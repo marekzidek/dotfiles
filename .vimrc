@@ -2,7 +2,12 @@
 set nocompatible
 
 " Helps force plug-ins to load correctly when it is turned back on below.
-filetype off
+set nocp
+filetype on
+filetype plugin indent on
+
+" Encoding
+set encoding=utf-8
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -11,8 +16,23 @@ call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
+" Super ctrl + P searching
+Plugin 'kien/ctrlp.vim'
+
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
+
+" Checking syntax on every change
+Plugin 'vim-syntastic/syntastic'
+
+" Vim - Tmux split navigator with same bindings :))
+Bundle 'christoomey/vim-tmux-navigator'
+
+" Airline plugin
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+let g:airline_theme='peaksea'
+let g:airline_powerline_fonts = 1
 
 " add all your plugins here (note older versions of Vundle
 " used Bundle instead of Plugin)
@@ -22,6 +42,8 @@ Plugin 'tmhedberg/SimpylFold'
 
 " Indent python
 Plugin 'vim-scripts/indentpython.vim'
+
+
 " NERDTree
 Plugin 'scrooloose/nerdtree'
 
@@ -44,7 +66,11 @@ Plugin 'Valloric/YouCompleteMe'
 call vundle#end()            " required
 hi Normal guibg=NONE ctermbg=NONE
 
+" Let my code be pretty
+let python_highlight_all=1
+syntax on
 
+" Remap esc to my favorite mix
 :imap jk <Esc>
 :imap kj <Esc>
 
@@ -99,6 +125,10 @@ let NERDTreeMapActivateNode='l' " Toggle child nodes with l
 " Speed up scrolling in Vim
 set ttyfast
 
+" Nicer visual selection
+hi Visual term=reverse cterm=reverse guibg=Grey
+
+
 " Status bar
 set laststatus=2
 "
@@ -108,12 +138,29 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+
+" Replace the standard behaviour of "o" and "O"
+nnoremap o o<Esc>
+nnoremap O O<Esc>
+
 " Display options
 set showmode
 set showcmd
 
+
 " Highlight matching pairs of brackets. Use the '%' character to jump between them.
 set matchpairs+=<:>
+
+" Add airline to Tmux
+Plugin 'edkolev/tmuxline.vim'
+
+
+" Enable resize of vim when is tmux
+if has("mouse_sgr")
+    set ttymouse=sgr
+else
+    set ttymouse=xterm2
+end
 
 " Display different types of white spaces.
 set list
@@ -132,6 +179,9 @@ au BufNewFile,BufRead *.py
     \ set autoindent |
     \ set fileformat=unix
 
+" Use system clipboard
+set clipboard=unnamed
+
 " Full stack dev indentation
 au BufNewFile,BufRead *.js, *.html, *.css
     \ set tabstop=2 |
@@ -146,8 +196,7 @@ set splitbelow
 " Set status line display
 set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ %{strftime('%c')}
 
-" Encoding
-set encoding=utf-8
+
 
 " Highlight matching search patterns
 set hlsearch
