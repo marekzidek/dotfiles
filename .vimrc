@@ -28,11 +28,15 @@ Plugin 'vim-syntastic/syntastic'
 " Vim - Tmux split navigator with same bindings :))
 Bundle 'christoomey/vim-tmux-navigator'
 
+
 " Airline plugin
+
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 let g:airline_theme='peaksea'
 let g:airline_powerline_fonts = 1
+
+" set alternate color for modified active/inactive tabs
 
 " add all your plugins here (note older versions of Vundle
 " used Bundle instead of Plugin)
@@ -69,6 +73,8 @@ hi Normal guibg=NONE ctermbg=NONE
 " Let my code be pretty
 let python_highlight_all=1
 syntax on
+
+let g:tmuxline_preset = 'righteous'
 
 " Remap esc to my favorite mix
 :imap jk <Esc>
@@ -113,6 +119,11 @@ set scrolloff=5
 " Fixes common backspace problems
 set backspace=indent,eol,start
 
+" Remap confirmation for searches
+cnoremap jk <CR>
+cnoremap kj <CR>
+
+
 " Do the harlem shake!
 set mouse=a
 
@@ -153,7 +164,6 @@ set matchpairs+=<:>
 
 " Add airline to Tmux
 Plugin 'edkolev/tmuxline.vim'
-
 
 " Enable resize of vim when is tmux
 if has("mouse_sgr")
