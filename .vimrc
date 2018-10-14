@@ -74,7 +74,8 @@ hi Normal guibg=NONE ctermbg=NONE
 let python_highlight_all=1
 syntax on
 
-let g:tmuxline_preset = 'righteous'
+" Don't use it now as we already have snapshot of this for .tmux.conf
+" let g:tmuxline_preset = 'righteous'
 
 " Remap esc to my favorite mix
 :imap jk <Esc>
@@ -90,9 +91,6 @@ map <C-n> :NERDTreeToggle<CR>
 :  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
 :  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 :augroup END
-
-" Turn on syntax highlighting.
-syntax on
 
 " For plug-ins to load correctly.
 filetype plugin indent on
@@ -137,22 +135,24 @@ let NERDTreeMapActivateNode='l' " Toggle child nodes with l
 set ttyfast
 
 " Nicer visual selection
-hi Visual term=reverse cterm=reverse guibg=Grey
+hi Visual term=bold cterm=bold guibg=Blue
 
 
 " Status bar
 set laststatus=2
 "
-"split navigations
+" Split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+" Settings for compatibility with tmux colorscheme vim
+set background=dark
+set t_Co=256
+
 
 " Replace the standard behaviour of "o" and "O"
-nnoremap o o<Esc>
-nnoremap O O<Esc>
 
 " Display options
 set showmode
@@ -163,7 +163,8 @@ set showcmd
 set matchpairs+=<:>
 
 " Add airline to Tmux
-Plugin 'edkolev/tmuxline.vim'
+" For now, we alerady snapshotted the vim tmuxline.vim config for .tmux.conf...
+" Plugin 'edkolev/tmuxline.vim'
 
 " Enable resize of vim when is tmux
 if has("mouse_sgr")
@@ -179,8 +180,14 @@ set listchars=tab:›\ ,extends:#,nbsp:.
 " Show line numbers
 set number
 
+" Full stack dev indentation
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2 |
+    \ set softtabstop=2 |
+    \ set shiftwidth=2
+
 " Add the proper PEP 8 indentation
-au BufNewFile,BufRead *.py
+au BufNewFile,BufRead *.py, *.pyx
     \ set tabstop=4 | 
     \ set softtabstop=4 |
     \ set shiftwidth=4 | 
@@ -191,12 +198,6 @@ au BufNewFile,BufRead *.py
 
 " Use system clipboard
 set clipboard=unnamed
-
-" Full stack dev indentation
-au BufNewFile,BufRead *.js, *.html, *.css
-    \ set tabstop=2 |
-    \ set softtabstop=2 |
-    \ set shiftwidth=2
 
 " Split a new window to the right
 set splitright

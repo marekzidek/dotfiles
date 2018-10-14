@@ -1,0 +1,1 @@
+xclip -in -selection clipboard >&2
