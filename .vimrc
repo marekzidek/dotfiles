@@ -9,6 +9,9 @@ filetype plugin indent on
 " Encoding
 set encoding=utf-8
 
+" My leader is space
+let mapleader = (' ') 
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -28,7 +31,6 @@ Plugin 'vim-syntastic/syntastic'
 " Vim - Tmux split navigator with same bindings :))
 Bundle 'christoomey/vim-tmux-navigator'
 
-
 " Airline plugin
 
 Plugin 'vim-airline/vim-airline'
@@ -47,8 +49,42 @@ Plugin 'tmhedberg/SimpylFold'
 " Indent python
 Plugin 'vim-scripts/indentpython.vim'
 
+" Easy-motion
+Plugin 'easymotion/vim-easymotion'
 
-" NERDTree
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+nmap s <Plug>(easymotion-overwin-f)
+" or
+" `s{char}{char}{label}`
+" Need one more keystroke, but on average, it may be more comfortable.
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Turn on case insensitive feature
+let g:EasyMotion_smartcase = 1
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+
+" NERDTreesyMotion_do_mapping = 0 " Disable default mappings
+
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+nmap s <Plug>(easymotion-overwin-f)
+" or
+" `s{char}{char}{label}`
+" Need one more keystroke, but on average, it may be more comfortable.
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Turn on case insensitive feature
+let g:EasyMotion_smartcase = 1
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
 Plugin 'scrooloose/nerdtree'
 
 " NERDTreeTabs
@@ -61,8 +97,6 @@ let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 let g:SimpylFold_docstring_preview=1
 
 map <Leader>n <plug>NERDTreeTabsToggle<CR>
-" Auto-complete plugin
-Plugin 'Valloric/YouCompleteMe'
 
 " ...
 
@@ -76,6 +110,7 @@ syntax on
 
 " Don't use it now as we already have snapshot of this for .tmux.conf
 " let g:tmuxline_preset = 'righteous'
+
 
 " Remap esc to my favorite mix
 :imap jk <Esc>
@@ -135,7 +170,7 @@ let NERDTreeMapActivateNode='l' " Toggle child nodes with l
 set ttyfast
 
 " Nicer visual selection
-hi Visual term=bold cterm=bold guibg=Blue
+hi Visual term=bold cterm=bold guibg=green
 
 
 " Status bar
@@ -174,7 +209,6 @@ else
 end
 
 " Display different types of white spaces.
-set list
 set listchars=tab:›\ ,extends:#,nbsp:.
 
 " Show line numbers
@@ -184,7 +218,7 @@ set number
 au BufNewFile,BufRead *.js, *.html, *.css
     \ set tabstop=2 |
     \ set softtabstop=2 |
-    \ set shiftwidth=2
+    \ set shiftwidth
 
 " Add the proper PEP 8 indentation
 au BufNewFile,BufRead *.py, *.pyx
@@ -218,12 +252,12 @@ set ignorecase
 " Include only uppercase words with uppercase search term
 set smartcase
 
-" Store info from no more than 100 files at a time, 9999 lines of text, 100kb of data. Useful for copying large amounts of data between files.
-set viminfo='100,<9999,s100
+" Store info from no more than 101 files at a time, 9999 lines of text, 100kb of data. Useful for copying large amounts of data between files.
+set viminfo='100,<9999,s101
 
 " Map the <Space> key to toggle a selected fold opened/closed.
-nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
-vnoremap <Space> zf
+nnoremap <silent> <Leader>f @=(foldlevel('.')?'za':"\<Leader>")<CR>
+vnoremap <Leader>f zf
 
 " Automatically save and load folds
 autocmd BufWinLeave *.* mkview
