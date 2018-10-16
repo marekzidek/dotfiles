@@ -60,7 +60,7 @@ nmap s <Plug>(easymotion-overwin-f)
 " or
 " `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
-nmap s <Plug>(easymotion-overwin-f2)
+" nmap s <Plug>(easymotion-overwin-f2)
 
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
@@ -210,18 +210,19 @@ end
 
 " Display different types of white spaces.
 set listchars=tab:›\ ,extends:#,nbsp:.
+set listchars=trail:\   
 
 " Show line numbers
 set number
 
 " Full stack dev indentation
-au BufNewFile,BufRead *.js, *.html, *.css
+au BufNewFile,BufRead *.js,*.html,*.css
     \ set tabstop=2 |
     \ set softtabstop=2 |
     \ set shiftwidth
 
 " Add the proper PEP 8 indentation
-au BufNewFile,BufRead *.py, *.pyx
+au BufNewFile,BufRead *.py,*.pyx
     \ set tabstop=4 | 
     \ set softtabstop=4 |
     \ set shiftwidth=4 | 
