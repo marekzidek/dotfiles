@@ -43,6 +43,46 @@ let g:airline_powerline_fonts = 1
 " add all your plugins here (note older versions of Vundle
 " used Bundle instead of Plugin)
 
+Plugin 'prabirshrestha/async.vim'
+Plugin 'prabirshrestha/vim-lsp'
+Plugin 'prabirshrestha/asyncomplete.vim'
+Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+
+if executable('pyls')
+    " pip install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
+
+let g:LanguageClient_loggingFile = '~/tmp/lc.log'
+let g:LanguageClient_loggingLevel = 'DEBUG'
+
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+
+set completeopt+=preview
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+
+let g:asyncomplete_smart_completion = 1
+let g:asyncomplete_auto_popup = 1
+let g:asyncomplete_remove_duplicates = 1
+
+nnoremap <leader>r :LspReferences<CR>
+nnoremap <leader>d :LspDefinition<CR>
+set completeopt+=preview
+
+" This remap is not so much motivated by lsp, but
+" by wierd behaviour of <C-space>, which is <Nul> in vimspeak :D 
+" it somehow inserts last couple of inserted chars and exits to normal mode
+inoremap <Nul> <C-n>
+
 " Folding plugin
 Plugin 'tmhedberg/SimpylFold'
 
@@ -82,16 +122,14 @@ nmap s <Plug>(easymotion-overwin-f2)
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
 Plugin 'scrooloose/nerdtree'
+
 
 " NERDTreeTabs
 Plugin 'jistr/vim-nerdtree-tabs'
 
 " NERDTree ignore *.pyc *.swp
-let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+let NERDTreeIgnore=['\.pyc$', '\.swp$', '\~$'] "ignore files in NERDTree
 
 " See docstrings of the folded code
 let g:SimpylFold_docstring_preview=1
@@ -115,9 +153,6 @@ syntax on
 " Remap esc to my favorite mix
 :imap jk <Esc>
 :imap kj <Esc>
-
-" Remap starting of NerdTree
-map <C-n> :NERDTreeToggle<CR>
 
 :set number relativenumber
 
@@ -156,6 +191,9 @@ set backspace=indent,eol,start
 cnoremap jk <CR>
 cnoremap kj <CR>
 
+" This remap is really bad when controlling visual selection
+" vno jk <Esc>
+" vno kj <Esc>
 
 " Do the harlem shake!
 set mouse=a
@@ -172,6 +210,7 @@ set ttyfast
 " Nicer visual selection
 hi Visual term=bold cterm=bold guibg=green
 
+set undolevels 1000
 
 " Status bar
 set laststatus=2
