@@ -52,7 +52,9 @@ Plugin 'vim-scripts/indentpython.vim'
 " Easy-motion
 Plugin 'easymotion/vim-easymotion'
 
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
+
+" Disable default mappings
+let g:EasyMotion_do_mapping = 0
 
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
@@ -71,20 +73,6 @@ map <Leader>k <Plug>(easymotion-k)
 
 " NERDTreesyMotion_do_mapping = 0 " Disable default mappings
 
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-nmap s <Plug>(easymotion-overwin-f)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-nmap s <Plug>(easymotion-overwin-f2)
-
-" Turn on case insensitive feature
-let g:EasyMotion_smartcase = 1
-
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
 Plugin 'scrooloose/nerdtree'
 
 " NERDTreeTabs
@@ -211,17 +199,21 @@ end
 " Display different types of white spaces.
 set listchars=tab:›\ ,extends:#,nbsp:.
 
+" Toggle lineNumbers
+nnoremap <leader>l :set relativenumber!<cr>:set number!<cr>
+
+
 " Show line numbers
 set number
 
 " Full stack dev indentation
-au BufNewFile,BufRead *.js, *.html, *.css
+au BufNewFile,BufRead *.js,*.html,*.css
     \ set tabstop=2 |
     \ set softtabstop=2 |
     \ set shiftwidth
 
 " Add the proper PEP 8 indentation
-au BufNewFile,BufRead *.py, *.pyx
+au BufNewFile,BufRead *.py,*.pyx
     \ set tabstop=4 | 
     \ set softtabstop=4 |
     \ set shiftwidth=4 | 
