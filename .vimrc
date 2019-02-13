@@ -63,6 +63,7 @@ let g:LanguageClient_loggingLevel = 'DEBUG'
 let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:asyncomplete_auto_popup = 1
 
 set completeopt+=preview
 
@@ -224,8 +225,6 @@ nnoremap <C-H> <C-W><C-H>
 set background=dark
 set t_Co=256
 
-
-" Replace the standard behaviour of "o" and "O"
 
 " Display options
 set showmode
