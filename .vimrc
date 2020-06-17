@@ -94,6 +94,9 @@ Plugin 'vim-scripts/indentpython.vim'
 Plugin 'easymotion/vim-easymotion'
 
 
+"use system clipboard
+set clipboard=unnamedplus
+
 " Disable default mappings
 let g:EasyMotion_do_mapping = 0
 
@@ -272,8 +275,6 @@ au BufNewFile,BufRead *.py,*.pyx
     \ set autoindent |
     \ set fileformat=unix
 
-" Use system clipboard
-set clipboard=unnamed
 
 " Split a new window to the right
 set splitright
