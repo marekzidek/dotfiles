@@ -1,0 +1,13 @@
+set editing-mode vi
+
+
+set keymap vi-insert
+
+"kj": vi-movement-mode
+
+# Pressing tab will list all completions & select the first one. Pressing it
+# again will cycle through available completions.
+TAB: menu-complete
+# Shift-TAB cycles completions backward
+"\e[Z": menu-complete-backward
+
