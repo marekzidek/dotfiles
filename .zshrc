@@ -74,6 +74,21 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -v '^?' backward-delete-char
 
+# Set tmux to preserve environments
+tmux()
+{
+    local current_env=""
+    if [ "$VIRTUAL_ENV" != "" ]; then
+        current_env="$VIRTUAL_ENV"
+        deactivate
+    fi
+    command tmux "$@"
+    local ret=$?
+    if [ "$current_env" != "" ]; then
+        workon $(basename $current_env)
+    fi
+    return $ret
+}
 
 
 # Fuzzy find to automatically open in vim by hitting <C-f>
