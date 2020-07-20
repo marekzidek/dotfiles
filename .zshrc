@@ -11,6 +11,9 @@ export HISTTIMEFORMAT="%F %T "
 
 export LANG=en_US.UTF-8
 
+# If vim could not be complied with +clipboard
+# uncomment this
+# alias vim='vimx'
 
 # Prompt setup
 PROMPT='%F{178}%n@%m%f %F{43}%2~%f%F{173}:%f '
@@ -70,6 +73,18 @@ bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -v '^?' backward-delete-char
+
+
+
+# Fuzzy find to automatically open in vim by hitting <C-f>
+# bind '"\C-f":"vim $(fzf)\n"'
+# Same, but my imporved version to not open empty vim on fzf exit :))
+# Also doesn't save the crazy command into history (watch the leading space with HISTCONTROL)
+# Also saves the executed filename in the history! I'm so proud
+bind '"\C-f":" fzf_out=$(fzf --preview \"bat --style=numbers --color=always --line-range :500 {}\"); [[ -z $fzf_out ]] && : || vim $fzf_out\nhistory -s vim $fzf_out\n"'
+
+export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
+export FZF_DEFAULT_OPT='--layout=reverse --height=60%'
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select {
