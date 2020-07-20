@@ -1,7 +1,16 @@
-# Lines configured by zsh-newuser-install
+# Enable shared history across all
+# terminal sessions and tmux panes
 HISTFILE=~/.histfile_zsh
 HISTSIZE=1000000
 SAVEHIST=10000000
+export HISTCONTROL=ignoredups:erasedups:ignorespaces
+setopt APPEND_HISTORY
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+export HISTTIMEFORMAT="%F %T "
+
+
+export LANG=en_US.UTF-8
+
 
 # Prompt setup
 PROMPT='%F{178}%n@%m%f %F{43}%2~%f%F{173}:%f '
@@ -11,7 +20,7 @@ precmd_vcs_info() { vcs_info }
 precmd_functions+=( precmd_vcs_info )
 setopt prompt_subst
 RPROMPT=\$vcs_info_msg_0_
-zstyle ':vcs_info:git:*' formats '%F{240}%r on (%b)%f'
+zstyle ':vcs_info:git:*' formats '%F{240}[%b]%f'
 zstyle ':vcs_info:*' enable git
 
 # Enamble colors and change prompt
