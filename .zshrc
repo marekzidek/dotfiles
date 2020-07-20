@@ -3,6 +3,13 @@
 HISTFILE=~/.histfile_zsh
 HISTSIZE=1000000
 SAVEHIST=10000000
+setopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_REDUCE_BLANKS
 export HISTCONTROL=ignoredups:erasedups:ignorespaces
 setopt APPEND_HISTORY
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
@@ -10,10 +17,14 @@ export HISTTIMEFORMAT="%F %T "
 
 
 export LANG=en_US.UTF-8
+setopt CORRECT
+setopt CORRECT_ALL
 
 # If vim could not be complied with +clipboard
 # uncomment this
 # alias vim='vimx'
+#
+alias "brew install"='!HOMEBREW_NO_AUTO_UPDATE=1 brew install'
 
 # Prompt setup
 PROMPT='%F{178}%n@%m%f %F{43}%2~%f%F{173}:%f '
