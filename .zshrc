@@ -107,10 +107,34 @@ tmux()
 # Same, but my imporved version to not open empty vim on fzf exit :))
 # Also doesn't save the crazy command into history (watch the leading space with HISTCONTROL)
 # Also saves the executed filename in the history! I'm so proud
-bind '"\C-f":" fzf_out=$(fzf --preview \"bat --style=numbers --color=always --line-range :500 {}\"); [[ -z $fzf_out ]] && : || vim $fzf_out\nhistory -s vim $fzf_out\n"'
-
+bindkey -s "\C-f" ' fzf_out=$(fzf --layout=reverse --preview \"bat --style=numbers --color=always --line-range :500 {}\"); [[ -z $fzf_out ]] && : || vim $fzf_out\n print -S "vim $fzf_out"\n'
 export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
 export FZF_DEFAULT_OPT='--layout=reverse --height=60%'
+
+
+
+
+
+# Interactive search.
+# Usage: ff or ff <folder>.
+ff() {
+[[ -n $1 ]] && cd $1 # go to provided folder or noop
+RG_DEFAULT_COMMAND="rg -i -l --hidden --no-ignore-vcs"
+selected=$(
+FZF_DEFAULT_COMMAND="rg --files" fzf \
+  -m \
+  -e \
+  --ansi \
+  --phony \
+  --reverse \
+  --bind "ctrl-a:select-all" \
+  --bind "f12:execute-silent:(subl -b {})" \
+  --bind "change:reload:$RG_DEFAULT_COMMAND {q} || true" \
+  --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
+)
+[[ -n $selected ]] && vim $selected # open multiple files in editor
+}
+bindkey -s "\C-g" 'fif\n'
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select {
