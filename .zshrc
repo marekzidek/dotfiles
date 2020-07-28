@@ -20,6 +20,9 @@ export LANG=en_US.UTF-8
 setopt CORRECT
 setopt CORRECT_ALL
 
+
+export PATH=/Users/mzi/Library:$PATH
+
 # If vim could not be complied with +clipboard
 # uncomment this
 # alias vim='vimx'
@@ -27,18 +30,91 @@ setopt CORRECT_ALL
 alias "brew install"='!HOMEBREW_NO_AUTO_UPDATE=1 brew install'
 
 # Prompt setup
-PROMPT='%F{178}%n@%m%f %F{43}%2~%f%F{173}:%f '
-
-autoload -Uz vcs_info
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
-setopt prompt_subst
-RPROMPT=\$vcs_info_msg_0_
-zstyle ':vcs_info:git:*' formats '%F{240}[%b]%f'
-zstyle ':vcs_info:*' enable git
+#PROMPT='%F{178}%n@%m%f %F{43}%2~%f%F{173}:%f '
+#
+#autoload -Uz vcs_info
+#precmd_vcs_info() { vcs_info }
+#precmd_functions+=( precmd_vcs_info )
+#setopt prompt_subst
+#RPROMPT=\$vcs_info_msg_0_
+#zstyle ':vcs_info:git:*' formats '%F{240}[%b]%f'
+#zstyle ':vcs_info:*' enable git
 
 # Enamble colors and change prompt
 autoload -U colors && colors
+
+
+
+
+
+# prompt setup
+setopt prompt_subst
+
+# Echoes a username/host string when connected over SSH (empty otherwise)
+ssh_info() {
+  [[ "$SSH_CONNECTION" != '' ]] && echo '%(!.%{$fg[red]%}.%{$fg[yellow]%})%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:' || echo ''
+}
+
+# Echoes information about Git repository status when inside a Git repository
+git_info() {
+
+  # Exit if not inside a Git repository
+  ! git rev-parse --is-inside-work-tree > /dev/null 2>&1 && return
+
+  # Git branch/tag, or name-rev if on detached head
+  local GIT_LOCATION=${$(git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD)#(refs/heads/|tags/)}
+
+  local AHEAD="%F{160}⇡NUM%f"
+  local BEHIND="%{$fg[cyan]%}⇣NUM%{$reset_color%}"
+  local MERGING="%{$fg[magenta]%}⚡︎%{$reset_color%}"
+  local UNTRACKED="%F{160}●%f"
+  local MODIFIED="%F{226}●%f"
+  local STAGED="%{$fg[green]%}●%{$reset_color%}"
+
+  local -a DIVERGENCES
+  local -a FLAGS
+
+  local NUM_AHEAD="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
+  if [ "$NUM_AHEAD" -gt 0 ]; then
+    DIVERGENCES+=( "${AHEAD//NUM/$NUM_AHEAD}" )
+  fi
+
+  local NUM_BEHIND="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
+  if [ "$NUM_BEHIND" -gt 0 ]; then
+    DIVERGENCES+=( "${BEHIND//NUM/$NUM_BEHIND}" )
+  fi
+
+  local GIT_DIR="$(git rev-parse --git-dir 2> /dev/null)"
+  if [ -n $GIT_DIR ] && test -r $GIT_DIR/MERGE_HEAD; then
+    FLAGS+=( "$MERGING" )
+  fi
+
+  if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
+    FLAGS+=( "$UNTRACKED" )
+  fi
+
+  if ! git diff --quiet 2> /dev/null; then
+    FLAGS+=( "$MODIFIED" )
+  fi
+
+  if ! git diff --cached --quiet 2> /dev/null; then
+    FLAGS+=( "$STAGED" )
+  fi
+
+  local -a GIT_INFO
+  [ -n "$GIT_STATUS" ] && GIT_INFO+=( "$GIT_STATUS" )
+  [[ ${#DIVERGENCES[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)DIVERGENCES}" )
+  [[ ${#FLAGS[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)FLAGS}" )
+  GIT_INFO+=( "%F{240}[$GIT_LOCATION]%f" )
+  echo "${GIT_INFO}"
+
+}
+
+# Use ❯ as the non-root prompt character; # for root
+# Change the prompt character color if the last command had a nonzero exit code
+PROMPT='$(ssh_info)%F{43}%2~%f%u %F{173}❯%f '
+
+RPROMPT='$(git_info)'
 
 
 # Vim keybindings and remappings
@@ -107,11 +183,9 @@ tmux()
 # Same, but my imporved version to not open empty vim on fzf exit :))
 # Also doesn't save the crazy command into history (watch the leading space with HISTCONTROL)
 # Also saves the executed filename in the history! I'm so proud
-bindkey -s "\C-f" ' fzf_out=$(fzf --layout=reverse --preview \"bat --style=numbers --color=always --line-range :500 {}\"); [[ -z $fzf_out ]] && : || vim $fzf_out\n print -S "vim $fzf_out"\n'
+bindkey -s "\C-f" ' fzf_out=$(fzf --layout=reverse --bind K:preview-up,J:preview-down,H:preview-page-up,L:preview-page-down --preview  \"bat --style=numbers --color=always --line-range :500 {}\"); [[ -z $fzf_out ]] && : || vim $fzf_out\n print -S "vim $fzf_out"\n'
 export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
-export FZF_DEFAULT_OPT='--layout=reverse --height=60%'
-
-
+export FZF_DEFAULT_OPT='--layout=reverse --height=60% --bind up:preview-up,down:preview-down'
 
 
 
@@ -134,7 +208,48 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
 )
 [[ -n $selected ]] && vim $selected # open multiple files in editor
 }
-bindkey -s "\C-g" 'fif\n'
+bindkey -s "\C-g" 'ff\n'
+
+# Interactive search.
+wikiff() {
+[[ -n $1 ]] && cd $1 || cd ~/my_site #provided or default
+RG_DEFAULT_COMMAND="rg -i -l --no-ignore-vcs"
+selected=$(
+FZF_DEFAULT_COMMAND="rg --files" fzf \
+  -m \
+  -e \
+  --ansi \
+  --phony \
+  --reverse \
+  --bind "ctrl-a:select-all" \
+  --bind "f12:execute-silent:(subl -b {})" \
+  --bind "change:reload:$RG_DEFAULT_COMMAND {q} || true" \
+  --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
+)
+[[ -n $selected ]] && vim $selected # open multiple files in editor
+}
+bindkey -s "\C-w" 'wikiff\n'
+
+
+# Interactive search.
+wikipp() {
+[[ -n $1 ]] && cd $1 || cd ~/my_site #provided or default
+RG_DEFAULT_COMMAND="rg -i -l --no-ignore-vcs"
+selected=$(
+FZF_DEFAULT_COMMAND="rg --files" fzf \
+  -m \
+  -e \
+  --ansi \
+  --phony \
+  --reverse \
+  --bind "ctrl-a:select-all" \
+  --bind "f12:execute-silent:(subl -b {})" \
+  --bind "change:reload:$RG_DEFAULT_COMMAND {q} || true" \
+  --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
+)
+[[ -n $selected ]] &&  grep "<cpy>" $selected | sed 's/<cpy>//g' | pbcopy # open multiple files in editor
+}
+bindkey -s "\C-q" 'wikipp\n'
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select {
