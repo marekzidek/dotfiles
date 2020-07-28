@@ -1,7 +1,27 @@
 ------- ClipboardTool -------
 lawl = hs.loadSpoon("ClipboardTool")
 lawl:start()
+lawl.show_copied_alert = false
 
+hs.loadSpoon("SpoonInstall")
+
+----------- Seal -------------
+spoon.SpoonInstall:andUse("Seal",
+               {
+                 hotkeys = { show = { {"cmd", "shift"}, "space" } },
+                 fn = function(s)
+                   s:loadPlugins({"apps", "calc", "safari_bookmarks",
+                                  "screencapture", "useractions"})
+                   s.plugins.safari_bookmarks.always_open_with_safari = false
+                   s.plugins.useractions.actions =
+                     {
+                         
+                     }
+                   s:refreshAllCommands()
+                 end,
+                 start = true,
+               }
+)
 
 ------ Window tiling --------
 
@@ -24,6 +44,8 @@ win:minimize()
 end)
 
 
+
+
 lol = hs.loadSpoon("MiroWindowsManager")	
 hs.window.animationDuration = 0.0
 spoon.MiroWindowsManager:bindHotkeys({
@@ -35,6 +57,67 @@ spoon.MiroWindowsManager:bindHotkeys({
 })
 
 
+-- DISPLAY FOCUS SWITCHING --
+local application = require "hs.application"
+--One hotkey should just suffice for dual-display setups as it will naturally
+--cycle through both.
+--A second hotkey to reverse the direction of the focus-shift would be handy
+--for setups with 3 or more displays.
+
+--Bring focus to next display/screen
+hs.hotkey.bind({"alt"}, "l", function ()
+  focusScreen(hs.window.focusedWindow():screen():next())
+end)
+
+--Bring focus to previous display/screen
+hs.hotkey.bind({"alt"}, "h", function() 
+  focusScreen(hs.window.focusedWindow():screen():previous())
+end)
+
+--Predicate that checks if a window belongs to a screen
+function isInScreen(screen, win)
+  return win:screen() == screen
+end
+
+-- Brings focus to the scren by setting focus on the front-most application in it.
+-- Also move the mouse cursor to the center of the screen. This is because
+-- Mission Control gestures & keyboard shortcuts are anchored, oddly, on where the
+-- mouse is focused.
+function focusScreen(screen)
+  --Get windows within screen, ordered from front to back.
+  --If no windows exist, bring focus to desktop. Otherwise, set focus on
+  --front-most application window.
+  local windows = hs.fnutils.filter(
+      hs.window.orderedWindows(),
+      hs.fnutils.partial(isInScreen, screen))
+  local windowToFocus = #windows > 0 and windows[1] or hs.window.desktop()
+  windowToFocus:focus()
+
+  -- Move mouse to center of screen
+  local pt = geometry.rectMidPoint(screen:fullFrame())
+  mouse.setAbsolutePosition(pt)
+end
+
+
+-- END DISPLAY FOCUS SWITCHING --
+
+------ Slight focus window highlight -----
+hs.window.highlight.ui.overlay=true
+hs.window.highlight.ui.overlayColor = {0,0,0,0.04}
+hs.window.highlight.start()
+
+
+
+local application = require "hs.application"
+
+---- Directional Focus ------
+hs.hotkey.bind({"alt", "shift", "cmd", "ctrl"},'l',function()hs.window.focusedWindow():focusWindowEast(nil, true, true)end)
+
+hs.hotkey.bind({"alt", "shift", "cmd", "ctrl"},'h',function()hs.window.focusedWindow():focusWindowWest(nil, true, true)end)
+
+hs.hotkey.bind({"alt", "shift", "cmd", "ctrl"},'k',function()hs.window.focusedWindow():focusWindowNorth(nil, true, true)end)
+
+hs.hotkey.bind({"alt", "shift", "cmd", "ctrl"},'j',function()hs.window.focusedWindow():focusWindowSouth(nil, true, true)end)
 --------- Switcher -----------
 
 switcher_space = hs.window.switcher.new(hs.window.filter.new():setCurrentSpace(true):setDefaultFilter{})
@@ -81,7 +164,4 @@ end)
 hap = hs.loadSpoon("HeadphoneAutoPause")
 hap.autoResume = false
 hap:start()
-
-
-
 
