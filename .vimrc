@@ -11,7 +11,7 @@ filetype plugin indent on
 set encoding=utf-8
 
 " My leader is space
-let mapleader = (' ') 
+let mapleader = (' ')
 
 
 " set the runtime path to include Vundle and initialize
@@ -24,6 +24,9 @@ call vundle#begin()
 " Super ctrl + P searching
 Plugin 'kien/ctrlp.vim'
 
+" Add airline to Tmux
+" For now, we alerady snapshotted the vim tmuxline.vim config for .tmux.conf...
+" Plugin 'edkolev/tmuxline.vim'
 
 "Plugin 'tmhedberg/SimpylFold'
  Plugin 'kalekundert/vim-coiled-snake'
@@ -47,8 +50,18 @@ let g:airline_powerline_fonts = 1
 
 " set alternate color for modified active/inactive tabs
 
-" add all your plugins here (note older versions of Vundle
-" used Bundle instead of Plugin)
+Plugin 'vimwiki/vimwiki'
+
+let g:vimwiki_list = [{'path': '~/vimwiki/',
+                      \ 'syntax': 'markdown', 'ext': '.md'},
+		      \	 {'path': '~/my_site/',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_ext2syntax = {'.md': 'markdown'}
+
+"!pip install --user smdv
+Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
+let g:instant_markdown_autostart = 0
+map <leader>md :InstantMarkdownPreview<CR>
 
 Plugin 'prabirshrestha/async.vim'
 Plugin 'prabirshrestha/vim-lsp'
@@ -77,6 +90,8 @@ let g:LanguageClient_loggingFile = '~/tmp/lc.log'
 let g:LanguageClient_loggingLevel = 'DEBUG'
 
 
+
+
 let g:lsp_preview_autoclose = 1
 let g:lsp_signature_help_enabled = 0
 let g:lsp_signs_error = {'text': '✗'}
@@ -99,6 +114,7 @@ augroup lsp_install
      augroup END
 
 
+
 set completeopt-=preview
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -109,8 +125,6 @@ let g:asyncomplete_auto_popup = 1
 let g:asyncomplete_smart_completion = 1
 let g:asyncomplete_remove_duplicates = 1
 
-
-
 " Syntastic custom config
 let g:syntastic_check_on_wq = 0
 
@@ -120,7 +134,7 @@ nnoremap <leader>d :LspDefinition<CR>
 
 set completeopt-=preview
 " This remap is not so much motivated by lsp, but
-" by wierd behaviour of <C-space>, which is <Nul> in vimspeak :D 
+" by wierd behaviour of <C-space>, which is <Nul> in vimspeak :D
 " it somehow inserts last couple of inserted chars and exits to normal mode
 inoremap <Nul> <C-n>
 
@@ -187,6 +201,9 @@ syntax on
 " Don't use it now as we already have snapshot of this for .tmux.conf
 " let g:tmuxline_preset = 'righteous'
 
+" Autocompletion
+set wildmode=longest,list,full
+set wildmenu
 
 " Remap esc to my favorite mix
 :imap jk <Esc>
@@ -259,7 +276,8 @@ set background=dark
 set t_Co=256
 
 
-" Replace the standard behaviour of "o" and "O"
+highlight LineNr ctermfg=grey
+
 
 " Display options
 set showmode
@@ -269,9 +287,6 @@ set showcmd
 " Highlight matching pairs of brackets. Use the '%' character to jump between them.
 set matchpairs+=<:>
 
-" Add airline to Tmux
-" For now, we alerady snapshotted the vim tmuxline.vim config for .tmux.conf...
-" Plugin 'edkolev/tmuxline.vim'
 
 " Enable resize of vim when is tmux
 if has("mouse_sgr")
@@ -282,7 +297,7 @@ end
 
 " Display different types of white spaces.
 set listchars=tab:›\ ,extends:#,nbsp:.
-set listchars=trail:\   
+set listchars=trail:\
 
 " Toggle lineNumbers
 nnoremap <leader>l :set relativenumber!<cr>:set number!<cr>
@@ -299,9 +314,9 @@ au BufNewFile,BufRead *.js,*.html,*.css
 
 " Add the proper PEP 8 indentation
 au BufNewFile,BufRead *.py,*.pyx
-    \ set tabstop=4 | 
+    \ set tabstop=4 |
     \ set softtabstop=4 |
-    \ set shiftwidth=4 | 
+    \ set shiftwidth=4 |
     \ set textwidth=79 |
     \ set expandtab |
     \ set autoindent |
@@ -374,7 +389,8 @@ augroup END
 "
 "set viewoptions-=options
 
-
+" Remove trailing whitespace on save
+autocmd BufWritePre * %s/\s\+$//e
 
 
 set completeopt-=preview
