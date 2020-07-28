@@ -97,6 +97,7 @@ let g:lsp_signature_help_enabled = 0
 let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:asyncomplete_auto_popup = 1
 
 
 function! s:on_lsp_buffer_enabled() abort
@@ -145,6 +146,9 @@ Plugin 'vim-scripts/indentpython.vim'
 " Easy-motion
 Plugin 'easymotion/vim-easymotion'
 
+
+"use system clipboard
+set clipboard=unnamedplus
 
 " Disable default mappings
 let g:EasyMotion_do_mapping = 0
@@ -322,8 +326,6 @@ au BufNewFile,BufRead *.py,*.pyx
     \ set autoindent |
     \ set fileformat=unix
 
-" Use system clipboard
-set clipboard=unnamed
 
 " Split a new window to the right
 set splitright

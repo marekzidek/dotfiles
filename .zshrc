@@ -161,7 +161,24 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -v '^?' backward-delete-char
 
-# Set tmux to preserve environments
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+HIST_STAMPS="mm/dd/yyyy"
+
+# Aliases
+#alias r='ranger'
+#alias vim='vimx'
+
+#export TERM="xterm-256color"
+
+#if [ -f /etc/zshrc ]; then
+#. /etc/zshrc
+#fi
+
+function cd {
+    builtin cd "$@" && ls -F
+    }
+
 tmux()
 {
     local current_env=""
@@ -169,11 +186,14 @@ tmux()
         current_env="$VIRTUAL_ENV"
         deactivate
     fi
+
     command tmux "$@"
     local ret=$?
+
     if [ "$current_env" != "" ]; then
         workon $(basename $current_env)
     fi
+
     return $ret
 }
 
@@ -296,3 +316,5 @@ rangercd () {
 }
 
 bindkey -s '^o' 'rangercd\n'
+
+
