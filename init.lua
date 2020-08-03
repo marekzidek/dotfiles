@@ -2,6 +2,7 @@
 lawl = hs.loadSpoon("ClipboardTool")
 lawl:start()
 lawl.show_copied_alert = false
+lawl.hist_size = 10000
 
 hs.loadSpoon("SpoonInstall")
 
@@ -15,7 +16,7 @@ spoon.SpoonInstall:andUse("Seal",
                    s.plugins.safari_bookmarks.always_open_with_safari = false
                    s.plugins.useractions.actions =
                      {
-                         
+
                      }
                    s:refreshAllCommands()
                  end,
@@ -46,14 +47,14 @@ end)
 
 
 
-lol = hs.loadSpoon("MiroWindowsManager")	
+lol = hs.loadSpoon("MiroWindowsManager")
 hs.window.animationDuration = 0.0
 spoon.MiroWindowsManager:bindHotkeys({
   up = {"cmd", "k"},
   right = {"cmd", "l"},
   down = {"cmd", "j"},
   left = {"cmd", "h"},
-  fullscreen = {{"cmd", "shift"}, "k"}								
+  fullscreen = {{"cmd", "shift"}, "k"}
 })
 
 
@@ -70,7 +71,7 @@ hs.hotkey.bind({"alt"}, "l", function ()
 end)
 
 --Bring focus to previous display/screen
-hs.hotkey.bind({"alt"}, "h", function() 
+hs.hotkey.bind({"alt"}, "h", function()
   focusScreen(hs.window.focusedWindow():screen():previous())
 end)
 
@@ -123,10 +124,10 @@ hs.hotkey.bind({"alt", "shift", "cmd", "ctrl"},'j',function()hs.window.focusedWi
 switcher_space = hs.window.switcher.new(hs.window.filter.new():setCurrentSpace(true):setDefaultFilter{})
 print(switcher_space)
 switcher_space.ui.fontName = 'Monaco'
-switcher_space.ui.textSize = 15		
+switcher_space.ui.textSize = 15
 switcher_space.ui.showTitles = false
 
-hs.window.switcher.ui.ThumbnailSize = 256 
+hs.window.switcher.ui.ThumbnailSize = 256
 hs.window.switcher.ui.showSelectedThumbnail = false
 hs.window.switcher.ui.showSelectedTitle = false
 -- alternatively, call .nextWindow() or .previousWindow() directly (same as hs.window.switcher.new():next())
