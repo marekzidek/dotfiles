@@ -79,6 +79,9 @@ if executable('pyls')
 endif
 
 
+
+
+
 set undofile
 set undodir=~/.vim/undodir
 " !mkdir ~/.vim/undodir
@@ -296,7 +299,10 @@ set matchpairs+=<:>
 if has("mouse_sgr")
     set ttymouse=sgr
 else
+
+  if !has('nvim')
     set ttymouse=xterm2
+  endif
 end
 
 " Display different types of white spaces.
