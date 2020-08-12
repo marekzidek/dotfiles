@@ -27,6 +27,8 @@ export PATH=/Users/mzi/Library:$PATH
 # uncomment this
 # alias vim='vimx'
 #
+
+alias vim='nvim'
 alias "brew install"='!HOMEBREW_NO_AUTO_UPDATE=1 brew install'
 
 # Prompt setup
@@ -42,10 +44,6 @@ alias "brew install"='!HOMEBREW_NO_AUTO_UPDATE=1 brew install'
 
 # Enamble colors and change prompt
 autoload -U colors && colors
-
-
-
-
 
 # prompt setup
 setopt prompt_subst
@@ -133,8 +131,20 @@ compinit -C
 _comp_options+=(globdots)
 
 
-# Autosuggest with changes on accept and partial accept
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+if echo $OSTYPE | grep "darwin" > /dev/null; then
+	# Autosuggest with changes on accept and partial accept
+	source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+	# Let python be homebrew managed python on macOS
+	alias python=/usr/local/bin/python3
+	alias pip=/usr/local/bin/pip3
+else
+	# prior to this, git clone into .zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+	source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+	alias python=/usr/bin/python3
+	alias pip=/usr/bin/pip3
+fi
 
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
 		end-of-line
@@ -303,6 +313,7 @@ lfcd () {
     fi
 }
 
+bindkey -s '^o' 'lfcd\n'
 
 # In case I decide to go back to ranger
 rangercd () {
@@ -315,6 +326,15 @@ rangercd () {
     fi
 }
 
-bindkey -s '^o' 'rangercd\n'
+#bindkey -s '^o' 'rangercd\n'
 
-
+# Change prompt to include k8s namespace and kn command to omit writing -n in each command
+source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
+PS1='$(kube_ps1) '$PS1
+kn () {
+	if [ -z "$1" ]; then
+		kubectl get namespaces
+	else
+		kubectl config set-context --current --namespace=$1 > /dev/null
+	fi
+}
