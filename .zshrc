@@ -17,19 +17,17 @@ export HISTTIMEFORMAT="%F %T "
 
 
 export LANG=en_US.UTF-8
-setopt CORRECT
-setopt CORRECT_ALL
-
+export LC_ALL=en_US.UTF-8
 
 export PATH=/Users/mzi/Library:$PATH
 
 # If vim could not be complied with +clipboard
-# uncomment this
 # alias vim='vimx'
-#
 
-alias vim='nvim'
+#alias vim='nvim' # god damn the problems I had on macOs with nvim
 alias "brew install"='!HOMEBREW_NO_AUTO_UPDATE=1 brew install'
+
+alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi'
 
 # Prompt setup
 #PROMPT='%F{178}%n@%m%f %F{43}%2~%f%F{173}:%f '
@@ -110,9 +108,9 @@ git_info() {
 
 # Use ❯ as the non-root prompt character; # for root
 # Change the prompt character color if the last command had a nonzero exit code
-PROMPT='$(ssh_info)%F{43}%2~%f%u %F{173}❯%f '
+PROMPT='$(git_info)$(ssh_info)%F{43}%2~%f%u %F{173}❯%f '
 
-RPROMPT='$(git_info)'
+#RPROMPT='$(git_info)'
 
 
 # Vim keybindings and remappings
@@ -130,6 +128,11 @@ zmodload zsh/complist
 compinit -C
 _comp_options+=(globdots)
 
+
+if echo $OSTYPE | grep "darwin" > /dev/null; then
+	# Use brew installed vim, because the basic is not compiled with +clipboard
+	alias vim=/usr/local/bin/vim
+fi
 
 if echo $OSTYPE | grep "darwin" > /dev/null; then
 	# Autosuggest with changes on accept and partial accept
@@ -165,6 +168,7 @@ ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
 	)
 
 
+
 # Use vim keys in tab complete menu:
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
@@ -175,15 +179,17 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 HIST_STAMPS="mm/dd/yyyy"
 
-# Aliases
-#alias r='ranger'
-#alias vim='vimx'
-
-#export TERM="xterm-256color"
+export TERM="xterm-256color"
 
 #if [ -f /etc/zshrc ]; then
 #. /etc/zshrc
 #fi
+
+
+[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+[ -f /usr/share/autojump/autojump.sh ] && . /usr/share/autojump/autojump.sh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 function cd {
     builtin cd "$@" && ls -F
@@ -281,28 +287,35 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
 }
 bindkey -s "\C-q" 'wikipp\n'
 
-# Change cursor shape for different vi modes.
-function zle-keymap-select {
-  if [[ ${KEYMAP} == vicmd ]] ||
-     [[ $1 = 'block' ]]; then
-    echo -ne '\e[1 q'
-  elif [[ ${KEYMAP} == main ]] ||
-       [[ ${KEYMAP} == viins ]] ||
-       [[ ${KEYMAP} = '' ]] ||
-       [[ $1 = 'beam' ]]; then
-    echo -ne '\e[5 q'
-  fi
-}
-zle -N zle-keymap-select
-zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[5 q"
-}
-zle -N zle-line-init
-echo -ne '\e[5 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+export EDITOR=vim
+export VISUAL=vim
+export OPENER=open
 
+
+### Change cursor shape for different vi modes.
+##function zle-keymap-select {
+#  #if [[ ${KEYMAP} == vicmd ]] ||
+#     #[[ $1 = 'block' ]]; then
+#    #echo -ne '\e[1 q'
+#  #elif [[ ${KEYMAP} == main ]] ||
+#       #[[ ${KEYMAP} == viins ]] ||
+#       #[[ ${KEYMAP} = '' ]] ||
+#       #[[ $1 = 'beam' ]]; then
+#    #echo -ne '\e[5 q'
+#  #fi
+##}
+##zle -N zle-keymap-select
+##zle-line-init() {
+#    #zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+#    #echo -ne "\e[5 q"
+##}
+##zle -N zle-line-init
+##echo -ne '\e[5 q' # Use beam shape cursor on startup.
+##preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+#
 # Use lf to switch directories and bind it to ctrl-o
+#
+#
 lfcd () {
     tmp="$(mktemp)"
     lf -last-dir-path="$tmp" "$@"
@@ -315,26 +328,27 @@ lfcd () {
 
 bindkey -s '^o' 'lfcd\n'
 
-# In case I decide to go back to ranger
-rangercd () {
-    tmp="$(mktemp)"
-    ranger --choosedir="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp"
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-    fi
-}
 
-#bindkey -s '^o' 'rangercd\n'
+## In case I decide to go back to ranger - just don't, it's slow
+#rangercd () {
+#    tmp="$(mktemp)"
+#    ranger --choosedir="$tmp" "$@"
+#    if [ -f "$tmp" ]; then
+#        dir="$(cat "$tmp")"
+#        rm -f "$tmp"
+#        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+#    fi
+#}
+#
+##bindkey -s '^o' 'rangercd\n'
 
 # Change prompt to include k8s namespace and kn command to omit writing -n in each command
-source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
-PS1='$(kube_ps1) '$PS1
-kn () {
-	if [ -z "$1" ]; then
-		kubectl get namespaces
-	else
-		kubectl config set-context --current --namespace=$1 > /dev/null
-	fi
-}
+#source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
+#PS1='$(kube_ps1) '$PS1
+#kn () {
+#	if [ -z "$1" ]; then
+#		kubectl get namespaces
+#	else
+#		kubectl config set-context --current --namespace=$1 > /dev/null
+#	fi
+#}
