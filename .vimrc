@@ -3,11 +3,13 @@
 set nocompatible
 
 " Helps force plug-ins to load correctly when it is turned back on below.
+
 set nocp
 filetype on
 filetype plugin indent on
 
 " Encoding
+
 set encoding=utf-8
 
 " My leader is space
@@ -55,7 +57,10 @@ Plugin 'vimwiki/vimwiki'
 let g:vimwiki_list = [{'path': '~/vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'},
 		      \	 {'path': '~/my_site/',
+                      \ 'syntax': 'markdown', 'ext': '.md'},
+		      \	 {'path': '~/tools/extendwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_markdown_link_ext = 1
 let g:vimwiki_ext2syntax = {'.md': 'markdown'}
 
 "!pip install --user smdv
@@ -282,7 +287,6 @@ nnoremap <C-H> <C-W><C-H>
 set background=dark
 set t_Co=256
 
-
 highlight LineNr ctermfg=grey
 
 
@@ -369,36 +373,34 @@ autocmd BufReadPost *
      \   exe "normal! g`\"" |
      \ endif
 
+""augroup vimrc
+""    autocmd BufWritePost *
+""    \   if expand('%') != '' && &buftype !~ 'nofile'
+""    \|      mkview
+""    \|  endif
+""    autocmd BufRead *
+""    \   if expand('%') != '' && &buftype !~ 'nofile'
+""    \|      silent loadview
+""    \|  endif
+""augroup END
 
-"set viewoptions-=options
-"augroup vimrc
-"    autocmd BufWritePost *
-"    \   if expand('%') != '' && &buftype !~ 'nofile'
-"    \|      mkview
-"    \|  endif
-"    autocmd BufRead *
-"    \   if expand('%') != '' && &buftype !~ 'nofile'
-"    \|      silent loadview
-"    \|  endif
+"autocmd VimEnter * silent exec "! echo -ne 'ge[1 q'"
+"autocmd VimLeave * silent exec "! echo -ne '\e[5 q'"
+
+" Reset cursor on startup
+"augroup ResetCursorShape
+"au!
+"autocmd VimEnter * :normal :startinsert :stopinsert
 "augroup END
 
-autocmd VimEnter * silent exec "! echo -ne '\e[1 q'"
-autocmd VimLeave * silent exec "! echo -ne '\e[5 q'"
-
-" This is for preserving folds, if not working, add incremental number to the
+"" This is for preserving folds, if not working, add incremental number to the
 " last argument up to 9, after that clear all files from mkview dir
-set viewoptions-=options
-
 augroup remember_folds
   autocmd!
   au BufWinLeave ?* mkview! 2
   au BufWinEnter ?* silent! loadview 2
 augroup END
-"
-"set viewoptions-=options
+set viewoptions-=options
 
 " Remove trailing whitespace on save
 autocmd BufWritePre * %s/\s\+$//e
-
-
-set completeopt-=preview
