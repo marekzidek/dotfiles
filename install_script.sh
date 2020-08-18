@@ -15,9 +15,20 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 #iterm
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
+# ripgrep on really old ubuntu images
+if $(uname -a) | grep "ubuntu"; then
+	curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+	sudo dpkg -i ripgrep_11.0.2_amd64.deb
+fi
+
+#fzf
+git clone git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+
 # Manual settings
 Use iterm2 and set colorscheme as Elemental, and set
 the foreground color to normal white instead of grey
+
 
 # From system repo
 man
@@ -25,6 +36,7 @@ neovim
 fzf
 python3-pip
 tldr
+htop
 zsh
 tmux
 ranger
@@ -39,14 +51,19 @@ automake
 # Configs
 chsh -s $(which zsh)
 
+# Install vim plugins
+vim +PluginInstall +qall
+
 
 # Pypi
 virtualenv
+ipython
 matplotlib
 scikitlearn
 numpy
 pandas
 torch
+fire
 
 
 ###### MacOS Section ########
