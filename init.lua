@@ -1,8 +1,8 @@
 ------- ClipboardTool -------
-lawl = hs.loadSpoon("ClipboardTool")
-lawl:start()
-lawl.show_copied_alert = false
-lawl.hist_size = 10000
+--lawl = hs.loadSpoon("ClipboardTool")
+--lawl:start()
+--lawl.show_copied_alert = false
+--lawl.hist_size = 10000
 
 hs.loadSpoon("SpoonInstall")
 
