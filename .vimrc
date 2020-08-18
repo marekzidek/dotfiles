@@ -147,16 +147,15 @@ set completeopt-=preview
 " it somehow inserts last couple of inserted chars and exits to normal mode
 inoremap <Nul> <C-n>
 
-
 " Indent python
 Plugin 'vim-scripts/indentpython.vim'
 
 " Easy-motion
 Plugin 'easymotion/vim-easymotion'
 
-
 "use system clipboard
-set clipboard=unnamedplus
+set clipboard=unnamed
+
 
 " Disable default mappings
 let g:EasyMotion_do_mapping = 0
