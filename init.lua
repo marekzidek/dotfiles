@@ -1,28 +1,33 @@
-------- ClipboardTool -------
---lawl = hs.loadSpoon("ClipboardTool")
---lawl:start()
---lawl.show_copied_alert = false
---lawl.hist_size = 10000
-
+-- https://github.com/Hammerspoon/Spoons/raw/master/Spoons/SpoonInstall.spoon.zip
 hs.loadSpoon("SpoonInstall")
 
------------ Seal -------------
-spoon.SpoonInstall:andUse("Seal",
-               {
-                 hotkeys = { show = { {"cmd", "shift"}, "space" } },
-                 fn = function(s)
-                   s:loadPlugins({"apps", "calc", "safari_bookmarks",
-                                  "screencapture", "useractions"})
-                   s.plugins.safari_bookmarks.always_open_with_safari = false
-                   s.plugins.useractions.actions =
-                     {
+------- ClipboardTool -------
+--spoon.SpoonInstall:andUse("ClipboardTool",
+--    {
+--        fn = function(lawl)
+--            lawl:start()
+--            lawl.show_copied_alert = false
+--            lawl.hist_size = 10000
+--        end
+--    })
 
-                     }
-                   s:refreshAllCommands()
-                 end,
-                 start = true,
-               }
-)
+----------- Seal -------------
+--spoon.SpoonInstall:andUse("Seal",
+--               {
+--                 hotkeys = { show = { {"cmd", "shift"}, "space" } },
+--                 fn = function(s)
+--                   s:loadPlugins({"apps", "calc", "safari_bookmarks",
+--                                  "screencapture", "useractions"})
+--                   s.plugins.safari_bookmarks.always_open_with_safari = false
+--                   s.plugins.useractions.actions =
+--                     {
+--
+--                     }
+--                   s:refreshAllCommands()
+--                 end,
+--                 start = true,
+--               }
+--)
 
 ------ Window tiling --------
 
@@ -47,15 +52,20 @@ end)
 
 
 
-lol = hs.loadSpoon("MiroWindowsManager")
-hs.window.animationDuration = 0.0
-spoon.MiroWindowsManager:bindHotkeys({
-  up = {"cmd", "k"},
-  right = {"cmd", "l"},
-  down = {"cmd", "j"},
-  left = {"cmd", "h"},
-  fullscreen = {{"cmd", "shift"}, "k"}
-})
+spoon.SpoonInstall:andUse("MiroWindowsManager",
+    {
+        fn = function(lol)
+            hs.window.animationDuration = 0.0
+            lol:bindHotkeys({
+              up = {"cmd", "k"},
+              right = {"cmd", "l"},
+              down = {"cmd", "j"},
+              left = {"cmd", "h"},
+              fullscreen = {{"cmd", "shift"}, "k"}
+            })
+        end
+    }
+)
 
 
 -- DISPLAY FOCUS SWITCHING --
@@ -162,7 +172,11 @@ end)
 
 
 ------ HeadphoneAutoPause --------
-hap = hs.loadSpoon("HeadphoneAutoPause")
-hap.autoResume = false
-hap:start()
-
+spoon.SpoonInstall:andUse("HeadphoneAutoPause",
+    {
+        fn = function(hap)
+            hap.autoResume = false
+            hap:start()
+        end
+    }
+)
