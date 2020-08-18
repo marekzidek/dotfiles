@@ -44,7 +44,7 @@
                                 "description": "Disable Command-Tab",
                                 "from": {
                                     "key_code": "tab",
-                                    "modifiers": { 
+                                    "modifiers": {
                                     "mandatory": ["left_command"]
 				    }
 
@@ -62,9 +62,10 @@
 
                             {
                                 "description": "Disable Command-Shift-Tab",
+
                                 "from": {
                                     "key_code": "tab",
-                                    "modifiers": { 
+                                    "modifiers": {
                                     "mandatory": ["shift", "left_command"]
 				    }
 
