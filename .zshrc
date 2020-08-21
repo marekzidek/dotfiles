@@ -248,7 +248,7 @@ bindkey -s "\C-g" 'ff\n'
 
 # Interactive search.
 wikiff() {
-[[ -n $1 ]] && cd $1 || cd ~/my_site #provided or default
+[[ -n $1 ]] && cd $1 || cd ~/tools/extendwiki #provided or default
 RG_DEFAULT_COMMAND="rg -i -l --no-ignore-vcs"
 selected=$(
 FZF_DEFAULT_COMMAND="rg --files" fzf \
