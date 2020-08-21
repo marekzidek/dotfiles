@@ -12,7 +12,7 @@
 
 # Manual installs
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-#iterm
+
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
 # ripgrep on really old ubuntu images
@@ -26,6 +26,7 @@ git clone git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
 # Manual settings
+Install iterm2
 Use iterm2 and set colorscheme as Elemental, and set
 the foreground color to normal white instead of grey
 
@@ -36,6 +37,7 @@ neovim
 fzf
 python3-pip
 tldr
+virtualevn
 htop
 zsh
 tmux
@@ -48,7 +50,7 @@ autoconf
 automake
 
 
-# Configs
+# Change default shell
 chsh -s $(which zsh)
 
 # Install vim plugins
