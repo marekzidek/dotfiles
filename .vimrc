@@ -15,6 +15,9 @@ command! -bang WQ wq<bang>
 command! -bang Q q<bang>
 command! -bang W w<bang>
 
+" Longer update times leads to noticable delays
+set updatetime=300
+
 
 " Encoding
 
@@ -30,9 +33,14 @@ call vundle#begin()
 
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
-
+"
+"
 " Super ctrl + P searching
 Plugin 'kien/ctrlp.vim'
+
+
+Plugin 'neoclide/coc.nvim', {'branch': 'release'}
+set statusline^=%{coc#status()}
 
 " Add airline to Tmux
 " For now, we alerady snapshotted the vim tmuxline.vim config for .tmux.conf...
@@ -76,78 +84,86 @@ Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
 let g:instant_markdown_autostart = 0
 map <leader>md :InstantMarkdownPreview<CR>
 
-Plugin 'prabirshrestha/async.vim'
-Plugin 'prabirshrestha/vim-lsp'
-Plugin 'prabirshrestha/asyncomplete.vim'
-Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+"Plugin 'prabirshrestha/async.vim'
+"Plugin 'prabirshrestha/vim-lsp'
+"Plugin 'prabirshrestha/asyncomplete.vim'
+"Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 
 " !pip install python-language-server
-if executable('pyls')
-    " pip install python-language-server
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'whitelist': ['python'],
-        \ })
-endif
+"if executable('pyls')
+"    " pip install python-language-server
+"    au User lsp_setup call lsp#register_server({
+"        \ 'name': 'pyls',
+"        \ 'cmd': {server_info->['pyls']},
+"        \ 'whitelist': ['python'],
+"        \ })
+"endif
 
 
 
 
 
-set undofile
-set undodir=~/.vim/undodir
-" !mkdir ~/.vim/undodir
-
-let @p='yiwoprint("kjpA")kjyypf"x;xkVj<................Vjd'
 
 
-let g:LanguageClient_loggingFile = '~/tmp/lc.log'
-let g:LanguageClient_loggingLevel = 'DEBUG'
-
-
-
-
-let g:lsp_preview_autoclose = 1
-let g:lsp_signature_help_enabled = 0
-let g:lsp_signs_error = {'text': '✗'}
-let g:lsp_signs_enabled = 1         " enable signs
-let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-let g:asyncomplete_auto_popup = 1
-
-
-function! s:on_lsp_buffer_enabled() abort
-setlocal omnifunc=lsp#complete
-setlocal signcolumn=yes
-if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
-endfunction
-
-
-augroup lsp_install
-    au!
-        " call s:on_lsp_buffer_enabled only for languages that has the
-" server registered.
-     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-     augroup END
+"let g:LanguageClient_loggingFile = '~/tmp/lc.log'
+"let g:LanguageClient_loggingLevel = 'DEBUG'
+"
+"
+"
+"
+"let g:lsp_preview_autoclose = 1
+"let g:lsp_signature_help_enabled = 0
+"let g:lsp_signs_error = {'text': '✗'}
+"let g:lsp_signs_enabled = 1         " enable signs
+"let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+"let g:asyncomplete_auto_popup = 1
+"
+"
+"function! s:on_lsp_buffer_enabled() abort
+"setlocal omnifunc=lsp#complete
+"setlocal signcolumn=yes
+"if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+"endfunction
+"
+"
+"augroup lsp_install
+"    au!
+"        " call s:on_lsp_buffer_enabled only for languages that has the
+"" server registered.
+"     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+"     augroup END
 
 
 
 set completeopt-=preview
 
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 
-let g:asyncomplete_auto_popup = 1
-let g:asyncomplete_smart_completion = 1
-let g:asyncomplete_remove_duplicates = 1
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+"let g:asyncomplete_auto_popup = 1
+"let g:asyncomplete_smart_completion = 1
+"let g:asyncomplete_remove_duplicates = 1
 
 " Syntastic custom config
 let g:syntastic_check_on_wq = 0
 
 
-nnoremap <leader>r :LspReferences<CR>
-nnoremap <leader>d :LspDefinition<CR>
+"nnoremap <leader>r :LspReferences<CR>
+"nnoremap <leader>d :LspDefinition<CR>
 
 set completeopt-=preview
 " This remap is not so much motivated by lsp, but
@@ -220,7 +236,6 @@ syntax on
 " Don't use it now as we already have snapshot of this for .tmux.conf
 " let g:tmuxline_preset = 'righteous'
 
-" Autocompletion
 set wildmode=longest,list,full
 set wildmenu
 
@@ -236,11 +251,15 @@ set wildmenu
 :  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 :augroup END
 
-" For plug-ins to load correctly.
-filetype plugin indent on
-
+"
 " Turn off modelines
 set modelines=0
+
+set undofile
+set undodir=~/.vim/undodir
+" !mkdir ~/.vim/undodir
+
+let @p='yiwoprint("kjpA")kjyypf"x;xkVj<................Vjd'
 
 "This unsets the "last search pattern" register by hitting return
 nnoremap <CR> :noh<CR><CR>
@@ -350,7 +369,10 @@ set splitright
 set splitbelow
 
 " Set status line display
-set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ %{strftime('%c')}
+
+
+
+
 
 
 
@@ -372,7 +394,6 @@ vnoremap <Leader>f zf
 
 " I don't like background highlighting at all
 highlight Folded ctermbg=black
-
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
