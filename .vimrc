@@ -49,6 +49,9 @@ let g:mdip_imgdir = 'img'
 " Super ctrl + P searching
 Plugin 'kien/ctrlp.vim'
 
+Plugin 'scrooloose/nerdcommenter'
+vmap <leader>c <plug>NERDCommenterToggle
+nmap <leader>c <plug>NERDCommenterToggle
 
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 set statusline^=%{coc#status()}
