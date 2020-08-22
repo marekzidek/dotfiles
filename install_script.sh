@@ -15,6 +15,13 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
+
+# Two coc-vim plugin related manual installs
+curl -sL install-node.now.sh/lts | bash
+
+npm install -g yarn
+
+
 # ripgrep on really old ubuntu images
 if $(uname -a) | grep "ubuntu"; then
 	curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
@@ -32,6 +39,7 @@ the foreground color to normal white instead of grey
 
 
 # From system repo
+ctags
 man
 neovim
 fzf
@@ -59,6 +67,7 @@ vim +PluginInstall +qall
 
 # Pypi
 virtualenv
+python-language-server
 ipython
 matplotlib
 scikitlearn
