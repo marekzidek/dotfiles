@@ -8,6 +8,14 @@ set nocp
 filetype on
 filetype plugin indent on
 
+
+" Never get angry again:
+command! -bang Wq wq<bang>
+command! -bang WQ wq<bang>
+command! -bang Q q<bang>
+command! -bang W w<bang>
+
+
 " Encoding
 
 set encoding=utf-8
