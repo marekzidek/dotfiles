@@ -29,6 +29,12 @@ alias "brew install"='!HOMEBREW_NO_AUTO_UPDATE=1 brew install'
 
 alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi'
 
+alias gs='git status'
+alias gd='git diff'
+alias gl='git log'
+alias ga='git add'
+alias gc='git commit'
+
 # Prompt setup
 #PROMPT='%F{178}%n@%m%f %F{43}%2~%f%F{173}:%f '
 #
