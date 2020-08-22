@@ -30,9 +30,17 @@ let mapleader = (' ')
 set mmp=5000
 
 
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+
+" Amazing when writing markdown in vim, just paste image from clipboard - fkin
+" conventient
+Plugin 'ferrine/md-img-paste.vim'
+autocmd FileType markdown nmap <buffer><silent> <leader>p :call mdip#MarkdownClipboardImage()<CR>
+let g:mdip_imgdir = 'img'
+"let g:mdip_imgname = 'image'
 
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
