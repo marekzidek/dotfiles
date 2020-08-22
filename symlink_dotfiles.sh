@@ -2,10 +2,13 @@ ln -s $(pwd)/.zshrc ~/.zshrc
 ln -s $(pwd)/.vimrc ~/.vimrc
 ln -s $(pwd)/.tmux.conf ~/.tmux.conf
 
-# Just don't use neovim... it's shit, remember that forever
+# Just don't use neovim... it's shit, remember that, forever
 #mkdir -p ~/.config/nvim
 #ln -s $(pwd)/nvim/init.vim ~/.config/nvim/init.vim
 mkdir -p ~/.ipython/profile_default/startup
 ln -s $(pwd)/ipython/profile_default/startup/keybindings.py ~/.ipython/profile_default/startup/keybindings.py
 mkdir -p ~/.config/lf
 ln -s $(pwd)/lf/lfrc ~/.config/lf/lfrc
+
+mkdir -p ~/.vim
+ls -s $(pwd)/.vim/coc-config.json ~/.vim/coc-settings.json

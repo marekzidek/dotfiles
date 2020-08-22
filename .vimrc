@@ -26,6 +26,9 @@ set encoding=utf-8
 " My leader is space
 let mapleader = (' ')
 
+" Some files need more memory for syntax highlight
+set mmp=5000
+
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
