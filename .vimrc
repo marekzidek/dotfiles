@@ -148,6 +148,7 @@ map <leader>md :InstantMarkdownPreview<CR>
 "     augroup END
 
 
+source ~/dotfiles/coc_config.vim
 
 set completeopt-=preview
 
