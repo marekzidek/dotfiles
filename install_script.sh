@@ -63,11 +63,11 @@ chsh -s $(which zsh)
 
 # Install vim plugins
 vim +PluginInstall +qall
+vim +"CocInstall coc-json coc-python coc-snippets"
 
 
 # Pypi
 virtualenv
-python-language-server
 ipython
 matplotlib
 scikitlearn
