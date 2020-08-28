@@ -11,4 +11,4 @@ mkdir -p ~/.config/lf
 ln -s $(pwd)/lf/lfrc ~/.config/lf/lfrc
 
 mkdir -p ~/.vim
-ls -s $(pwd)/.vim/coc-settings.json ~/.vim/coc-settings.json
+ln -s $(pwd)/.vim/coc-settings.json ~/.vim/coc-settings.json
