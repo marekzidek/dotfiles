@@ -19,6 +19,20 @@ command! -bang W w<bang>
 set updatetime=300
 
 
+""" Customize colors
+func! s:my_colors_setup() abort
+    " this is an example
+    hi Pmenu guibg=#d7e5dc gui=NONE
+    hi PmenuSel guibg=#b7c7b7 gui=NONE
+    hi PmenuSbar guibg=#bcbcbc
+    hi PmenuThumb guibg=#585858
+endfunc
+
+augroup colorscheme_coc_setup | au!
+    au ColorScheme * call s:my_colors_setup()
+augroup END
+
+
 " Encoding
 
 set encoding=utf-8
@@ -68,7 +82,9 @@ Plugin 'Konfekt/FastFold'
 Plugin 'gmarik/Vundle.vim'
 
 " Checking syntax on every change
-Plugin 'vim-syntastic/syntastic'
+"
+" use coc-linter instead
+" Plugin 'vim-syntastic/syntastic'
 
 " Vim - Tmux split navigator with same bindings :))
 Bundle 'christoomey/vim-tmux-navigator'
@@ -324,10 +340,6 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" Settings for compatibility with tmux colorscheme vim
-set background=dark
-set t_Co=256
-
 highlight LineNr ctermfg=grey
 
 
@@ -383,12 +395,12 @@ set splitright
 " Split a new window to the bottom
 set splitbelow
 
-" Set status line display
 
 
 
-
-
+" Settings for compatibility with tmux colorscheme vim
+set background=dark
+set t_Co=256
 
 
 " Highlight matching search patterns
