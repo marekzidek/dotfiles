@@ -174,7 +174,6 @@ ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
 	)
 
 
-
 # Use vim keys in tab complete menu:
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
@@ -234,7 +233,7 @@ export FZF_DEFAULT_OPT='--layout=reverse --height=60% --bind up:preview-up,down:
 # Interactive search.
 # Usage: ff or ff <folder>.
 ff() {
-[[ -n $1 ]] && cd $1 # go to provided folder or noop
+[[ -n $1 ]] && cd $1 || # go to provided folder or noop
 RG_DEFAULT_COMMAND="rg -i -l --hidden --no-ignore-vcs"
 selected=$(
 FZF_DEFAULT_COMMAND="rg --files" fzf \
@@ -251,6 +250,34 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
 [[ -n $selected ]] && vim $selected # open multiple files in editor
 }
 bindkey -s "\C-g" 'ff\n'
+
+
+gff() {
+echo "lol"
+while [[ $(ls -a | grep -q ".git"; echo $?) -eq 1 ]]; do
+echo "funny stuff"
+cd ..
+if [[ "$(pwd)" == "$HOME" ]]; then
+	break
+fi
+done
+echo "not funny"
+RG_DEFAULT_COMMAND="rg -i -l --hidden --no-ignore-vcs"
+selected=$(
+FZF_DEFAULT_COMMAND="rg --files" fzf \
+  -m \
+  -e \
+  --ansi \
+  --phony \
+  --reverse \
+  --bind "ctrl-a:select-all" \
+  --bind "f12:execute-silent:(subl -b {})" \
+  --bind "change:reload:$RG_DEFAULT_COMMAND {q} || true" \
+  --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
+)
+[[ -n $selected ]] && vim $selected # open multiple files in editor
+}
+bindkey -s "\C-p" 'gff\n'
 
 # Interactive search.
 wikiff() {
