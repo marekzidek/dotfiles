@@ -252,32 +252,15 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
 bindkey -s "\C-g" 'ff\n'
 
 
-gff() {
-echo "lol"
+back_project() {
 while [[ $(ls -a | grep -q ".git"; echo $?) -eq 1 ]]; do
-echo "funny stuff"
 cd ..
 if [[ "$(pwd)" == "$HOME" ]]; then
 	break
 fi
 done
-echo "not funny"
-RG_DEFAULT_COMMAND="rg -i -l --hidden --no-ignore-vcs"
-selected=$(
-FZF_DEFAULT_COMMAND="rg --files" fzf \
-  -m \
-  -e \
-  --ansi \
-  --phony \
-  --reverse \
-  --bind "ctrl-a:select-all" \
-  --bind "f12:execute-silent:(subl -b {})" \
-  --bind "change:reload:$RG_DEFAULT_COMMAND {q} || true" \
-  --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
-)
-[[ -n $selected ]] && vim $selected # open multiple files in editor
 }
-bindkey -s "\C-p" 'gff\n'
+bindkey -s "\C-p" 'back_project\n'
 
 # Interactive search.
 wikiff() {
