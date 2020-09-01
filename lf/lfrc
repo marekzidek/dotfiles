@@ -31,10 +31,14 @@ map X !$f
 map o &mimeopen $f
 map O $mimeopen --ask $f
 
+
+# Tmux pane swithching
 map <c-j> ${{tmux select-pane -D}}
 map <c-k> ${{tmux select-pane -U}}
 map <bs> ${{tmux select-pane -L}}
 map <c-l> ${{tmux select-pane -R}}
+
+
 
 # define a custom 'open' command
 # This command is called when current file is not a directory. You may want to
