@@ -75,7 +75,7 @@ set statusline^=%{coc#status()}
 " Plugin 'edkolev/tmuxline.vim'
 
 "Plugin 'tmhedberg/SimpylFold'
- Plugin 'kalekundert/vim-coiled-snake'
+Plugin 'kalekundert/vim-coiled-snake'
 Plugin 'Konfekt/FastFold'
 
 " let Vundle manage Vundle, required
@@ -207,6 +207,12 @@ Plugin 'vim-scripts/indentpython.vim'
 
 " Easy-motion
 Plugin 'easymotion/vim-easymotion'
+
+Plugin 'tpope/vim-fugitive'
+
+Plugin 'mbbill/undotree' ":UndotreeToggle || press ? while in undotree window
+
+Plugin 'honza/vim-snippets'
 
 "use system clipboard
 set clipboard=unnamed

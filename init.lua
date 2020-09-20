@@ -2,14 +2,14 @@
 hs.loadSpoon("SpoonInstall")
 
 ------- ClipboardTool -------
---spoon.SpoonInstall:andUse("ClipboardTool",
---    {
---        fn = function(lawl)
---            lawl:start()
---            lawl.show_copied_alert = false
---            lawl.hist_size = 10000
---        end
---    })
+spoon.SpoonInstall:andUse("ClipboardTool",
+    {
+        fn = function(lawl)
+            lawl:start()
+            lawl.show_copied_alert = false
+            lawl.hist_size = 10000
+        end
+    })
 
 ----------- Seal -------------
 --spoon.SpoonInstall:andUse("Seal",
