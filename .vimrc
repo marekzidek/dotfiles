@@ -61,7 +61,19 @@ let g:mdip_imgdir = 'img'
 "
 "
 " Super ctrl + P searching
-Plugin 'kien/ctrlp.vim'
+" Plugin 'kien/ctrlp.vim'
+Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plugin 'junegunn/fzf.vim'
+let g:fzf_layout = { 'window': {'width': 0.8, 'height':0.8 } }
+let $FZF_DEFAULT_OPTS='--reverse'
+nnoremap <C-f> :Files<CR>
+
+let g:fzf_action = {
+      \ 'ctrl-t': 'tab split',
+      \ 'ctrl-s': 'split',
+      \ 'ctrl-v': 'vsplit'
+  \ }
+nnoremap <C-e> :Buffers<CR>
 
 Plugin 'scrooloose/nerdcommenter'
 vmap <leader>c <plug>NERDCommenterToggle
