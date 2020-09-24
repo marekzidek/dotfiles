@@ -1,1 +1,4 @@
 .DS_STORE
+/Spoons/
+/.gitignore.swp
+/.vimrc.swp
