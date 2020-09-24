@@ -260,7 +260,7 @@ if [[ "$(pwd)" == "$HOME" ]]; then
 fi
 done
 }
-bindkey -s "\C-p" 'back_project\n'
+bindkey -s "\C-b" 'back_project\n'
 
 # Interactive search.
 wikiff() {
@@ -342,7 +342,7 @@ lfcd () {
     fi
 }
 
-bindkey -s '^o' 'lfcd\n'
+bindkey -s '^p' 'lfcd\n'
 
 
 ## In case I decide to go back to ranger - just don't, it's slow
