@@ -235,6 +235,10 @@ Plugin 'honza/vim-snippets'
 "use system clipboard
 set clipboard=unnamed
 
+" New splits
+nmap <leader>s :split<CR>
+nmap <leader>v :vsplit<CR>
+
 
 " Disable default mappings
 let g:EasyMotion_do_mapping = 0
