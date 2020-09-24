@@ -220,6 +220,11 @@ Plugin 'vim-scripts/indentpython.vim'
 " Easy-motion
 Plugin 'easymotion/vim-easymotion'
 
+Plugin 'ptzz/lf.vim'
+let g:lf_map_keys = 0
+map <leader><leader>f :Lf<CR>
+
+
 Plugin 'tpope/vim-fugitive'
     " :G to bring the window, '-' to stage/unstage, '=' to view diff, 'cc' to commit
     " out of window: press '=' - brings up inline diff, select hunk via visual and press '-'
