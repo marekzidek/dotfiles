@@ -221,6 +221,12 @@ Plugin 'vim-scripts/indentpython.vim'
 Plugin 'easymotion/vim-easymotion'
 
 Plugin 'tpope/vim-fugitive'
+    " :G to bring the window, '-' to stage/unstage, '=' to view diff, 'cc' to commit
+    " out of window: press '=' - brings up inline diff, select hunk via visual and press '-'
+    " merge conflicts: ':G', pres dv on the file that I want to resolve, to close C-w + C-O (or S-o)
+
+nmap <leader>gj :diffget //3<CR>
+nmap <leader>gf :diffget //2<CR>
 
 Plugin 'mbbill/undotree' ":UndotreeToggle || press ? while in undotree window
 
