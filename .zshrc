@@ -260,7 +260,7 @@ if [[ "$(pwd)" == "$HOME" ]]; then
 fi
 done
 }
-bindkey -s "\C-b" 'back_project\n'
+bindkey -s "\C-n" 'back_project\n'
 
 # Interactive search.
 wikiff() {
