@@ -8,6 +8,8 @@ set nocp
 filetype on
 filetype plugin indent on
 
+" Buffers become hidden when abandoned
+set hidden
 
 " Never get angry again:
 command! -bang Wq wq<bang>
@@ -56,6 +58,7 @@ autocmd FileType markdown nmap <buffer><silent> <leader>p :call mdip#MarkdownCli
 let g:mdip_imgdir = 'img'
 "let g:mdip_imgname = 'image'
 
+
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 "
@@ -80,6 +83,8 @@ vmap <leader>c <plug>NERDCommenterToggle
 nmap <leader>c <plug>NERDCommenterToggle
 
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
+"Coc is confused? run ":CocRes'
+
 set statusline^=%{coc#status()}
 
 " Add airline to Tmux
@@ -142,16 +147,8 @@ map <leader>md :InstantMarkdownPreview<CR>
 "endif
 
 
-
-
-
-
-
 "let g:LanguageClient_loggingFile = '~/tmp/lc.log'
 "let g:LanguageClient_loggingLevel = 'DEBUG'
-"
-"
-"
 "
 "let g:lsp_preview_autoclose = 1
 "let g:lsp_signature_help_enabled = 0
@@ -159,7 +156,6 @@ map <leader>md :InstantMarkdownPreview<CR>
 "let g:lsp_signs_enabled = 1         " enable signs
 "let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 "let g:asyncomplete_auto_popup = 1
-"
 "
 "function! s:on_lsp_buffer_enabled() abort
 "setlocal omnifunc=lsp#complete
@@ -366,7 +362,7 @@ hi Visual term=bold cterm=bold guibg=green
 
 " Status bar
 set laststatus=2
-"
+
 " Split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -427,8 +423,6 @@ au BufNewFile,BufRead *.py,*.pyx
 set splitright
 " Split a new window to the bottom
 set splitbelow
-
-
 
 
 " Settings for compatibility with tmux colorscheme vim
