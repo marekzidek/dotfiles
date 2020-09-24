@@ -11,6 +11,11 @@ spoon.SpoonInstall:andUse("ClipboardTool",
         end
     })
 
+hs.hotkey.bind({"cmd", "shift", "alt", "ctrl"}, "R", function()
+  hs.reload()
+end)
+hs.alert.show("Config loaded")
+
 ----------- Seal -------------
 --spoon.SpoonInstall:andUse("Seal",
 --               {
