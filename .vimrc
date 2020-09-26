@@ -69,14 +69,27 @@ Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plugin 'junegunn/fzf.vim'
 let g:fzf_layout = { 'window': {'width': 0.8, 'height':0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
-nnoremap <C-f> :Files<CR>
+
+function! GFilesFallback()
+  let output = system('git rev-parse --show-toplevel')
+  let prefix = get(g:, 'fzf_command_prefix', '')
+  if v:shell_error == 0
+    exec "normal :" . prefix . "GFiles\<CR>"
+  else
+    exec "normal :" . prefix . "Files\<CR>"
+  endif
+  return 0
+endfunction
+
+nnoremap <C-f> :call GFilesFallback()<CR>
+
+nnoremap <C-e> :Buffers<CR>
 
 let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
       \ 'ctrl-s': 'split',
       \ 'ctrl-v': 'vsplit'
   \ }
-nnoremap <C-e> :Buffers<CR>
 
 Plugin 'scrooloose/nerdcommenter'
 vmap <leader>c <plug>NERDCommenterToggle
