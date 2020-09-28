@@ -505,6 +505,23 @@ set ignorecase
 " Include only uppercase words with uppercase search term
 set smartcase
 
+
+function! ScrollQuarter(move)
+    let height=winheight(0)
+
+    if a:move == 'up'
+        let key="k"
+    else
+        let key="j"
+    endif
+
+    "execute 'normal! ' . height/7 . key
+    execute 'normal! ' . 3 . key
+endfunction
+
+nnoremap <silent> <C-u> :call ScrollQuarter('up')<CR>
+nnoremap <silent> <C-d> :call ScrollQuarter('down')<CR>
+
 " Store info from no more than 101 files at a time, 9999 lines of text, 100kb of data. Useful for copying large amounts of data between files.
 set viminfo='100,<9999,s101
 
