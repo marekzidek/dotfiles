@@ -70,6 +70,57 @@ Plugin 'junegunn/fzf.vim'
 let g:fzf_layout = { 'window': {'width': 0.8, 'height':0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
 
+
+command! Lfko call LfFloat()
+
+nnoremap <C-p> :Lfko<CR>
+
+function! LfFloat() abort
+
+    let curr_dir= expand("%:p:h")
+    let id = Flt_term_win("lf -selection-path /tmp/lf_result " . curr_dir, 0.8,0.8, '')
+    execute 'autocmd BufWipeout * ++once call Open_lf_callback("/tmp/lf_result")'
+    return winbufnr(id)
+endfunction
+
+function! Open_lf_callback(selection_path) abort
+    let s:choice_file_path = '/tmp/lf_result'
+    if filereadable(a:selection_path)
+      for f in readfile(a:selection_path)
+        exec "edit " . f
+      endfor
+    endif
+    call delete(a:selection_path)
+    redraw!
+    " reset the filetype to fix the issue that happens
+    " when opening lf on VimEnter (with `vim .`)
+    filetype detect
+endfunction
+
+
+function! Flt_term_win(cmd, width, height, border_highlight) abort
+    let width = float2nr(&columns * a:width)
+    let height = float2nr(&lines * a:height)
+    let bufnr = term_start(a:cmd, {'hidden': 1, 'term_finish': 'close'})
+
+    let winid = popup_create(bufnr, {
+	    \ 'minwidth': width,
+	    \ 'maxwidth': width,
+	    \ 'minheight': height,
+	    \ 'maxheight': height,
+	    \ 'border': [],
+	    \ 'borderchars': ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+	    \ 'borderhighlight': [a:border_highlight],
+	    \ 'padding': [0,1,0,1],
+	    \ 'highlight': a:border_highlight
+	    \ })
+
+    " Optionally set the 'Normal' color for the terminal buffer
+    call setwinvar(winid, '&wincolor', 'Special')
+    return winid
+
+endfunction
+
 function! GFilesFallback()
   let curr_dir= expand("%:p:h")
   let output = system('git -C ' . curr_dir . ' rev-parse --show-toplevel')
