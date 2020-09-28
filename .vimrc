@@ -134,7 +134,6 @@ function! GFilesFallback()
 endfunction
 
 nnoremap <C-f> :call GFilesFallback()<CR>
-
 nnoremap <C-e> :Buffers<CR>
 
 let g:fzf_action = {
@@ -283,7 +282,7 @@ Plugin 'easymotion/vim-easymotion'
 
 Plugin 'ptzz/lf.vim'
 let g:lf_map_keys = 0
-nmap <C-p> :Lf<CR>
+"nmap <C-p> :Lf<CR>
 
 
 Plugin 'tpope/vim-fugitive'
