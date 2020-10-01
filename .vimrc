@@ -61,10 +61,18 @@ let g:mdip_imgdir = 'img'
 
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
-"
-"
-" Super ctrl + P searching
-" Plugin 'kien/ctrlp.vim'
+
+Plugin 'unblevable/quick-scope'
+
+" Trigger a highlight in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+highlight QuickScopePrimary guifg='#00C7DF' gui=underline ctermfg=154 cterm=underline
+highlight QuickScopeSecondary guifg='#afff5f' gui=underline ctermfg=80 cterm=underline
+
+"let g:qs_max_chars=150
+
+
 Plugin 'marekzidek/fzf', { 'do': { -> fzf#install() } }
 Plugin 'marekzidek/fzf.vim'
 let g:fzf_layout = { 'window': {'width': 0.8, 'height':0.8 } }
@@ -134,6 +142,7 @@ function! GFilesFallback()
 endfunction
 
 nnoremap <C-f> :call GFilesFallback()<CR>
+nnoremap <C-g> :Rg<CR>
 nnoremap <C-e> :Buffers<CR>
 
 let g:fzf_action = {
@@ -305,6 +314,8 @@ set clipboard=unnamed
 nmap <leader>s :split<CR>
 nmap <leader>v :vsplit<CR>
 
+highlight VertSplit cterm=NONE
+set fillchars+=vert:\▏
 
 " Disable default mappings
 let g:EasyMotion_do_mapping = 0
@@ -556,6 +567,14 @@ autocmd BufReadPost *
 "au!
 "autocmd VimEnter * :normal :startinsert :stopinsert
 "augroup END
+
+augroup VIMRC
+  autocmd!
+
+  autocmd BufWinLeave *.vimrc normal! mV
+  autocmd BufWinLeave *.zshrc normal! mZ
+  autocmd BufWinLeave Makefile normal! mM
+augroup END
 
 "" This is for preserving folds, if not working, add incremental number to the
 " last argument up to 9, after that clear all files from mkview dir
