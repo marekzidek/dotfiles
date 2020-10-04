@@ -8,6 +8,8 @@ set nocp
 filetype on
 filetype plugin indent on
 
+set noswapfile
+
 " Buffers become hidden when abandoned
 set hidden
 
@@ -72,6 +74,10 @@ highlight QuickScopeSecondary guifg='#afff5f' gui=underline ctermfg=80 cterm=und
 
 "let g:qs_max_chars=150
 
+
+if executable('rg')
+    let g:rg_derive_root='true'
+endif
 
 Plugin 'marekzidek/fzf', { 'do': { -> fzf#install() } }
 Plugin 'marekzidek/fzf.vim'
@@ -144,6 +150,7 @@ endfunction
 nnoremap <C-f> :call GFilesFallback()<CR>
 nnoremap <C-g> :Rg<CR>
 nnoremap <C-e> :Buffers<CR>
+nnoremap <leader>e :Buffers<CR>
 
 let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
@@ -304,6 +311,8 @@ nmap <leader>gj :diffget //3<CR>
 nmap <leader>gf :diffget //2<CR>
 
 Plugin 'mbbill/undotree' ":UndotreeToggle || press ? while in undotree window
+nmap <leader>u :UndotreeToggle<CR>
+
 
 Plugin 'honza/vim-snippets'
 
@@ -526,7 +535,7 @@ function! ScrollQuarter(move)
     endif
 
     "execute 'normal! ' . height/7 . key
-    execute 'normal! ' . 3 . key
+    execute 'normal! ' . 4 . key
 endfunction
 
 nnoremap <silent> <C-u> :call ScrollQuarter('up')<CR>
