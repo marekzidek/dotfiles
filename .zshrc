@@ -249,7 +249,7 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
 )
 [[ -n $selected ]] && vim $selected # open multiple files in editor
 }
-bindkey -s "\C-g" 'ff\n'
+bindkey -s "\C-g" ' ff\n'
 
 
 back_project() {
@@ -260,7 +260,7 @@ if [[ "$(pwd)" == "$HOME" ]]; then
 fi
 done
 }
-bindkey -s "\C-n" 'back_project\n'
+bindkey -s "\C-n" ' back_project\n'
 
 # Interactive search.
 wikiff() {
@@ -280,7 +280,7 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
 )
 [[ -n $selected ]] && vim $selected # open multiple files in editor
 }
-bindkey -s "\C-w" 'wikiff\n'
+bindkey -s "\C-w" ' wikiff\n'
 
 
 # Interactive search.
@@ -342,7 +342,7 @@ lfcd () {
     fi
 }
 
-bindkey -s '^p' 'lfcd\n'
+bindkey -s '^p' ' lfcd\n'
 
 
 ## In case I decide to go back to ranger - just don't, it's slow
