@@ -45,13 +45,14 @@ neovim
 fzf
 python3-pip
 tldr
-virtualevn
+virtualenv
 htop
 zsh
 tmux
 ranger
 bat
 ripgrep
+tokei
 autojump
 libtool
 autoconf
@@ -64,7 +65,6 @@ chsh -s $(which zsh)
 # Install vim plugins
 vim +PluginInstall +qall
 vim +"CocInstall coc-json coc-python coc-snippets"
-
 
 # Pypi
 virtualenv
