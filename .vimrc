@@ -10,6 +10,8 @@ filetype plugin indent on
 
 set noswapfile
 
+set virtualedit=block
+
 " Buffers become hidden when abandoned
 set hidden
 
@@ -183,6 +185,9 @@ Plugin 'gmarik/Vundle.vim'
 " use coc-linter instead
 " Plugin 'vim-syntastic/syntastic'
 
+
+Plugin 'tpope/vim-surround'
+
 " Vim - Tmux split navigator with same bindings :))
 Bundle 'christoomey/vim-tmux-navigator'
 
@@ -229,21 +234,21 @@ map <leader>md :InstantMarkdownPreview<CR>
 
 "let g:LanguageClient_loggingFile = '~/tmp/lc.log'
 "let g:LanguageClient_loggingLevel = 'DEBUG'
-"
+
 "let g:lsp_preview_autoclose = 1
 "let g:lsp_signature_help_enabled = 0
 "let g:lsp_signs_error = {'text': '✗'}
 "let g:lsp_signs_enabled = 1         " enable signs
 "let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 "let g:asyncomplete_auto_popup = 1
-"
+
 "function! s:on_lsp_buffer_enabled() abort
 "setlocal omnifunc=lsp#complete
 "setlocal signcolumn=yes
 "if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
 "endfunction
-"
-"
+
+
 "augroup lsp_install
 "    au!
 "        " call s:on_lsp_buffer_enabled only for languages that has the
@@ -255,7 +260,6 @@ map <leader>md :InstantMarkdownPreview<CR>
 source ~/dotfiles/coc_config.vim
 
 set completeopt-=preview
-
 
 " use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
@@ -280,7 +284,6 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Syntastic custom config
 let g:syntastic_check_on_wq = 0
 
-
 "nnoremap <leader>r :LspReferences<CR>
 "nnoremap <leader>d :LspDefinition<CR>
 
@@ -296,8 +299,8 @@ Plugin 'vim-scripts/indentpython.vim'
 " Easy-motion
 Plugin 'easymotion/vim-easymotion'
 
-Plugin 'ptzz/lf.vim'
-let g:lf_map_keys = 0
+"Plugin 'ptzz/lf.vim'
+"let g:lf_map_keys = 0
 "nmap <C-p> :Lf<CR>
 
 
@@ -411,7 +414,9 @@ nnoremap <CR> :noh<CR><CR>
 
 " Automatically wrap text that extends beyond the screen length.
 set wrap
-" Vim's auto indentation feature does not work properly with text copied from outisde of Vim. Press the <F2> key to toggle paste mode on/off.
+" Vim's auto indentation feature does not work properly with text copied from
+" outisde of Vim. Press the <F2> key to toggle paste mode on/off.
+" Or just select your stuff and use " '='
 nnoremap <F2> :set invpaste paste?<CR>
 imap <F2> <C-O>:set invpaste paste?<CR>
 set pastetoggle=<F2>
@@ -465,7 +470,7 @@ set showmode
 set showcmd
 
 
-" Highlight matching pairs of brackets. Use the '%' character to jump between them.
+" Highlight matching pairs of brackets.
 set matchpairs+=<:>
 
 
@@ -544,7 +549,12 @@ endfunction
 nnoremap <silent> <C-u> :call ScrollQuarter('up')<CR>
 nnoremap <silent> <C-d> :call ScrollQuarter('down')<CR>
 
-" Store info from no more than 101 files at a time, 9999 lines of text, 100kb of data. Useful for copying large amounts of data between files.
+
+highlight ColorColumn ctermbg=59 guibg=grey
+call matchadd('ColorColumn', '\%81v', 100)
+
+" Store info from no more than 101 files at a time, 9999 lines of text,
+" 100kb of data. Useful for copying large amounts of data between files.
 set viminfo='100,<9999,s101
 
 " Map the <Space> key to toggle a selected fold opened/closed.
