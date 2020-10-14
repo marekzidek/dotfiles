@@ -430,6 +430,9 @@ cnoremap kj <CR>
 " vno jk <Esc>
 " vno kj <Esc>
 
+" the greatest one
+vnoremap <leader>p "_dP
+
 " Do the harlem shake!
 set mouse=a
 
