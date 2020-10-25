@@ -550,6 +550,7 @@ nnoremap <silent> <C-u> :call ScrollQuarter('up')<CR>
 nnoremap <silent> <C-d> :call ScrollQuarter('down')<CR>
 
 
+" One of the least invasive pep8 fun
 highlight ColorColumn ctermbg=59 guibg=grey
 call matchadd('ColorColumn', '\%81v', 100)
 
