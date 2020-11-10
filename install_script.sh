@@ -32,6 +32,10 @@ fi
 git clone git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
+#v
+git clone https://github.com/rupa/v.git ~/.bin
+
+
 # Manual settings
 Install iterm2
 Use iterm2 and set colorscheme as Elemental, and set
