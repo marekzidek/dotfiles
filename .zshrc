@@ -196,6 +196,8 @@ export TERM="xterm-256color"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+[ -f ~/.bin/v ] && export PATH=~/.bin:"$PATH"
+
 function cd {
     builtin cd "$@" && ls -F
     }
