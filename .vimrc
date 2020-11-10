@@ -81,6 +81,7 @@ if executable('rg')
     let g:rg_derive_root='true'
 endif
 
+Plugin 'nelstrom/vim-visual-star-search'
 Plugin 'marekzidek/fzf', { 'do': { -> fzf#install() } }
 Plugin 'marekzidek/fzf.vim'
 let g:fzf_layout = { 'window': {'width': 0.8, 'height':0.8 } }
@@ -153,6 +154,7 @@ nnoremap <C-f> :call GFilesFallback()<CR>
 nnoremap <C-g> :Rg<CR>
 nnoremap <C-e> :Buffers<CR>
 nnoremap <leader>e :Buffers<CR>
+nnoremap <leader>h :History<CR>
 
 let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
@@ -163,6 +165,9 @@ let g:fzf_action = {
 Plugin 'scrooloose/nerdcommenter'
 vmap <leader>c <plug>NERDCommenterToggle
 nmap <leader>c <plug>NERDCommenterToggle
+
+Plugin 'puremourning/vimspector'
+Plugin 'szw/vim-maximizer'
 
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 "Coc is confused? run ":CocRes'
@@ -557,6 +562,14 @@ call matchadd('ColorColumn', '\%81v', 100)
 " Store info from no more than 101 files at a time, 9999 lines of text,
 " 100kb of data. Useful for copying large amounts of data between files.
 set viminfo='100,<9999,s101
+
+" Press * to search for the term under the cursor a visual selection and
+" then <leader>r to replace all the instances in the curr file.
+nnoremap <Leader>r :%s///g<Left><Left>
+xnoremap <Leader>r :s///g<Left><Left>
+
+nnoremap <Leader>rc :%s///gc<Left><Left>
+xnoremap <Leader>rc :s///gc<Left><Left>
 
 " Map the <Space> key to toggle a selected fold opened/closed.
 nnoremap <silent> <Leader>f @=(foldlevel('.')?'za':"\<Leader>")<CR>
