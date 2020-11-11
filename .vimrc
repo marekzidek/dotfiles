@@ -148,7 +148,7 @@ function! Flt_term_win(cmd, width, height, border_highlight) abort
 	    \ })
 
     " Optionally set the 'Normal' color for the terminal buffer
-    call setwinvar(winid, '&wincolor', 'Special')
+    call setwinvar(winid, '&wincolor', 'Cool')
     return winid
 
 endfunction
@@ -159,8 +159,7 @@ function! GFilesFallback()
   let prefix = get(g:, 'fzf_command_prefix', '')
   if v:shell_error == 0
     exec "normal :" . prefix . "GFiles\<CR>"
-  else
-    exec "normal :" . prefix . "Files \%:p:h\<CR>"
+  else exec "normal :" . prefix . "Files \%:p:h\<CR>"
   endif
   return 0
 endfunction
