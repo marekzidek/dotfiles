@@ -89,6 +89,16 @@ Plugin 'marekzidek/fzf.vim'
 
 " Automatically clear search highlighting after move of cursor.
 Plugin 'haya14busa/is.vim'
+
+Plugin 'lifepillar/vim-gruvbox8'
+Plugin 'morhetz/gruvbox'
+
+set t_Co=256
+syntax on
+set background=dark
+
+
+
 let g:fzf_layout = { 'window': {'width': 0.8, 'height':0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
 
