@@ -587,8 +587,8 @@ set viminfo='100,<9999,s101
 nnoremap <Leader>r :%s///g<Left><Left>
 xnoremap <Leader>r :s///g<Left><Left>
 
-nnoremap <Leader>rc :%s///gc<Left><Left>
-xnoremap <Leader>rc :s///gc<Left><Left>
+nnoremap <Leader>rc :%s///gc<Left><Left><Left>
+xnoremap <Leader>rc :s///gc<Left><Left><Left>
 
 " Map the <Space> key to toggle a selected fold opened/closed.
 nnoremap <silent> <Leader>f @=(foldlevel('.')?'za':"\<Leader>")<CR>
