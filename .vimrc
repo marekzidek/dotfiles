@@ -642,3 +642,14 @@ set viewoptions-=options
 
 " Remove trailing whitespace on save
 autocmd BufWritePre * %s/\s\+$//e
+
+" Sort import on save
+" autocmd BufWritePre *.py :Isort
+
+" Format by black on save
+autocmd BufWritePre *.py :Format
+
+set cursorline
+colorscheme gruvbox8
+set noshowmode
+set shortmess+=F
