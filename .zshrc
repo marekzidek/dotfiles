@@ -114,14 +114,14 @@ git_info() {
 
 # Use ❯ as the non-root prompt character; # for root
 # Change the prompt character color if the last command had a nonzero exit code
-PROMPT='$(git_info)$(ssh_info)%F{43}%2~%f%u %F{173}❯%f '
+PROMPT='$(git_info)$(ssh_info) %F{12}%2~%f%u %F{173}❯%f '
 
 #RPROMPT='$(git_info)'
 
 
 # Vim keybindings and remappings
 bindkey -v
-bindkey '^R' history-incremental-search-backward
+# bindkey '^R' history-incremental-search-backward
 
 bindkey kj vi-cmd-mode
 bindkey jk vi-cmd-mode
