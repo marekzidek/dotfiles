@@ -164,12 +164,29 @@ function! GFilesFallback()
   let prefix = get(g:, 'fzf_command_prefix', '')
   if v:shell_error == 0
     exec "normal :" . prefix . "GFiles\<CR>"
-  else exec "normal :" . prefix . "Files \%:p:h\<CR>"
+  else
+    exec "normal :" . prefix . "Files \%:p:h\<CR>"
   endif
   return 0
 endfunction
 
 nnoremap <C-f> :call GFilesFallback()<CR>
+
+" Allow passing optional flags into rg
+" command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
+
+Plugin 'mhinz/vim-grepper'
+
+let g:grepper={}
+let g:grepper.tool=["rg"]
+
+" Project wide find and replace (can do regexes if goes to the replaced stuff)
+nnoremap <Leader>R
+	\ :let @s='\<'.expand('<cword>').'\>'<CR>
+	\ :Grepper -cword -noprimpt<CR>
+	\ :cfdo %s/<C-r>s// \| update
+	\<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+
 nnoremap <C-g> :Rg<CR>
 nnoremap <C-e> :Buffers<CR>
 nnoremap <leader>e :Buffers<CR>
@@ -188,6 +205,8 @@ nmap <leader>c <plug>NERDCommenterToggle
 Plugin 'puremourning/vimspector'
 Plugin 'szw/vim-maximizer'
 
+Plugin 'sstallion/vim-cursorline'
+
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 "Coc is confused? run ":CocRes'
 
@@ -195,7 +214,8 @@ set statusline^=%{coc#status()}
 
 " Add airline to Tmux
 " For now, we alerady snapshotted the vim tmuxline.vim config for .tmux.conf...
-" Plugin 'edkolev/tmuxline.vim'
+" Btw. you can snapshot it by :TmuxlineSnaphot [file] (for me file=.tmuxline)
+"Plugin 'edkolev/tmuxline.vim'
 
 "Plugin 'tmhedberg/SimpylFold'
 Plugin 'kalekundert/vim-coiled-snake'
@@ -216,11 +236,25 @@ Plugin 'tpope/vim-surround'
 Bundle 'christoomey/vim-tmux-navigator'
 
 " Airline plugin
-
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-let g:airline_theme='peaksea'
-let g:airline_powerline_fonts = 1
+"
+let g:airline_theme='distinguished'
+let g:airline_powerline_fonts = 0
+
+"Plugin 'itchyny/lightline.vim'
+"
+"
+"let g:lightline = {
+"      \ 'colorscheme': 'seoul256',
+"      \ 'active': {
+"      \   'left': [ [ 'mode', 'paste' ],
+"      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+"      \ },
+"      \ 'component_function': {
+"      \   'gitbranch': 'FugitiveHead'
+"      \ },
+"      \ }
 
 " set alternate color for modified active/inactive tabs
 
@@ -343,12 +377,17 @@ nmap <leader>u :UndotreeToggle<CR>
 
 Plugin 'honza/vim-snippets'
 
+let g:ultisnips_python_style="google"
+
 "use system clipboard
 set clipboard=unnamed
 
 " New splits
 nmap <leader>s :split<CR>
 nmap <leader>v :vsplit<CR>
+
+
+
 
 highlight VertSplit cterm=NONE
 set fillchars+=vert:\▏
@@ -446,8 +485,8 @@ imap <F2> <C-O>:set invpaste paste?<CR>
 set pastetoggle=<F2>
 
 
-" Display 5 lines above/below the cursor when scrolling with a mouse.
-set scrolloff=5
+" Display 6 lines above/below the cursor when scrolling with a mouse.
+set scrolloff=6
 " Fixes common backspace problems
 set backspace=indent,eol,start
 
@@ -478,7 +517,7 @@ set ttyfast
 hi Visual term=bold cterm=bold guibg=green
 
 " Status bar
-set laststatus=2
+set laststatus=1
 
 " Split navigations
 nnoremap <C-J> <C-W><C-J>
