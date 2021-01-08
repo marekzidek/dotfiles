@@ -25,7 +25,8 @@ export PATH=/Users/mzi/Library:$PATH
 # alias vim='vimx'
 
 #alias vim='nvim' # god damn the problems I had on macOs with nvim
-alias "brew install"='!HOMEBREW_NO_AUTO_UPDATE=1 brew install'
+
+alias "brew install"='HOMEBREW_NO_AUTO_UPDATE=1 brew install'
 
 alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi'
 
@@ -185,6 +186,7 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 HIST_STAMPS="mm/dd/yyyy"
 
 export TERM="xterm-256color"
+export FZFZ_RECENT_DIRS_TOOL=autojump
 
 #if [ -f /etc/zshrc ]; then
 #. /etc/zshrc
@@ -252,6 +254,7 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
 [[ -n $selected ]] && vim $selected # open multiple files in editor
 }
 bindkey -s "\C-g" ' ff\n'
+
 
 
 back_project() {
@@ -346,6 +349,7 @@ lfcd () {
 
 bindkey -s '^p' ' lfcd\n'
 
+bindkey -s "\C-t" ' cd $(fzfz)\n'
 
 ## In case I decide to go back to ranger - just don't, it's slow
 #rangercd () {
