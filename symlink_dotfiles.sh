@@ -7,6 +7,7 @@ ln -s $(pwd)/.tmux.conf ~/.tmux.conf
 #ln -s $(pwd)/nvim/init.vim ~/.config/nvim/init.vim
 mkdir -p ~/.ipython/profile_default/startup
 ln -s $(pwd)/ipython/profile_default/startup/keybindings.py ~/.ipython/profile_default/startup/keybindings.py
+ln -s $(pwd)/ipython/profile_default/startup/start.ipy ~/.ipython/profile_default/startup/start.ipy
 mkdir -p ~/.config/lf
 ln -s $(pwd)/lf/lfrc ~/.config/lf/lfrc
 

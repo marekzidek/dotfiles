@@ -34,6 +34,8 @@ git clone git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 
 #v
 git clone https://github.com/rupa/v.git ~/.bin
+git clone https://github.com/andrewferrier/fzf-z ~/.bin
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 
 # Manual settings
@@ -68,10 +70,12 @@ chsh -s $(which zsh)
 
 # Install vim plugins
 vim +PluginInstall +qall
-vim +"CocInstall coc-json coc-python coc-snippets"
+#vim +"CocInstall coc-json coc-python coc-snippets"
 
 # Pypi
 virtualenv
+pyyaml
+loguru
 ipython
 matplotlib
 scikitlearn
