@@ -6,7 +6,6 @@ set nocompatible
 
 set nocp
 filetype on
-filetype plugin indent on
 
 set noswapfile
 
@@ -51,27 +50,23 @@ set mmp=5000
 
 
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" set the runtime path to include vim-plug and initialize
+call plug#begin('~/.vim/plugged')
 
-Plugin 'tpope/vim-rhubarb'
+Plug 'tpope/vim-rhubarb'
 
 " Amazing when writing markdown in vim, just paste image from clipboard - fkin
 " conventient
-Plugin 'ferrine/md-img-paste.vim'
-autocmd FileType markdown nmap <buffer><silent> <leader>p :call mdip#MarkdownClipboardImage()<CR>
+Plug 'ferrine/md-img-paste.vim'
+autocmd FileType markdown nmap <buffer><silent> <leader><leader>p :call mdip#MarkdownClipboardImage()<CR>
 let g:mdip_imgdir = 'img'
 "let g:mdip_imgname = 'image'
 
-Plugin 'airblade/vim-rooter'
+Plug 'airblade/vim-rooter'
 
-Plugin 'fisadev/vim-isort'
+Plug 'fisadev/vim-isort'
 
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-Plugin 'unblevable/quick-scope'
+Plug 'unblevable/quick-scope'
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -87,20 +82,25 @@ if executable('rg')
 endif
 
 " Visually select more than 1 word and hit * to search for longer texts
-Plugin 'nelstrom/vim-visual-star-search'
+Plug 'nelstrom/vim-visual-star-search'
 
-Plugin 'marekzidek/fzf', { 'do': { -> fzf#install() } }
-Plugin 'marekzidek/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+
+Plug 'junegunn/fzf.vim'
 
 " Automatically clear search highlighting after move of cursor.
-Plugin 'haya14busa/is.vim'
+Plug 'haya14busa/is.vim'
 
-Plugin 'lifepillar/vim-gruvbox8'
-Plugin 'morhetz/gruvbox'
+
+let g:UltiSnipsExpandTrigger = "<nop>"
+
+Plug 'lifepillar/vim-gruvbox8'
+Plug 'morhetz/gruvbox'
 
 set t_Co=256
 syntax on
 set background=dark
+
 
 
 
@@ -175,7 +175,7 @@ nnoremap <C-f> :call GFilesFallback()<CR>
 " Allow passing optional flags into rg
 " command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
 
-Plugin 'mhinz/vim-grepper'
+Plug 'mhinz/vim-grepper'
 
 let g:grepper={}
 let g:grepper.tool=["rg"]
@@ -198,16 +198,16 @@ let g:fzf_action = {
       \ 'ctrl-v': 'vsplit'
   \ }
 
-Plugin 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdcommenter'
 vmap <leader>c <plug>NERDCommenterToggle
 nmap <leader>c <plug>NERDCommenterToggle
 
-Plugin 'puremourning/vimspector'
-Plugin 'szw/vim-maximizer'
+Plug 'puremourning/vimspector'
+Plug 'szw/vim-maximizer'
 
-Plugin 'sstallion/vim-cursorline'
+Plug 'sstallion/vim-cursorline'
 
-Plugin 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Coc is confused? run ":CocRes'
 
 set statusline^=%{coc#status()}
@@ -215,34 +215,28 @@ set statusline^=%{coc#status()}
 " Add airline to Tmux
 " For now, we alerady snapshotted the vim tmuxline.vim config for .tmux.conf...
 " Btw. you can snapshot it by :TmuxlineSnaphot [file] (for me file=.tmuxline)
-"Plugin 'edkolev/tmuxline.vim'
+"Plug 'edkolev/tmuxline.vim'
 
-"Plugin 'tmhedberg/SimpylFold'
-Plugin 'kalekundert/vim-coiled-snake'
-Plugin 'Konfekt/FastFold'
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+"Plug 'tmhedberg/SimpylFold'
+Plug 'kalekundert/vim-coiled-snake'
+Plug 'Konfekt/FastFold'
 
 " Checking syntax on every change
 "
 " use coc-linter instead
-" Plugin 'vim-syntastic/syntastic'
+" Plug 'vim-syntastic/syntastic'
 
 
-Plugin 'tpope/vim-surround'
-
-" Vim - Tmux split navigator with same bindings :))
-Bundle 'christoomey/vim-tmux-navigator'
+Plug 'tpope/vim-surround'
 
 " Airline plugin
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 "
 let g:airline_theme='distinguished'
 let g:airline_powerline_fonts = 0
 
-"Plugin 'itchyny/lightline.vim'
+"Plug 'itchyny/lightline.vim'
 "
 "
 "let g:lightline = {
@@ -258,7 +252,7 @@ let g:airline_powerline_fonts = 0
 
 " set alternate color for modified active/inactive tabs
 
-Plugin 'vimwiki/vimwiki'
+Plug 'vimwiki/vimwiki'
 
 let g:vimwiki_list = [{'path': '~/vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'},
@@ -268,16 +262,17 @@ let g:vimwiki_list = [{'path': '~/vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 let g:vimwiki_markdown_link_ext = 1
 let g:vimwiki_ext2syntax = {'.md': 'markdown'}
+let g:markdown_folding = 1
 
 "!pip install --user smdv
-Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
+Plug 'suan/vim-instant-markdown', {'rtp': 'after'}
 let g:instant_markdown_autostart = 0
 map <leader>md :InstantMarkdownPreview<CR>
 
-"Plugin 'prabirshrestha/async.vim'
-"Plugin 'prabirshrestha/vim-lsp'
-"Plugin 'prabirshrestha/asyncomplete.vim'
-"Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+"Plug 'prabirshrestha/async.vim'
+"Plug 'prabirshrestha/vim-lsp'
+"Plug 'prabirshrestha/asyncomplete.vim'
+"Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 " !pip install python-language-server
 "if executable('pyls')
@@ -352,17 +347,17 @@ set completeopt-=preview
 inoremap <Nul> <C-n>
 
 " Indent python
-Plugin 'vim-scripts/indentpython.vim'
+Plug 'vim-scripts/indentpython.vim'
 
 " Easy-motion
-Plugin 'easymotion/vim-easymotion'
+Plug 'easymotion/vim-easymotion'
 
-"Plugin 'ptzz/lf.vim'
+"Plug 'ptzz/lf.vim'
 "let g:lf_map_keys = 0
 "nmap <C-p> :Lf<CR>
 
 
-Plugin 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
     " :G to bring the window, '-' to stage/unstage, '=' to view diff, 'cc' to commit
     " out of window: press '=' - brings up inline diff, select hunk via visual and press '-'
     " merge conflicts: ':G', pres dv on the file that I want to resolve, to close C-w + C-O (or S-o)
@@ -371,13 +366,30 @@ Plugin 'tpope/vim-fugitive'
 nmap <leader>gj :diffget //3<CR>
 nmap <leader>gf :diffget //2<CR>
 
-Plugin 'mbbill/undotree' ":UndotreeToggle || press ? while in undotree window
+let g:cocPlugInstall = 'yarn install --frozen-lockfile'
+Plug 'neoclide/coc-json', {'do': cocPlugInstall }
+Plug 'neoclide/coc-python', {'do': cocPlugInstall }
+Plug 'neoclide/coc-snippets', {'do': cocPlugInstall }
+
+Plug 'mbbill/undotree' ":UndotreeToggle || press ? while in undotree window
 nmap <leader>u :UndotreeToggle<CR>
 
 
-Plugin 'honza/vim-snippets'
+Plug 'honza/vim-snippets'
 
 let g:ultisnips_python_style="google"
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
 
 "use system clipboard
 set clipboard=unnamed
@@ -386,7 +398,7 @@ set clipboard=unnamed
 nmap <leader>s :split<CR>
 nmap <leader>v :vsplit<CR>
 
-
+Plug 'christoomey/vim-tmux-navigator'
 
 
 highlight VertSplit cterm=NONE
@@ -423,10 +435,10 @@ nmap s <Plug>(easymotion-overwin-f2)
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
-Plugin 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree'
 
 " NERDTreeTabs
-Plugin 'jistr/vim-nerdtree-tabs'
+Plug 'jistr/vim-nerdtree-tabs'
 
 " NERDTree ignore *.pyc *.swp
 let NERDTreeIgnore=['\.pyc$', '\.swp$', '\~$'] "ignore files in NERDTree
@@ -436,8 +448,9 @@ map <Leader>n <plug>NERDTreeTabsToggle<CR>
 
 " ...
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
+" All of your Plugs must be added before the following line
+call plug#end()            " required
+
 hi Normal guibg=NONE ctermbg=NONE
 
 " Let my code be pretty
@@ -553,6 +566,10 @@ set listchars=trail:\
 
 " Toggle lineNumbers
 nnoremap <leader>l :set relativenumber!<cr>:set number!<cr>
+
+
+nnoremap <leader>o :normal yiwologger.debug(f"<Esc>pa: {<Esc>pa}")<Esc>
+vnoremap <leader>o yologger.debug(f"<Esc>pa: {<Esc>pa}")<Esc>
 
 
 " Show line numbers
@@ -686,9 +703,9 @@ autocmd BufWritePre * %s/\s\+$//e
 " autocmd BufWritePre *.py :Isort
 
 " Format by black on save
-autocmd BufWritePre *.py :Format
+" autocmd BufWritePre *.py :Format
 
-set cursorline
-colorscheme gruvbox8
+" set cursorline
+" colorscheme gruvbox8
 set noshowmode
 set shortmess+=F
