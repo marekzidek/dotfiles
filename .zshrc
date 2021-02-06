@@ -146,8 +146,8 @@ if echo $OSTYPE | grep "darwin" > /dev/null; then
 	source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 	# Let python be homebrew managed python on macOS
-	alias python=/usr/local/bin/python3
-	alias pip=/usr/local/bin/pip3
+	alias python=~/.pyenv/shims/python3
+	alias pip=~/.pyenv/shims/pip3
 else
 	# prior to this, git clone into .zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 	source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
