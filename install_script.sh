@@ -45,6 +45,7 @@ the foreground color to normal white instead of grey
 
 
 # From system repo
+
 ctags
 man
 neovim
@@ -90,4 +91,5 @@ fire
 hammerspoon
 homebrew
 karabiner
+altTab
 
