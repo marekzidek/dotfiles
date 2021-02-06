@@ -51,6 +51,7 @@ neovim
 fzf
 python3-pip
 tldr
+ctags-exuberant
 virtualenv
 htop
 zsh
