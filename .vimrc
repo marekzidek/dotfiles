@@ -49,9 +49,13 @@ let mapleader = (' ')
 set mmp=5000
 
 
+let g:ale_disable_lsp = 1
 
 " set the runtime path to include vim-plug and initialize
 call plug#begin('~/.vim/plugged')
+
+Plug 'psliwka/vim-smoothie'
+Plug 'makerforceio/CoVim'
 
 Plug 'tpope/vim-rhubarb'
 
@@ -66,13 +70,13 @@ Plug 'airblade/vim-rooter'
 
 Plug 'fisadev/vim-isort'
 
-Plug 'unblevable/quick-scope'
+"Plug 'unblevable/quick-scope'
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
-highlight QuickScopePrimary guifg='#00C7DF' gui=underline ctermfg=154 cterm=underline
-highlight QuickScopeSecondary guifg='#afff5f' gui=underline ctermfg=80 cterm=underline
+"highlight QuickScopePrimary guifg='#00C7DF' gui=underline ctermfg=154 cterm=underline
+"highlight QuickScopeSecondary guifg='#afff5f' gui=underline ctermfg=80 cterm=underline
 
 "let g:qs_max_chars=150
 
@@ -94,8 +98,9 @@ Plug 'haya14busa/is.vim'
 
 let g:UltiSnipsExpandTrigger = "<nop>"
 
-Plug 'lifepillar/vim-gruvbox8'
-Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
+" Plug 'cocopon/iceberg.vim'
+" Plug 'morhetz/gruvbox'
 
 set t_Co=256
 syntax on
@@ -103,8 +108,7 @@ set background=dark
 
 
 
-
-let g:fzf_layout = { 'window': {'width': 0.8, 'height':0.8 } }
+let g:fzf_layout = { 'window': {'width': 0.85, 'height':0.85} }
 let $FZF_DEFAULT_OPTS='--reverse'
 
 
@@ -115,7 +119,7 @@ nnoremap <C-p> :Lfko<CR>
 function! LfFloat() abort
 
     let curr_dir= expand("%:p:h")
-    let id = Flt_term_win("lf -selection-path /tmp/lf_result " . curr_dir, 0.8,0.8, '')
+    let id = Flt_term_win("lf -selection-path /tmp/lf_result " . curr_dir, 0.85,0.85, '')
     execute 'autocmd BufWipeout * ++once call Open_lf_callback("/tmp/lf_result")'
     return winbufnr(id)
 endfunction
@@ -208,6 +212,7 @@ Plug 'szw/vim-maximizer'
 Plug 'sstallion/vim-cursorline'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'dense-analysis/ale'
 "Coc is confused? run ":CocRes'
 
 set statusline^=%{coc#status()}
@@ -243,14 +248,14 @@ set foldtext=MyFoldText()
 " use coc-linter instead
 " Plug 'vim-syntastic/syntastic'
 
-
+Plug 'relastle/vim-nayvy'
 Plug 'tpope/vim-surround'
 
 " Airline plugin
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 "
-let g:airline_theme='distinguished'
+let g:airline_theme='tomorrow'
 let g:airline_powerline_fonts = 0
 
 "Plug 'itchyny/lightline.vim'
@@ -348,7 +353,7 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 "let g:asyncomplete_auto_popup = 1
-"let g:asyncomplete_smart_completion = 1
+"let g:asyncomplete_smart_copletion = 1
 "let g:asyncomplete_remove_duplicates = 1
 
 " Syntastic custom config
@@ -363,8 +368,19 @@ set completeopt-=preview
 " it somehow inserts last couple of inserted chars and exits to normal mode
 inoremap <Nul> <C-n>
 
+" Show da context
+Plug 'wellle/context.vim'
+let g:context_highlight_tag = '<hide>'
+
 " Indent python
 Plug 'vim-scripts/indentpython.vim'
+
+" Send ma python code straight into REPL
+Plug 'lotabout/slimux'
+
+map <Leader>; :SlimuxREPLSendLine<CR>
+vmap <Leader>; :SlimuxREPLSendSelection<CR>
+map <Leader>b :SlimuxREPLSendBuffer<CR>
 
 " Easy-motion
 Plug 'easymotion/vim-easymotion'
@@ -383,10 +399,20 @@ Plug 'tpope/vim-fugitive'
 nmap <leader>gj :diffget //3<CR>
 nmap <leader>gf :diffget //2<CR>
 
+Plug 'sodapopcan/vim-twiggy'
+
 let g:cocPlugInstall = 'yarn install --frozen-lockfile'
 Plug 'neoclide/coc-json', {'do': cocPlugInstall }
 Plug 'neoclide/coc-python', {'do': cocPlugInstall }
 Plug 'neoclide/coc-snippets', {'do': cocPlugInstall }
+
+
+" jedi
+let g:jedi#completions_enabled = 0
+let g:jedi#goto_stubs_command = ''
+
+" Temporary fix on every go-to definition, save the file to omit that typical jedi error
+nmap <buffer> gd :w<CR><Plug>(coc-definition)
 
 Plug 'mbbill/undotree' ":UndotreeToggle || press ? while in undotree window
 nmap <leader>u :UndotreeToggle<CR>
@@ -395,11 +421,11 @@ nmap <leader>u :UndotreeToggle<CR>
 Plug 'honza/vim-snippets'
 
 let g:ultisnips_python_style="google"
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+"inoremap <silent><expr> <TAB>
+      "\ pumvisible() ? coc#_select_confirm() :
+      "\ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      "\ <SID>check_back_space() ? "\<TAB>" :
+      "\ coc#refresh()
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -452,16 +478,18 @@ nmap s <Plug>(easymotion-overwin-f2)
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
-Plug 'scrooloose/nerdtree'
+Plug 'ludovicchabant/vim-gutentags'
+" Plug 'wookayin/vim-autoimport'
+"Plug 'scrooloose/nerdtree'
 
-" NERDTreeTabs
-Plug 'jistr/vim-nerdtree-tabs'
+"" NERDTreeTabs
+"Plug 'jistr/vim-nerdtree-tabs'
 
-" NERDTree ignore *.pyc *.swp
-let NERDTreeIgnore=['\.pyc$', '\.swp$', '\~$'] "ignore files in NERDTree
+"" NERDTree ignore *.pyc *.swp
+"let NERDTreeIgnore=['\.pyc$', '\.swp$', '\~$'] "ignore files in NERDTree
 
 
-map <Leader>n <plug>NERDTreeTabsToggle<CR>
+"map <Leader>n <plug>NERDTreeTabsToggle<CR>
 
 " ...
 
@@ -488,8 +516,8 @@ set wildmenu
 
 :augroup numbertoggle
 :  autocmd!
-:  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-:  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+:  autocmd BufEnter,FocusGained * set relativenumber
+:  autocmd BufLeave,FocusLost * set norelativenumber
 :augroup END
 
 "
@@ -505,8 +533,10 @@ let @p='yiwoprint("kjpA")kjyypf"x;xkVj<................Vjd'
 "This unsets the "last search pattern" register by hitting return
 nnoremap <CR> :noh<CR><CR>
 
-" Automatically wrap text that extends beyond the screen length.
-set wrap
+" Automatically wrap text that extends beyond the screen length. (OR NOT)
+
+set nowrap
+
 " Vim's auto indentation feature does not work properly with text copied from
 " outisde of Vim. Press the <F2> key to toggle paste mode on/off.
 " Or just select your stuff and use " '='
@@ -515,8 +545,8 @@ imap <F2> <C-O>:set invpaste paste?<CR>
 set pastetoggle=<F2>
 
 
-" Display 6 lines above/below the cursor when scrolling with a mouse.
-set scrolloff=6
+" Display 7 lines above/below the cursor when scrolling with a mouse.
+set scrolloff=7
 " Fixes common backspace problems
 set backspace=indent,eol,start
 
@@ -542,6 +572,7 @@ let NERDTreeMapActivateNode='l' " Toggle child nodes with l
 
 " Speed up scrolling in Vim
 set ttyfast
+set lazyredraw
 
 " Nicer visual selection
 hi Visual term=bold cterm=bold guibg=green
@@ -556,7 +587,6 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 highlight LineNr ctermfg=grey
-
 
 " Display options
 set showmode
@@ -593,10 +623,11 @@ vnoremap <leader>o yologger.debug(f"<Esc>pa: {<Esc>pa}")<Esc>
 set number
 
 " Full stack dev indentation
-au BufNewFile,BufRead *.js,*.html,*.css
+au BufNewFile,BufRead *.js,*.html,*.css, *.yaml
     \ set tabstop=2 |
     \ set softtabstop=2 |
-    \ set shiftwidth
+    \ set shiftwidth=2 |
+    \ set expandtab
 
 " Add the proper PEP 8 indentation
 au BufNewFile,BufRead *.py,*.pyx
@@ -629,22 +660,85 @@ set ignorecase
 " Include only uppercase words with uppercase search term
 set smartcase
 
+" Override w motion
+function! MyWMotion()
+    " Save the initial position
+    let initialLine=line('.')
 
-function! ScrollQuarter(move)
-    let height=winheight(0)
+    " Execute the builtin word motion and get the new position
+    normal! w
+    let newLine=line('.')
 
-    if a:move == 'up'
-        let key="k"
-    else
-        let key="j"
+    " If the line as changed go back to the previous line
+    if initialLine != newLine
+        normal k$
     endif
-
-    "execute 'normal! ' . height/7 . key
-    execute 'normal! ' . 4 . key
 endfunction
 
-nnoremap <silent> <C-u> :call ScrollQuarter('up')<CR>
-nnoremap <silent> <C-d> :call ScrollQuarter('down')<CR>
+" Override b motion
+function! MyBMotion()
+    " Save the initial position
+    let initialLine=line('.')
+
+    " Execute the builtin word motion and get the new position
+    normal! b
+    let newLine=line('.')
+
+    " If the line as changed go back to the previous line
+    if initialLine != newLine
+        normal j^
+    endif
+endfunction
+
+" Override w motion
+function! MyCapWMotion()
+    " Save the initial position
+    let initialLine=line('.')
+
+    " Execute the builtin word motion and get the new position
+    normal! W
+    let newLine=line('.')
+
+    " If the line as changed go back to the previous line
+    if initialLine != newLine
+        normal k$
+    endif
+endfunction
+
+" Override b motion
+function! MyCapBMotion()
+    " Save the initial position
+    let initialLine=line('.')
+
+    " Execute the builtin word motion and get the new position
+    normal! B
+    let newLine=line('.')
+
+    " If the line as changed go back to the previous line
+    if initialLine != newLine
+        normal j^
+    endif
+endfunction
+nnoremap <silent> w :call MyWMotion()<CR>
+nnoremap <silent> b :call MyBMotion()<CR>
+nnoremap <silent> W :call MyCapWMotion()<CR>
+nnoremap <silent> B :call MyCapBMotion()<CR>
+
+"function! ScrollQuarter(move)
+    "let height=winheight(0)
+
+    "if a:move == 'up'
+        "let key="k"
+    "else
+        "let key="j"
+    "endif
+
+    ""execute 'normal! ' . height/7 . key
+    "execute 'normal! ' . 4 . key
+"endfunction
+
+"nnoremap <silent> <C-u> :call ScrollQuarter('up')<CR>
+"nnoremap <silent> <C-d> :call ScrollQuarter('down')<CR>
 
 
 " One of the least invasive pep8 fun
@@ -695,7 +789,15 @@ autocmd BufReadPost *
 "au!
 "autocmd VimEnter * :normal :startinsert :stopinsert
 "augroup END
+"
+"" Vimwiki autosave
+augroup vimwikisave
+    autocmd!
+    autocmd BufWritePost */tools/extendwiki/** execute ':silent ! cd ~/tools/extendwiki && nohup $(if git rev-parse --git-dir > /dev/null 2>&1 ; then git add . && git commit -m "Auto-commit: saved %" && git push; fi > /dev/null 2>&1) &'
+augroup end
 
+
+"" Move position of my global marks to last editing position
 augroup VIMRC
   autocmd!
 
@@ -703,6 +805,57 @@ augroup VIMRC
   autocmd BufWinLeave *.zshrc normal! mZ
   autocmd BufWinLeave Makefile normal! mM
 augroup END
+
+
+au FileType python let b:coc_root_patterns = ['.git', '.env', 'venv', '.venv', 'setup.cfg', 'setup.py', 'pyrightconfig.json', 'env']
+
+let g:nayvy_pyproject_root_markers = [
+  \ 'pyproject.toml',
+  \ 'setup.py',
+  \ 'setup.cfg',
+  \ 'requirements.txt',
+\ ]
+
+let g:nayvy_linter_for_fix = "flake8"
+let g:nayvy_import_path_format = "all_absolute"
+let g:nayvy_coc_enabled = 1
+let g:nayvy_import_config_path = "~/dotfiles/nayvy_config.py"
+
+let g:ale_completion_enabled = 0
+let g:ale_lint_on_enter = 0
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_linters_explicit = 1
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
+" let g:ale_linters = {'python': ['flake8']}
+
+
+
+let g:ale_lint_dirs = {
+\    'flake8': getcwd()
+\}
+
+let g:ale_fixers = {
+\   'python': ['nayvy#ale_fixer', 'remove_trailing_lines', 'trim_whitespace', 'isort', 'black'],
+\   'javascript': ['eslint'],
+\}
+"let g:ale_fixers = {
+"\   'python': ['remove_trailing_lines', 'trim_whitespace', 'isort', 'black'],
+"\   'javascript': ['eslint'],
+"\}
+"
+
+let g:ale_fix_on_save = 1
+
+" Format by black on save
+"augroup black_python
+  "autocmd!
+   "autocmd BufWritePre *.py :Format
+"augroup END
+"
 
 "" This is for preserving folds, if not working, add incremental number to the
 " last argument up to 9, after that clear all files from mkview dir
@@ -714,15 +867,21 @@ augroup END
 set viewoptions-=options
 
 " Remove trailing whitespace on save
-autocmd BufWritePre * %s/\s\+$//e
+"augroup trailin_remove
+  "autocmd!
+  "autocmd BufWritePre * %s/\s\+$//e
+"augroup END
 
-" Sort import on save
-" autocmd BufWritePre *.py :Isort
+set cursorline
 
-" Format by black on save
-" autocmd BufWritePre *.py :Format
+let g:pythonStdlibPath = '~/.pyenv/versions/3.7.7/lib/python3.7/site-packages/'
 
-" set cursorline
 " colorscheme gruvbox8
 set noshowmode
 set shortmess+=F
+colorscheme gruvbox
+let g:fzf_colors =
+\ { 'fg': ['fg', 'Normal'],
+\ 'bg': ['bg', 'Normal']}
+hi Normal guibg=NONE ctermbg=NONE
+

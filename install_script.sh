@@ -32,6 +32,10 @@ fi
 git clone git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
+#kube_sync
+git clone https://github.com/nraw/kube_sync.git ~/.bin/kube-sync
+cp ~/.bin/kube-sync/kube_sync.sh ~/.bin/ks
+
 #v
 git clone https://github.com/rupa/v.git ~/.bin
 git clone https://github.com/andrewferrier/fzf-z ~/.bin
@@ -88,8 +92,11 @@ fire
 
 
 ###### MacOS Section ########
-hammerspoon
-homebrew
-karabiner
-altTab
+brew:
+  hammerspoon
+  homebrew
+  karabiner
+
+cask:
+  altTab
 
