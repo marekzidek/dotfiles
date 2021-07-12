@@ -1,3 +1,4 @@
+source ~/dotfiles/.vim_indent_python
 " Set compatibility to Vim only - because compatibility with basic Vi turns
 " off most of the IMproved stuff
 set nocompatible
@@ -5,7 +6,6 @@ set nocompatible
 " Helps force plug-ins to load correctly when it is turned back on below.
 
 set nocp
-filetype on
 
 set noswapfile
 
@@ -14,15 +14,24 @@ set virtualedit=block
 " Buffers become hidden when abandoned
 set hidden
 
+"use system clipboard
+set clipboard=unnamed
+
 " Never get angry again:
 command! -bang Wq wq<bang>
 command! -bang WQ wq<bang>
 command! -bang Q q<bang>
 command! -bang W w<bang>
 
+
+" More beautiful vertical spit line
+highlight VertSplit cterm=NONE
+set fillchars+=vert:\▏
+
 " Longer update times leads to noticable delays
 set updatetime=300
 
+:set number relativenumber
 
 """ Customize colors
 func! s:my_colors_setup() abort
@@ -49,37 +58,57 @@ let mapleader = (' ')
 set mmp=5000
 
 
+
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+
 let g:ale_disable_lsp = 1
+
+set t_Co=256
+syntax on
+set background=dark
+
+
+" New splits
+nmap <leader>s :split<CR>
+nmap <leader>v :vsplit<CR>
 
 " set the runtime path to include vim-plug and initialize
 call plug#begin('~/.vim/plugged')
 
 Plug 'psliwka/vim-smoothie'
 Plug 'makerforceio/CoVim'
-
 Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-dispatch'
 
-" Amazing when writing markdown in vim, just paste image from clipboard - fkin
-" conventient
+" Amazing when writing markdown in vim, just paste image from clipboard
 Plug 'ferrine/md-img-paste.vim'
 autocmd FileType markdown nmap <buffer><silent> <leader><leader>p :call mdip#MarkdownClipboardImage()<CR>
 let g:mdip_imgdir = 'img'
 "let g:mdip_imgname = 'image'
 
 Plug 'airblade/vim-rooter'
+let g:rooter_manual_only = 1
 
 Plug 'fisadev/vim-isort'
+Plug 'voldikss/vim-floaterm'
+
+"Plug 'chaoren/vim-wordmotion'
 
 "Plug 'unblevable/quick-scope'
-
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
 "highlight QuickScopePrimary guifg='#00C7DF' gui=underline ctermfg=154 cterm=underline
 "highlight QuickScopeSecondary guifg='#afff5f' gui=underline ctermfg=80 cterm=underline
-
 "let g:qs_max_chars=150
-
 
 if executable('rg')
     let g:rg_derive_root='true'
@@ -89,12 +118,11 @@ endif
 Plug 'nelstrom/vim-visual-star-search'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim'
 
 " Automatically clear search highlighting after move of cursor.
 Plug 'haya14busa/is.vim'
-
 
 let g:UltiSnipsExpandTrigger = "<nop>"
 
@@ -102,82 +130,13 @@ Plug 'gruvbox-community/gruvbox'
 " Plug 'cocopon/iceberg.vim'
 " Plug 'morhetz/gruvbox'
 
-set t_Co=256
-syntax on
-set background=dark
-
-
-
 let g:fzf_layout = { 'window': {'width': 0.85, 'height':0.85} }
 let $FZF_DEFAULT_OPTS='--reverse'
 
-
-command! Lfko call LfFloat()
-
-nnoremap <C-p> :Lfko<CR>
-
-function! LfFloat() abort
-
-    let curr_dir= expand("%:p:h")
-    let id = Flt_term_win("lf -selection-path /tmp/lf_result " . curr_dir, 0.85,0.85, '')
-    execute 'autocmd BufWipeout * ++once call Open_lf_callback("/tmp/lf_result")'
-    return winbufnr(id)
-endfunction
-
-function! Open_lf_callback(selection_path) abort
-    let s:choice_file_path = '/tmp/lf_result'
-    if filereadable(a:selection_path)
-      for f in readfile(a:selection_path)
-        exec "edit " . f
-      endfor
-    endif
-    call delete(a:selection_path)
-    redraw!
-    " reset the filetype to fix the issue that happens
-    " when opening lf on VimEnter (with `vim .`)
-    filetype detect
-endfunction
-
-
-function! Flt_term_win(cmd, width, height, border_highlight) abort
-    let width = float2nr(&columns * a:width)
-    let height = float2nr(&lines * a:height)
-    let bufnr = term_start(a:cmd, {'hidden': 1, 'term_finish': 'close'})
-
-    let winid = popup_create(bufnr, {
-	    \ 'minwidth': width,
-	    \ 'maxwidth': width,
-	    \ 'minheight': height,
-	    \ 'maxheight': height,
-	    \ 'border': [],
-	    \ 'borderchars': ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
-	    \ 'borderhighlight': [a:border_highlight],
-	    \ 'padding': [0,1,0,1],
-	    \ 'highlight': a:border_highlight
-	    \ })
-
-    " Optionally set the 'Normal' color for the terminal buffer
-    call setwinvar(winid, '&wincolor', 'Cool')
-    return winid
-
-endfunction
-
-function! GFilesFallback()
-  let curr_dir= expand("%:p:h")
-  let output = system('git -C ' . curr_dir . ' rev-parse --show-toplevel')
-  let prefix = get(g:, 'fzf_command_prefix', '')
-  if v:shell_error == 0
-    exec "normal :" . prefix . "GFiles\<CR>"
-  else
-    exec "normal :" . prefix . "Files \%:p:h\<CR>"
-  endif
-  return 0
-endfunction
-
-nnoremap <C-f> :call GFilesFallback()<CR>
-
 " Allow passing optional flags into rg
 " command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
+
+Plug 'turbio/bracey.vim'
 
 Plug 'mhinz/vim-grepper'
 
@@ -205,43 +164,33 @@ let g:fzf_action = {
 Plug 'scrooloose/nerdcommenter'
 vmap <leader>c <plug>NERDCommenterToggle
 nmap <leader>c <plug>NERDCommenterToggle
+let g:NERDDefaultAlign = 'start'
 
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
-
 Plug 'sstallion/vim-cursorline'
-
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
 "Coc is confused? run ":CocRes'
 
-set statusline^=%{coc#status()}
+"set statusline^=%{coc#status()}
 
 " Add airline to Tmux
 " For now, we alerady snapshotted the vim tmuxline.vim config for .tmux.conf...
 " Btw. you can snapshot it by :TmuxlineSnaphot [file] (for me file=.tmuxline)
 "Plug 'edkolev/tmuxline.vim'
 
-"Plug 'tmhedberg/SimpylFold'
-Plug 'kalekundert/vim-coiled-snake'
 Plug 'Konfekt/FastFold'
+Plug 'tmhedberg/SimpylFold'
+let g:SimpylFold_fold_blank = 1
 
-function! MyFoldText() " {{{
-    let line = getline(v:foldstart)
+filetype plugin on
+" Plug 'kalekundert/vim-coiled-snake'
 
-    let nucolwidth = &fdc + &number * &numberwidth
-    let windowwidth = winwidth(0) - nucolwidth - 3
-    let foldedlinecount = v:foldend - v:foldstart
+let g:coiled_snake_explicit_sign_width = 1
 
-    " expand tabs into spaces
-    let onetab = strpart('          ', 0, &tabstop)
-    let line = substitute(line, '\t', onetab, 'g')
+"set foldmethod=syntax
 
-    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-    return line . '' . repeat(" ",fillcharcount) . '(' . foldedlinecount . ')' . ' '
-endfunction " }}}
-set foldtext=MyFoldText()
 
 " Checking syntax on every change
 "
@@ -280,14 +229,25 @@ let g:vimwiki_list = [{'path': '~/vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'},
 		      \	 {'path': '~/my_site/',
                       \ 'syntax': 'markdown', 'ext': '.md'},
+		      \	 {'path': '~/tools/private-wiki/',
+                      \ 'syntax': 'markdown', 'ext': '.md'},
 		      \	 {'path': '~/tools/extendwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 let g:vimwiki_markdown_link_ext = 1
 let g:vimwiki_ext2syntax = {'.md': 'markdown'}
+
+
+
+Plug 'tpope/vim-projectionist'
+" Best thing ever I am mindblown
+
 let g:markdown_folding = 1
 
+
 "!pip install --user smdv
-Plug 'suan/vim-instant-markdown', {'rtp': 'after'}
+"Plug 'suan/vim-instant-markdown', {'rtp': 'after'}
+filetype plugin indent on
+Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown'}
 let g:instant_markdown_autostart = 0
 map <leader>md :InstantMarkdownPreview<CR>
 
@@ -369,8 +329,13 @@ set completeopt-=preview
 inoremap <Nul> <C-n>
 
 " Show da context
-Plug 'wellle/context.vim'
+" Plug 'wellle/context.vim'
+
 let g:context_highlight_tag = '<hide>'
+
+
+"Plug 'svermeulen/vim-easyclip'
+"let g:EasyClipPreserveCursorPositionAfterYank = 1
 
 " Indent python
 Plug 'vim-scripts/indentpython.vim'
@@ -378,12 +343,19 @@ Plug 'vim-scripts/indentpython.vim'
 " Send ma python code straight into REPL
 Plug 'lotabout/slimux'
 
-map <Leader>; :SlimuxREPLSendLine<CR>
-vmap <Leader>; :SlimuxREPLSendSelection<CR>
-map <Leader>b :SlimuxREPLSendBuffer<CR>
+map <Leader>;; :SlimuxREPLSendLine<CR>
+nnoremap <Leader>;k /if __name__ == "__main__":<CR> <bar> kVgg :SlimuxREPLSendSelection<CR>
+nnoremap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
+vmap <Leader>;; <Esc>mzgv:SlimuxREPLSendSelection<CR>`z
+map <Leader>;b :SlimuxREPLSendBuffer<CR>
+" Explore current pandas df word under cursor
+map <Leader>;v :call SlimuxSendCommand('from visidata import view_pandas as vd; vd(' . expand('<cword>') . ')')<CR>
+" Print current word under cursor
+
+vnoremap y <Esc>mzgvy<CR>`z
 
 " Easy-motion
-Plug 'easymotion/vim-easymotion'
+" Plug 'easymotion/vim-easymotion'
 
 "Plug 'ptzz/lf.vim'
 "let g:lf_map_keys = 0
@@ -400,6 +372,11 @@ nmap <leader>gj :diffget //3<CR>
 nmap <leader>gf :diffget //2<CR>
 
 Plug 'sodapopcan/vim-twiggy'
+
+map <Leader>b :G \| Twiggy<CR>
+nnoremap <expr> <Leader>nb ":Twiggy " . input("Branch name: ") "\<ESC>"
+" map <Leader>bn :Twiggy <C-\><C-o>:call <SID>Twigg_new_branch()<CR><C-r>=branch_name<CR>
+
 
 let g:cocPlugInstall = 'yarn install --frozen-lockfile'
 Plug 'neoclide/coc-json', {'do': cocPlugInstall }
@@ -427,6 +404,7 @@ let g:ultisnips_python_style="google"
       "\ <SID>check_back_space() ? "\<TAB>" :
       "\ coc#refresh()
 
+
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
@@ -434,18 +412,9 @@ endfunction
 
 let g:coc_snippet_next = '<tab>'
 
-"use system clipboard
-set clipboard=unnamed
 
-" New splits
-nmap <leader>s :split<CR>
-nmap <leader>v :vsplit<CR>
 
 Plug 'christoomey/vim-tmux-navigator'
-
-
-highlight VertSplit cterm=NONE
-set fillchars+=vert:\▏
 
 " Disable default mappings
 let g:EasyMotion_do_mapping = 0
@@ -462,18 +431,18 @@ nmap s <Plug>(easymotion-overwin-f)
 let g:EasyMotion_smartcase = 1
 
 " JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
+"map <Leader>j <Plug>(easymotion-j)
+"map <Leader>k <Plug>(easymotion-k)
 
 " NERDTreesyMotion_do_mapping = 0 " Disable default mappings
 
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
-nmap s <Plug>(easymotion-overwin-f)
+"nmap s <Plug>(easymotion-overwin-f)
 " or
 " `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
-nmap s <Plug>(easymotion-overwin-f2)
+"nmap s <Plug>(easymotion-overwin-f2)
 
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
@@ -491,10 +460,122 @@ Plug 'ludovicchabant/vim-gutentags'
 
 "map <Leader>n <plug>NERDTreeTabsToggle<CR>
 
-" ...
-
 " All of your Plugs must be added before the following line
 call plug#end()            " required
+
+nnoremap <leader>y :call PlotlySaveAndYank()<CR>
+function! PlotlySaveAndYank()
+exec "normal ?def\<CR>wyt(\<C-o>ofig.write_image('images/"
+  exec "normal pA.png')"
+  exec "normal =="
+  exec "normal o![alt text]('images/"
+  exec "normal pA.png')"
+  exec "normal dd"
+endfunction
+
+function! ReportFigure()
+  let curr_dir= expand("%:p:h")
+  " I forgot to actually increase the number here
+  let output = system("ls ' . curr_dir . '/images | awk -F '[_.]' '{print $(NF-1)}' | sort | tail -n 1")
+  exec "insert fig.write_image("images/fig_" . output . ".png")<Esc>A:i![alt text](images/fig_" . output . ".png)<Esc>C-o <bar> :InstantMarkdownPreview<CR>
+endfunction
+
+nnoremap <leader><leader>fp :call SlimuxForPass()<CR>
+function! SlimuxForPass() abort
+  exec "normal A pass"
+  exec "normal :SlimuxREPLSendLine\<CR>"
+  exec "normal u"
+endfunction
+
+function! MyFoldText() " {{{
+    let line = getline(v:foldstart)
+
+    let nucolwidth = &fdc + &number * &numberwidth
+    let windowwidth = winwidth(0) - nucolwidth - 3
+    let foldedlinecount = v:foldend - v:foldstart
+
+    " expand tabs into spaces
+    let onetab = strpart('          ', 0, &tabstop)
+    let line = substitute(line, '\t', onetab, 'g')
+
+    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
+    return line . '' . repeat(" ",fillcharcount) . '(' . foldedlinecount . ')' . ' '
+endfunction " }}}
+set foldtext=MyFoldText()
+
+command! Lfko call LfFloat()
+
+nnoremap <C-p> :Lfko<CR>
+
+function! LfFloat() abort
+
+    let curr_dir= expand("%:p:h")
+    let id = Flt_term_win("lf -selection-path /tmp/lf_result " . curr_dir, 0.85,0.85, '')
+    execute 'autocmd BufWipeout * ++once call Open_lf_callback("/tmp/lf_result")'
+    return winbufnr(id)
+endfunction
+
+function! Open_lf_callback(selection_path) abort
+    let s:choice_file_path = '/tmp/lf_result'
+    if filereadable(a:selection_path)
+      for f in readfile(a:selection_path)
+        exec "edit " . f
+      endfor
+    endif
+    call delete(a:selection_path)
+    redraw!
+    " reset the filetype to fix the issue that happens
+    " when opening lf on VimEnter (with `vim .`)
+    filetype detect
+endfunction
+
+
+function! Flt_term_win(cmd, width, height, border_highlight) abort
+    let width = float2nr(&columns * a:width)
+    let height = float2nr(&lines * a:height)
+    let bufnr = term_start(a:cmd, {'hidden': 1, 'term_finish': 'close'})
+
+    let winid = popup_create(bufnr, {
+	    \ 'minwidth': width,
+	    \ 'maxwidth': width,
+	    \ 'minheight': height,
+	    \ 'maxheight': height,
+	    \ 'border': [],
+	    \ 'borderchars': ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+	    \ 'borderhighlight': [a:border_highlight],
+	    \ 'padding': [0,1,0,1],
+	    \ 'highlight': a:border_highlight
+	    \ })
+
+    " Optionally set the 'Normal' color for the terminal buffer
+    call setwinvar(winid, '&wincolor', 'Cool')
+    return winid
+
+endfunction
+
+function! GFilesFallback()
+  let curr_dir= expand("%:p:h")
+  let output = system('git -C ' . curr_dir . ' rev-parse --show-toplevel')
+  let prefix = get(g:, 'fzf_command_prefix', '')
+  if v:shell_error == 0
+    exec "normal :" . prefix . "GFiles\<CR>"
+  else
+    exec "normal :" . prefix . "Files \%:p:h\<CR>"
+  endif
+  return 0
+endfunction
+
+nnoremap <C-f> :call GFilesFallback()<CR>
+
+
+" Do not add regular n and N for search into jumplist
+nnoremap <silent> n :<C-u>execute "keepjumps norm! " . v:count1 . "n"<CR>
+nnoremap <silent> N :<C-u>execute "keepjumps norm! " . v:count1 . "N"<CR>
+
+" Their counterparts here
+nnoremap <leader>n n
+nnoremap <leader>N N
 
 hi Normal guibg=NONE ctermbg=NONE
 
@@ -512,9 +593,8 @@ set wildmenu
 :imap jk <Esc>
 :imap kj <Esc>
 
-:set number relativenumber
 
-:augroup numbertoggle
+:augroup *.py numbertoggle
 :  autocmd!
 :  autocmd BufEnter,FocusGained * set relativenumber
 :  autocmd BufLeave,FocusLost * set norelativenumber
@@ -534,8 +614,7 @@ let @p='yiwoprint("kjpA")kjyypf"x;xkVj<................Vjd'
 nnoremap <CR> :noh<CR><CR>
 
 " Automatically wrap text that extends beyond the screen length. (OR NOT)
-
-set nowrap
+set wrap
 
 " Vim's auto indentation feature does not work properly with text copied from
 " outisde of Vim. Press the <F2> key to toggle paste mode on/off.
@@ -613,6 +692,7 @@ set listchars=trail:\
 
 " Toggle lineNumbers
 nnoremap <leader>l :set relativenumber!<cr>:set number!<cr>
+vnoremap <leader>gv :<c-u>exe '!git log -L' line("'<").','.line("'>").':'.expand('%')<CR>
 
 
 nnoremap <leader>o :normal yiwologger.debug(f"<Esc>pa: {<Esc>pa}")<Esc>
@@ -761,6 +841,10 @@ xnoremap <Leader>rc :s///gc<Left><Left><Left>
 nnoremap <silent> <Leader>f @=(foldlevel('.')?'za':"\<Leader>")<CR>
 vnoremap <Leader>f zf
 
+" Kube sync the currently edited file to your development pod
+nnoremap <leader>ks :Start! ks % <CR>
+
+
 " I don't like background highlighting at all
 highlight Folded ctermbg=black
 
@@ -770,6 +854,9 @@ autocmd BufReadPost *
      \   exe "normal! g`\"" |
      \ endif
 
+
+nnoremap j gj
+nnoremap k gk
 ""augroup vimrc
 ""    autocmd BufWritePost *
 ""    \   if expand('%') != '' && &buftype !~ 'nofile'
@@ -796,6 +883,19 @@ augroup vimwikisave
     autocmd BufWritePost */tools/extendwiki/** execute ':silent ! cd ~/tools/extendwiki && nohup $(if git rev-parse --git-dir > /dev/null 2>&1 ; then git add . && git commit -m "Auto-commit: saved %" && git push; fi > /dev/null 2>&1) &'
 augroup end
 
+" Automatically create dirs if missing on :e/newdir/file.py
+function s:MkNonExDir(file, buf)
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+        let dir=fnamemodify(a:file, ':h')
+        if !isdirectory(dir)
+            call mkdir(dir, 'p')
+        endif
+    endif
+endfunction
+augroup BWCCreateDir
+    autocmd!
+autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
+augroup END
 
 "" Move position of my global marks to last editing position
 augroup VIMRC
@@ -839,7 +939,7 @@ let g:ale_lint_dirs = {
 \}
 
 let g:ale_fixers = {
-\   'python': ['nayvy#ale_fixer', 'remove_trailing_lines', 'trim_whitespace', 'isort', 'black'],
+\   'python': ['remove_trailing_lines', 'trim_whitespace', 'isort', 'black'],
 \   'javascript': ['eslint'],
 \}
 "let g:ale_fixers = {
@@ -857,14 +957,16 @@ let g:ale_fix_on_save = 1
 "augroup END
 "
 
-"" This is for preserving folds, if not working, add incremental number to the
+" This is for preserving folds, if not working, add incremental number to the
 " last argument up to 9, after that clear all files from mkview dir
-augroup remember_folds
-  autocmd!
-  au BufWinLeave ?* mkview! 2
-  au BufWinEnter ?* silent! loadview 2
-augroup END
-set viewoptions-=options
+"augroup remember_folds
+"  autocmd!
+"  au BufWinLeave ?* mkview!
+"  au BufWinEnter ?* silent! loadview
+"augroup END
+"set viewoptions-=options
+"" This appears to be crucial for everything to work (OR NOT AT ALL)
+"let g:fastfold_savehook = 0
 
 " Remove trailing whitespace on save
 "augroup trailin_remove
@@ -872,9 +974,19 @@ set viewoptions-=options
   "autocmd BufWritePre * %s/\s\+$//e
 "augroup END
 
+:command! Json :%!python -m json.tool
+
 set cursorline
 
 let g:pythonStdlibPath = '~/.pyenv/versions/3.7.7/lib/python3.7/site-packages/'
+
+
+function! RooterFileShow() abort
+    :Rooter
+    :f
+endfunction
+
+command F call RooterFileShow()
 
 " colorscheme gruvbox8
 set noshowmode
@@ -884,4 +996,4 @@ let g:fzf_colors =
 \ { 'fg': ['fg', 'Normal'],
 \ 'bg': ['bg', 'Normal']}
 hi Normal guibg=NONE ctermbg=NONE
-
+hi Visual cterm=none ctermbg=darkgrey ctermfg=cyan

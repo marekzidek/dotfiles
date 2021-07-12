@@ -11,7 +11,7 @@ spoon.SpoonInstall:andUse("ClipboardTool",
         end
     })
 
-hs.hotkey.bind({"cmd", "shift", "alt", "ctrl"}, "R", function()
+hs.hotkey.bind({"cmd", "shift", "ctrl"}, "R", function()
   hs.reload()
 end)
 hs.alert.show("Config loaded")
@@ -59,16 +59,16 @@ end)
 
 spoon.SpoonInstall:andUse("MiroWindowsManager",
     {
-        fn = function(lol)
-            hs.window.animationDuration = 0.0
-            lol:bindHotkeys({
-              up = {"cmd", "k"},
-              right = {"cmd", "l"},
-              down = {"cmd", "j"},
-              left = {"cmd", "h"},
-              fullscreen = {{"cmd", "shift"}, "k"}
-            })
-        end
+	fn = function(lol)
+	    hs.window.animationDuration = 0.0
+	    lol:bindHotkeys({
+	      up = {"cmd", "k"},
+	      right = {"cmd", "l"},
+	      down = {"cmd", "j"},
+	      left = {"cmd", "h"},
+	      fullscreen = {{"cmd", "shift"}, "k"}
+	    })
+	end
     }
 )
 
@@ -127,31 +127,31 @@ hs.window.highlight.start()
 local application = require "hs.application"
 
 ---- Directional Focus ------
-hs.hotkey.bind({"alt", "shift", "cmd", "ctrl"},'l',function()hs.window.focusedWindow():focusWindowEast(nil, true, true)end)
+hs.hotkey.bind({"shift", "cmd", "ctrl"},'l',function()hs.window.focusedWindow():focusWindowEast(nil, true, true)end)
 
-hs.hotkey.bind({"alt", "shift", "cmd", "ctrl"},'h',function()hs.window.focusedWindow():focusWindowWest(nil, true, true)end)
+hs.hotkey.bind({"shift", "cmd", "ctrl"},'h',function()hs.window.focusedWindow():focusWindowWest(nil, true, true)end)
 
-hs.hotkey.bind({"alt", "shift", "cmd", "ctrl"},'k',function()hs.window.focusedWindow():focusWindowNorth(nil, true, true)end)
+hs.hotkey.bind({"shift", "cmd", "ctrl"},'k',function()hs.window.focusedWindow():focusWindowNorth(nil, true, true)end)
 
-hs.hotkey.bind({"alt", "shift", "cmd", "ctrl"},'j',function()hs.window.focusedWindow():focusWindowSouth(nil, true, true)end)
+hs.hotkey.bind({"shift", "cmd", "ctrl"},'j',function()hs.window.focusedWindow():focusWindowSouth(nil, true, true)end)
 
 --------- Switcher -----------
 
-switcher_space = hs.window.switcher.new(hs.window.filter.new():setCurrentSpace(true):setDefaultFilter{})
-print(switcher_space)
-switcher_space.ui.fontName = 'Monaco'
-switcher_space.ui.textSize = 15
-switcher_space.ui.showTitles = false
+--switcher_space = hs.window.switcher.new(hs.window.filter.new():setCurrentSpace(true):setDefaultFilter{})
+--print(switcher_space)
+--switcher_space.ui.fontName = 'Monaco'
+--switcher_space.ui.textSize = 15
+--switcher_space.ui.showTitles = false
 
-hs.window.switcher.ui.ThumbnailSize = 256
-hs.window.switcher.ui.showSelectedThumbnail = false
-hs.window.switcher.ui.showSelectedTitle = false
--- alternatively, call .nextWindow() or .previousWindow() directly (same as hs.window.switcher.new():next())
-hs.hotkey.bind('alt','tab',function()switcher_space:next()end, nil, function()switcher_space:next()end)
---hs.hotkey.bind('alt','tab',switcher_space.nextWindow,nil,switcher_space.nextWindow)
--- you can also bind to `repeatFn` for faster traversing
-hs.hotkey.bind('alt-shift','tab',function()switcher_space:previous()end, nil, function()switcher_space:previous()end)
----hs.hotkey.bind('alt-shift','tab',switcher_space.previousWindow,nil,switcher_space.previousWindow)
+--hs.window.switcher.ui.ThumbnailSize = 256
+--hs.window.switcher.ui.showSelectedThumbnail = false
+--hs.window.switcher.ui.showSelectedTitle = false
+---- alternatively, call .nextWindow() or .previousWindow() directly (same as hs.window.switcher.new():next())
+--hs.hotkey.bind('alt','tab',function()switcher_space:next()end, nil, function()switcher_space:next()end)
+----hs.hotkey.bind('alt','tab',switcher_space.nextWindow,nil,switcher_space.nextWindow)
+---- you can also bind to `repeatFn` for faster traversing
+--hs.hotkey.bind('alt-shift','tab',function()switcher_space:previous()end, nil, function()switcher_space:previous()end)
+-----hs.hotkey.bind('alt-shift','tab',switcher_space.previousWindow,nil,switcher_space.previousWindow)
 
 
 --------- Wifi Show --------------
@@ -173,8 +173,8 @@ wifiWatcher = hs.wifi.watcher.new(ssidChanged):start()
 
 
 ------ Disable CMD - tab ----- UNDER CONSTRUCTION
-hs.hotkey.bind({"cmd"},"tab",function()
-end)
+--hs.hotkey.bind({"cmd"},"tab",function()
+--end)
 
 
 ------ HeadphoneAutoPause --------
@@ -186,3 +186,7 @@ spoon.SpoonInstall:andUse("HeadphoneAutoPause",
         end
     }
 )
+
+
+----------------- GRID STUFF ---------
+hs.grid.setMargins({w=9, h=9})

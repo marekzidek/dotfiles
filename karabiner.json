@@ -18,6 +18,7 @@
                     {
                         "manipulators": [
                             {
+
                                 "description": "Change caps_lock to command+control+option+shift.",
                                 "from": {
                                     "key_code": "caps_lock",
@@ -38,48 +39,8 @@
                                     }
                                 ],
                                 "type": "basic"
-                            },
-
-                            {
-                                "description": "Disable Command-Tab",
-                                "from": {
-                                    "key_code": "tab",
-                                    "modifiers": {
-                                    "mandatory": ["left_command"]
-				    }
-
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "tab",
-                                        "modifiers": [
-                                            "left_option"
-                                        ]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-
-                            {
-                                "description": "Disable Command-Shift-Tab",
-
-                                "from": {
-                                    "key_code": "tab",
-                                    "modifiers": {
-                                    "mandatory": ["shift", "left_command"]
-				    }
-
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "tab",
-                                        "modifiers": [
-                                            "shift", "left_option"
-                                        ]
-                                    }
-                                ],
-                                "type": "basic"
                             }
+
                         ]
                     }
                 ]

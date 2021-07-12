@@ -26,15 +26,18 @@ export PATH=/Users/mzi/Library:$PATH
 
 #alias vim='nvim' # god damn the problems I had on macOs with nvim
 
-alias "brew install"='HOMEBREW_NO_AUTO_UPDATE=1 brew install'
+export HOMEBREW_NO_AUTO_UPDATE=1
 
-alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi'
+alias k='kubectl'
+#source <(kubectl completion zsh | sed 's/kubectl/k/g')
 
 alias gs='git status'
 alias gd='git diff'
 alias gl='git log'
 alias ga='git add'
 alias gc='git commit'
+
+alias env_add='set -a && source .env && set +a'
 
 # Prompt setup
 #PROMPT='%F{178}%n@%m%f %F{43}%2~%f%F{173}:%f '
@@ -182,6 +185,8 @@ bindkey -M menuselect 'l' vi-forward-char
 bindkey -v '^?' backward-delete-char
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/.bin:$PATH
+export PYENV_VERSION=3.7.7
 
 HIST_STAMPS="mm/dd/yyyy"
 
@@ -236,11 +241,12 @@ export FZF_DEFAULT_OPT='--layout=reverse --height=60% --bind up:preview-up,down:
 
 # Interactive search.
 # Usage: ff or ff <folder>.
+# Separate searchterms by | without space
 ff() {
 [[ -n $1 ]] && cd $1 || # go to provided folder or noop
-RG_DEFAULT_COMMAND="rg -i -l --hidden --no-ignore-vcs"
+RG_DEFAULT_COMMAND="rg  -i -l --hidden --no-ignore-vcs"
 selected=$(
-FZF_DEFAULT_COMMAND="rg --files" fzf \
+FZF_DEFAULT_COMMAND="rg  --files --hidden --follow" fzf \
   -m \
   -e \
   --ansi \
@@ -255,8 +261,6 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
 }
 bindkey -s "\C-g" ' ff\n'
 
-
-
 back_project() {
 while [[ $(ls -a | grep -q ".git"; echo $?) -eq 1 ]]; do
 cd ..
@@ -266,6 +270,28 @@ fi
 done
 }
 bindkey -s "\C-n" ' back_project\n'
+
+# Interactive search.
+wikiprivate() {
+[[ -n $1 ]] && cd $1 || cd ~/tools/private-wiki #provided or default
+RG_DEFAULT_COMMAND="rg -i -l --no-ignore-vcs"
+selected=$(
+FZF_DEFAULT_COMMAND="rg --files" fzf \
+  -m \
+  -e \
+  --ansi \
+  --phony \
+  --reverse \
+  --bind "ctrl-a:select-all" \
+  --bind "f12:execute-silent:(subl -b {})" \
+  --bind "change:reload:$RG_DEFAULT_COMMAND {q} || true" \
+  --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
+)
+[[ -n $selected ]] && vim $selected # open multiple files in editor
+}
+bindkey -s "\C-e" ' wikiprivate\n'
+
+
 
 # Interactive search.
 wikiff() {
@@ -289,24 +315,24 @@ bindkey -s "\C-w" ' wikiff\n'
 
 
 # Interactive search.
-wikipp() {
-[[ -n $1 ]] && cd $1 || cd ~/my_site #provided or default
-RG_DEFAULT_COMMAND="rg -i -l --no-ignore-vcs"
-selected=$(
-FZF_DEFAULT_COMMAND="rg --files" fzf \
-  -m \
-  -e \
-  --ansi \
-  --phony \
-  --reverse \
-  --bind "ctrl-a:select-all" \
-  --bind "f12:execute-silent:(subl -b {})" \
-  --bind "change:reload:$RG_DEFAULT_COMMAND {q} || true" \
-  --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
-)
-[[ -n $selected ]] &&  grep "<cpy>" $selected | sed 's/<cpy>//g' | pbcopy # open multiple files in editor
-}
-bindkey -s "\C-q" 'wikipp\n'
+#wikipp() {
+#[[ -n $1 ]] && cd $1 || cd ~/my_site #provided or default
+#RG_DEFAULT_COMMAND="rg -i -l --no-ignore-vcs"
+#selected=$(
+#FZF_DEFAULT_COMMAND="rg --files" fzf \
+  #-m \
+  #-e \
+  #--ansi \
+  #--phony \
+  #--reverse \
+  #--bind "ctrl-a:select-all" \
+  #--bind "f12:execute-silent:(subl -b {})" \
+  #--bind "change:reload:$RG_DEFAULT_COMMAND {q} || true" \
+  #--preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
+#)
+#[[ -n $selected ]] &&  grep "<cpy>" $selected | sed 's/<cpy>//g' | pbcopy # open multiple files in editor
+#}
+#bindkey -s "\C-q" 'wikipp\n'
 
 export EDITOR=vim
 export VISUAL=vim
@@ -374,3 +400,10 @@ bindkey -s "\C-t" ' cd $(fzfz)\n'
 #		kubectl config set-context --current --namespace=$1 > /dev/null
 #	fi
 #}
+
+
+export NAYVY_PYPROJECT_ROOT_MARKERS='pyproject.toml,setup.py,.git'  # comma-separated format
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi --no-autoindent'
