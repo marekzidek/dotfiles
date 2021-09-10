@@ -84,10 +84,15 @@ nmap <leader>v :vsplit<CR>
 " set the runtime path to include vim-plug and initialize
 call plug#begin('~/.vim/plugged')
 
+
+"Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+"Plug 'python-rope/ropevim'
 Plug 'psliwka/vim-smoothie'
 Plug 'makerforceio/CoVim'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-dispatch'
+
+Plug 'apalmer1377/factorus'
 
 " Amazing when writing markdown in vim, just paste image from clipboard
 Plug 'ferrine/md-img-paste.vim'
@@ -343,6 +348,7 @@ Plug 'vim-scripts/indentpython.vim'
 " Send ma python code straight into REPL
 Plug 'lotabout/slimux'
 
+let g:slimux_select_from_current_window = 1
 map <Leader>;; :SlimuxREPLSendLine<CR>
 nnoremap <Leader>;k /if __name__ == "__main__":<CR> <bar> kVgg :SlimuxREPLSendSelection<CR>
 nnoremap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
@@ -367,16 +373,24 @@ Plug 'tpope/vim-fugitive'
     " out of window: press '=' - brings up inline diff, select hunk via visual and press '-'
     " merge conflicts: ':G', pres dv on the file that I want to resolve, to close C-w + C-O (or S-o)
     " gitignore: ':G' go to a file and type any number 7gI, or 4gI and it will " autoadd it to gitignore
+    " In vim-fugitive, if you don’t like your random changes to a file, just push “X” while over it.
+
 
 nmap <leader>gj :diffget //3<CR>
 nmap <leader>gf :diffget //2<CR>
+
+
+
 
 Plug 'sodapopcan/vim-twiggy'
 
 map <Leader>b :G \| Twiggy<CR>
 nnoremap <expr> <Leader>nb ":Twiggy " . input("Branch name: ") "\<ESC>"
 " map <Leader>bn :Twiggy <C-\><C-o>:call <SID>Twigg_new_branch()<CR><C-r>=branch_name<CR>
+"
+Plug 'nvie/vim-flake8'
 
+nnoremap <leader><leader>f :call Flake8()<CR>
 
 let g:cocPlugInstall = 'yarn install --frozen-lockfile'
 Plug 'neoclide/coc-json', {'do': cocPlugInstall }
@@ -480,7 +494,7 @@ function! ReportFigure()
   exec "insert fig.write_image("images/fig_" . output . ".png")<Esc>A:i![alt text](images/fig_" . output . ".png)<Esc>C-o <bar> :InstantMarkdownPreview<CR>
 endfunction
 
-nnoremap <leader><leader>fp :call SlimuxForPass()<CR>
+nnoremap <leader><leader>fp :call SlimuxForPass()<CR> pass
 function! SlimuxForPass() abort
   exec "normal A pass"
   exec "normal :SlimuxREPLSendLine\<CR>"
@@ -986,7 +1000,7 @@ function! RooterFileShow() abort
     :f
 endfunction
 
-command F call RooterFileShow()
+command! F call RooterFileShow()
 
 " colorscheme gruvbox8
 set noshowmode
@@ -997,3 +1011,4 @@ let g:fzf_colors =
 \ 'bg': ['bg', 'Normal']}
 hi Normal guibg=NONE ctermbg=NONE
 hi Visual cterm=none ctermbg=darkgrey ctermfg=cyan
+source ~/.vim/python_ropevim.vim
