@@ -89,6 +89,7 @@ numpy
 pandas
 torch
 fire
+neovim-remote
 
 
 ###### MacOS Section ########

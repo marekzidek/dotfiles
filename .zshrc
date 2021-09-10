@@ -38,6 +38,7 @@ alias ga='git add'
 alias gc='git commit'
 
 alias env_add='set -a && source .env && set +a'
+# Another possibility is https://github.com/theskumar/python-dotenv
 
 # Prompt setup
 #PROMPT='%F{178}%n@%m%f %F{43}%2~%f%F{173}:%f '
