@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create custom user with sudo priviledges
-	#useradd marekzide
+	#useradd marekzidek
 	#usermod -aG sudo marekzidek
 
 # For retarded images with no manual pages
@@ -11,10 +11,9 @@
 	# continue with your life
 
 # Manual installs
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+# OUTDATED, BUT... git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
-
 
 # Two coc-vim plugin related manual installs
 curl -sL install-node.now.sh/lts | bash
@@ -41,6 +40,9 @@ git clone https://github.com/rupa/v.git ~/.bin
 git clone https://github.com/andrewferrier/fzf-z ~/.bin
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
+
+# If using big sur 11.0 and newer, pyenv will be a terrible experience 
+Solve using this link https://github.com/pyenv/pyenv/issues/1737
 
 # Manual settings
 Install iterm2
@@ -89,6 +91,9 @@ numpy
 pandas
 torch
 fire
+black
+isort
+jedi
 neovim-remote
 
 
