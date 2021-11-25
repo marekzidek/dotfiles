@@ -1,4 +1,5 @@
 source ~/dotfiles/.vim_indent_python
+
 " Set compatibility to Vim only - because compatibility with basic Vi turns
 " off most of the IMproved stuff
 set nocompatible
@@ -94,6 +95,16 @@ Plug 'tpope/vim-dispatch'
 
 Plug 'apalmer1377/factorus'
 
+
+" Plug 'iago-lito/vim-visualMarks'
+" This stuff seriously fucks up your << in normal mode
+"vmap <leader>j  <Plug>VisualMarksVisualMark
+"nmap <leader><leader>j <Plug>VisualMarksGetVisualMark
+
+
+
+
+
 " Amazing when writing markdown in vim, just paste image from clipboard
 Plug 'ferrine/md-img-paste.vim'
 autocmd FileType markdown nmap <buffer><silent> <leader><leader>p :call mdip#MarkdownClipboardImage()<CR>
@@ -158,7 +169,7 @@ nnoremap <Leader>R
 nnoremap <C-g> :Rg<CR>
 nnoremap <C-e> :Buffers<CR>
 nnoremap <leader>e :Buffers<CR>
-nnoremap <leader>h :History<CR>
+" nnoremap <leader>h :History<CR>
 
 let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
@@ -345,14 +356,24 @@ let g:context_highlight_tag = '<hide>'
 " Indent python
 Plug 'vim-scripts/indentpython.vim'
 
+
 " Send ma python code straight into REPL
 Plug 'lotabout/slimux'
+
+
+vmap <leader>j <Plug>VisualMarksAlternateVisualMark
+nmap <leader>ll <Plug>VisualMarksSaveAlternateVisualMark
+nmap <leader>i <Plug>VisualMarksGetVisualMarkk
+nmap <leader>j <Plug>VisualMarksGetVisualMarkj
+nmap <leader>h <Plug>VisualMarksGetVisualMarkh
+nmap <leader>hh <Plug>VisualMarksAlternateVisualMarkSaveh
+" nmap <leader>l <Plug>VisualMarksGetVisualMark
 
 let g:slimux_select_from_current_window = 1
 map <Leader>;; :SlimuxREPLSendLine<CR>
 nnoremap <Leader>;k /if __name__ == "__main__":<CR> <bar> kVgg :SlimuxREPLSendSelection<CR>
 nnoremap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
-vmap <Leader>;; <Esc>mzgv:SlimuxREPLSendSelection<CR>`z
+vmap <Leader>;; <Esc>mzgv<leader>j :SlimuxREPLSendSelection<CR>`z
 map <Leader>;b :SlimuxREPLSendBuffer<CR>
 " Explore current pandas df word under cursor
 map <Leader>;v :call SlimuxSendCommand('from visidata import view_pandas as vd; vd(' . expand('<cword>') . ')')<CR>
@@ -366,6 +387,10 @@ vnoremap y <Esc>mzgvy<CR>`z
 "Plug 'ptzz/lf.vim'
 "let g:lf_map_keys = 0
 "nmap <C-p> :Lf<CR>
+"
+
+map <Leader>z :s/(/(\r    / <bar> s/, /\r    /g <bar> s/.*\zs)/\r)/<CR>
+vmap <Leader>z :norm $x<CR>
 
 
 Plug 'tpope/vim-fugitive'
@@ -592,6 +617,28 @@ nnoremap <leader>n n
 nnoremap <leader>N N
 
 hi Normal guibg=NONE ctermbg=NONE
+
+"FZF Command History
+
+function! s:mycommand_sink(cmd)
+    let cmd = substitute(a:cmd, '\d..', '', 'g') 
+    execute cmd
+endfunction
+
+function! s:commands(bang)
+  redir => history
+  silent history
+  redir END
+  let list = split(history, '\n')
+    call fzf#run({
+                \ 'source':  reverse(extend(list[0:0], map(list[2:], 's:format_cmd(v:val)'))),
+                \ 'sink':    function('s:mycommand_sink'),
+                \ 'options': '--ansi -x --prompt "Commands> " ',
+                \ 'window': 'aboveleft 20new'}, a:bang)
+endfunction
+
+command! -bang Cmds call s:commands(<bang>0)
+
 
 " Let my code be pretty
 let python_highlight_all=1
@@ -857,6 +904,7 @@ vnoremap <Leader>f zf
 
 " Kube sync the currently edited file to your development pod
 nnoremap <leader>ks :Start! ks % <CR>
+nnoremap <leader>ss :Start! ssh_sync % <CR>
 
 
 " I don't like background highlighting at all
@@ -930,9 +978,9 @@ let g:nayvy_pyproject_root_markers = [
   \ 'requirements.txt',
 \ ]
 
+let g:nayvy_coc_enabled = 1
 let g:nayvy_linter_for_fix = "flake8"
 let g:nayvy_import_path_format = "all_absolute"
-let g:nayvy_coc_enabled = 1
 let g:nayvy_import_config_path = "~/dotfiles/nayvy_config.py"
 
 let g:ale_completion_enabled = 0
@@ -1012,3 +1060,5 @@ let g:fzf_colors =
 hi Normal guibg=NONE ctermbg=NONE
 hi Visual cterm=none ctermbg=darkgrey ctermfg=cyan
 source ~/.vim/python_ropevim.vim
+source ~/dotfiles/custom_vim_plugins/visualMarks.vim
+

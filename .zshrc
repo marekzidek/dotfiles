@@ -20,6 +20,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 export PATH=/Users/mzi/Library:$PATH
+export PATH=/User/marekzidek/.pyenv/versions/3.7.7/bin/:$PATH
 
 # If vim could not be complied with +clipboard
 # alias vim='vimx'
@@ -29,6 +30,7 @@ export PATH=/Users/mzi/Library:$PATH
 export HOMEBREW_NO_AUTO_UPDATE=1
 
 alias k='kubectl'
+alias c='clear'
 #source <(kubectl completion zsh | sed 's/kubectl/k/g')
 
 alias gs='git status'

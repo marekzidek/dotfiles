@@ -54,6 +54,8 @@ the foreground color to normal white instead of grey
 
 ctags
 man
+zlib
+bzip2
 neovim
 fzf
 python3-pip

@@ -118,9 +118,9 @@ end
 -- END DISPLAY FOCUS SWITCHING --
 
 ------ Slight focus window highlight -----
-hs.window.highlight.ui.overlay=true
-hs.window.highlight.ui.overlayColor = {0,0,0,0.04}
-hs.window.highlight.start()
+--- hs.window.highlight.ui.overlay=true
+--- hs.window.highlight.ui.overlayColor = {0,0,0,0.04}
+--- hs.window.highlight.start()
 
 
 
@@ -189,4 +189,4 @@ spoon.SpoonInstall:andUse("HeadphoneAutoPause",
 
 
 ----------------- GRID STUFF ---------
-hs.grid.setMargins({w=9, h=9})
+hs.grid.setMargins({w=15, h=13})
