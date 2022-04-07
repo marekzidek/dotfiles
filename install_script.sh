@@ -40,9 +40,12 @@ git clone https://github.com/rupa/v.git ~/.bin
 git clone https://github.com/andrewferrier/fzf-z ~/.bin
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-
+# pyenv issues
 # If using big sur 11.0 and newer, pyenv will be a terrible experience 
 Solve using this link https://github.com/pyenv/pyenv/issues/1737
+# For macOS Monterey (12.3.1), only few python versions are possible to install
+Listed here: https://issueantenna.com/repo/pyenv/pyenv/issues/2284
+If other version is needed: https://github.com/pyenv/pyenv/issues/2143#issuecomment-1069269496
 
 # Manual settings
 Install iterm2
