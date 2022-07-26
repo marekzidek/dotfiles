@@ -1,38 +1,95 @@
 source ~/dotfiles/.vim_indent_python
 
-" Set compatibility to Vim only - because compatibility with basic Vi turns
-" off most of the IMproved stuff
-set nocompatible
-
-" Helps force plug-ins to load correctly when it is turned back on below.
-
 set nocp
-
 set noswapfile
-
+set nuw=5
 set virtualedit=block
-
-" Buffers become hidden when abandoned
 set hidden
-
-"use system clipboard
 set clipboard=unnamed
+set number relativenumber
+set encoding=utf-8
+set t_Co=256
+set background=dark
+set completeopt-=preview
+set mouse=a
+set wildmode=longest,list,full
+set cursorline
+set wildmenu
+set modelines=0
+set undofile
+set undodir=~/.vim/undodir
+set fillchars+=vert:\▏
+set splitright
+set splitbelow
+set background=dark
+set t_Co=256
+
+" Highlight matching search patterns
+set hlsearch
+" Enable incremental search
+set incsearch
+" Include matching uppercase words with lowercase search term
+set ignorecase
+" Include only uppercase words with uppercase search term
+set smartcase
+" Status bar
+set laststatus=1
+
+" Display options
+set showmode
+set showcmd
+
+" Highlight matching pairs of brackets.
+set matchpairs+=<:>
+
+" Enable resize of vim when is tmux
+if has("mouse_sgr")
+    set ttymouse=sgr
+else
+  if !has('nvim')
+    set ttymouse=xterm2
+  endif
+end
+
+" Store info from no more than 101 files at a time, 9999 lines of text,
+" 100kb of data. Useful for copying large amounts of data between files.
+set viminfo='100,<9999,s101
+
+" Display different types of white spaces.
+set listchars=tab:›\ ,extends:#,nbsp:.
+set listchars=trail:\
+
+" Speed up scrolling in Vim
+set ttyfast
+set lazyredraw
+
+" Some files need more memory for syntax highlight
+set mmp=5000
+
+" Longer update times leads to noticable delays
+set updatetime=300
+
+" Automatically wrap text that extends beyond the screen length. (OR NOT)
+set wrap
+
+" Display 7 lines above/below the cursor when scrolling with a mouse.
+set scrolloff=7
+
+" Fixes common backspace problems
+set backspace=indent,eol,start
+
+" More beautiful vertical spit line
+highlight VertSplit cterm=NONE
+
+syntax on
+
+let mapleader = (' ')
 
 " Never get angry again:
 command! -bang Wq wq<bang>
 command! -bang WQ wq<bang>
 command! -bang Q q<bang>
 command! -bang W w<bang>
-
-
-" More beautiful vertical spit line
-highlight VertSplit cterm=NONE
-set fillchars+=vert:\▏
-
-" Longer update times leads to noticable delays
-set updatetime=300
-
-:set number relativenumber
 
 """ Customize colors
 func! s:my_colors_setup() abort
@@ -48,18 +105,6 @@ augroup colorscheme_coc_setup | au!
 augroup END
 
 
-" Encoding
-
-set encoding=utf-8
-
-" My leader is space
-let mapleader = (' ')
-
-" Some files need more memory for syntax highlight
-set mmp=5000
-
-
-
 " Install vim-plug if not found
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -72,11 +117,6 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 \| endif
 
 let g:ale_disable_lsp = 1
-
-set t_Co=256
-syntax on
-set background=dark
-
 
 " New splits
 nmap <leader>s :split<CR>
@@ -95,14 +135,10 @@ Plug 'tpope/vim-dispatch'
 
 Plug 'apalmer1377/factorus'
 
-
 " Plug 'iago-lito/vim-visualMarks'
 " This stuff seriously fucks up your << in normal mode
 "vmap <leader>j  <Plug>VisualMarksVisualMark
 "nmap <leader><leader>j <Plug>VisualMarksGetVisualMark
-
-
-
 
 
 " Amazing when writing markdown in vim, just paste image from clipboard
@@ -141,7 +177,12 @@ Plug 'junegunn/goyo.vim'
 Plug 'haya14busa/is.vim'
 
 let g:UltiSnipsExpandTrigger = "<nop>"
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
+let g:pydocstring_doq_path = "~/.pyenv/versions/3.7.7/bin/doq"
+let g:pydocstring_formatter = 'google'
+nmap <silent> <C-_> <Plug>(pydocstring)
 
+Plug 'relastle/bluewery.vim'
 Plug 'gruvbox-community/gruvbox'
 " Plug 'cocopon/iceberg.vim'
 " Plug 'morhetz/gruvbox'
@@ -182,14 +223,17 @@ vmap <leader>c <plug>NERDCommenterToggle
 nmap <leader>c <plug>NERDCommenterToggle
 let g:NERDDefaultAlign = 'start'
 
+Plug 'preservim/tagbar'
+nmap <leader>t :TagbarToggle<CR>
+let g:tagbar_sort = 0
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
 Plug 'sstallion/vim-cursorline'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', { 'tag': 'v0.0.78' }
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
 "Coc is confused? run ":CocRes'
 
-"set statusline^=%{coc#status()}
 
 " Add airline to Tmux
 " For now, we alerady snapshotted the vim tmuxline.vim config for .tmux.conf...
@@ -205,7 +249,6 @@ filetype plugin on
 
 let g:coiled_snake_explicit_sign_width = 1
 
-"set foldmethod=syntax
 
 
 " Checking syntax on every change
@@ -213,7 +256,7 @@ let g:coiled_snake_explicit_sign_width = 1
 " use coc-linter instead
 " Plug 'vim-syntastic/syntastic'
 
-Plug 'relastle/vim-nayvy'
+Plug 'marekzidek/vim-nayvy'
 Plug 'tpope/vim-surround'
 
 " Airline plugin
@@ -237,7 +280,6 @@ let g:airline_powerline_fonts = 0
 "      \ },
 "      \ }
 
-" set alternate color for modified active/inactive tabs
 
 Plug 'vimwiki/vimwiki'
 
@@ -267,38 +309,6 @@ Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown'}
 let g:instant_markdown_autostart = 0
 map <leader>md :InstantMarkdownPreview<CR>
 
-"Plug 'prabirshrestha/async.vim'
-"Plug 'prabirshrestha/vim-lsp'
-"Plug 'prabirshrestha/asyncomplete.vim'
-"Plug 'prabirshrestha/asyncomplete-lsp.vim'
-
-" !pip install python-language-server
-"if executable('pyls')
-"    " pip install python-language-server
-"    au User lsp_setup call lsp#register_server({
-"        \ 'name': 'pyls',
-"        \ 'cmd': {server_info->['pyls']},
-"        \ 'whitelist': ['python'],
-"        \ })
-"endif
-
-
-"let g:LanguageClient_loggingFile = '~/tmp/lc.log'
-"let g:LanguageClient_loggingLevel = 'DEBUG'
-
-"let g:lsp_preview_autoclose = 1
-"let g:lsp_signature_help_enabled = 0
-"let g:lsp_signs_error = {'text': '✗'}
-"let g:lsp_signs_enabled = 1         " enable signs
-"let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-"let g:asyncomplete_auto_popup = 1
-
-"function! s:on_lsp_buffer_enabled() abort
-"setlocal omnifunc=lsp#complete
-"setlocal signcolumn=yes
-"if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
-"endfunction
-
 
 "augroup lsp_install
 "    au!
@@ -310,7 +320,6 @@ map <leader>md :InstantMarkdownPreview<CR>
 
 source ~/dotfiles/coc_config.vim
 
-set completeopt-=preview
 
 " use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
@@ -338,7 +347,6 @@ let g:syntastic_check_on_wq = 0
 "nnoremap <leader>r :LspReferences<CR>
 "nnoremap <leader>d :LspDefinition<CR>
 
-set completeopt-=preview
 " This remap is not so much motivated by lsp, but
 " by wierd behaviour of <C-space>, which is <Nul> in vimspeak :D
 " it somehow inserts last couple of inserted chars and exits to normal mode
@@ -371,15 +379,58 @@ nmap <leader>hh <Plug>VisualMarksAlternateVisualMarkSaveh
 
 let g:slimux_select_from_current_window = 1
 map <Leader>;; :SlimuxREPLSendLine<CR>
-nnoremap <Leader>;k /if __name__ == "__main__":<CR> <bar> kVgg :SlimuxREPLSendSelection<CR>
-nnoremap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
+map <Leader>;x :norm ^viW 99<CR>
+map <Leader>;w :norm viw 99<CR>
+map <Leader>;d :call SlimuxSendCommand('%debug')<CR>
+map <Leader>;c :call SlimuxSendCommand(expand('<cword>') . '.columns')<CR>
+map <Leader>;f :norm V[[%jO][k ;;<CR>
+map <Leader>;F :norm V[[O]]k ;;<CR>
+map <Leader>;m :norm V[m%jO]Mk ;;<CR>
+map <Leader>;M :norm V[mO]mk ;;<CR>
+
+nmap <Leader>;k /if __name__ == "__main__":<CR> <bar> kVgg :SlimuxREPLSendSelection<CR>
+nmap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
+nmap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
 vmap <Leader>;; <Esc>mzgv<leader>j :SlimuxREPLSendSelection<CR>`z
+nmap <Leader>7 :call SlimuxSendCommand('')<CR>
+vmap <Leader>99 <Esc>mzgv<leader>j :SlimuxREPLSendSelection<CR>`z
+nmap <Leader>88 <Esc>mzgv<leader>j :SlimuxREPLSendSelection<CR>`z
 map <Leader>;b :SlimuxREPLSendBuffer<CR>
 " Explore current pandas df word under cursor
 map <Leader>;v :call SlimuxSendCommand('from visidata import view_pandas as vd; vd(' . expand('<cword>') . ')')<CR>
 " Print current word under cursor
 
+
 vnoremap y <Esc>mzgvy<CR>`z
+
+" Slimux send %%magic selection
+
+function! Get_visual_selection()
+    " Why is this not a built-in Vim script function?!
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    let lines = getline(line_start, line_end)
+    if len(lines) == 0
+        return ''
+    endif
+    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][column_start - 1:]
+    return join(lines, "\n")
+endfunction
+
+function! CheckSlimuxEnter() abort
+  let selection = Get_visual_selection()
+  let iPythonMagic = matchstr(selection, '%%')
+  if strchars(iPythonMagic)
+    exec "normal mz 88"
+    exec "normal mz 7"
+  else
+    exec 'normal mz 88'
+  endif
+endfunction
+
+" vnoremap <Leader>;; :<C-U>call CheckSlimuxEnter()<CR>
+
 
 " Easy-motion
 " Plug 'easymotion/vim-easymotion'
@@ -391,6 +442,7 @@ vnoremap y <Esc>mzgvy<CR>`z
 
 map <Leader>z :s/(/(\r    / <bar> s/, /\r    /g <bar> s/.*\zs)/\r)/<CR>
 vmap <Leader>z :norm $x<CR>
+
 
 
 Plug 'tpope/vim-fugitive'
@@ -541,6 +593,7 @@ function! MyFoldText() " {{{
     let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
     return line . '' . repeat(" ",fillcharcount) . '(' . foldedlinecount . ')' . ' '
 endfunction " }}}
+
 set foldtext=MyFoldText()
 
 command! Lfko call LfFloat()
@@ -647,8 +700,6 @@ syntax on
 " Don't use it now as we already have snapshot of this for .tmux.conf
 " let g:tmuxline_preset = 'righteous'
 
-set wildmode=longest,list,full
-set wildmenu
 
 " Remap esc to my favorite mix
 :imap jk <Esc>
@@ -663,10 +714,6 @@ set wildmenu
 
 "
 " Turn off modelines
-set modelines=0
-
-set undofile
-set undodir=~/.vim/undodir
 " !mkdir ~/.vim/undodir
 
 let @p='yiwoprint("kjpA")kjyypf"x;xkVj<................Vjd'
@@ -674,8 +721,6 @@ let @p='yiwoprint("kjpA")kjyypf"x;xkVj<................Vjd'
 "This unsets the "last search pattern" register by hitting return
 nnoremap <CR> :noh<CR><CR>
 
-" Automatically wrap text that extends beyond the screen length. (OR NOT)
-set wrap
 
 " Vim's auto indentation feature does not work properly with text copied from
 " outisde of Vim. Press the <F2> key to toggle paste mode on/off.
@@ -685,10 +730,7 @@ imap <F2> <C-O>:set invpaste paste?<CR>
 set pastetoggle=<F2>
 
 
-" Display 7 lines above/below the cursor when scrolling with a mouse.
-set scrolloff=7
-" Fixes common backspace problems
-set backspace=indent,eol,start
+
 
 " Remap confirmation for searches
 cnoremap jk <CR>
@@ -701,8 +743,6 @@ cnoremap kj <CR>
 " the greatest one
 vnoremap <leader>p "_dP
 
-" Do the harlem shake!
-set mouse=a
 
 " NERDTree keybindings
 let NERDTreeQuitOnOpen=1 " Autoclose NERDTREE on file opening
@@ -710,15 +750,10 @@ let NERDTreeMapActivateNode='l' " Toggle child nodes with l
 "let NERDTreeMapActivateNode='h' " Toggle child nodes with h
 "let NERDTreeMapCloseChildren='h' " Close  child nodes with h
 
-" Speed up scrolling in Vim
-set ttyfast
-set lazyredraw
 
 " Nicer visual selection
 hi Visual term=bold cterm=bold guibg=green
 
-" Status bar
-set laststatus=1
 
 " Split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -728,28 +763,6 @@ nnoremap <C-H> <C-W><C-H>
 
 highlight LineNr ctermfg=grey
 
-" Display options
-set showmode
-set showcmd
-
-
-" Highlight matching pairs of brackets.
-set matchpairs+=<:>
-
-
-" Enable resize of vim when is tmux
-if has("mouse_sgr")
-    set ttymouse=sgr
-else
-
-  if !has('nvim')
-    set ttymouse=xterm2
-  endif
-end
-
-" Display different types of white spaces.
-set listchars=tab:›\ ,extends:#,nbsp:.
-set listchars=trail:\
 
 " Toggle lineNumbers
 nnoremap <leader>l :set relativenumber!<cr>:set number!<cr>
@@ -760,8 +773,6 @@ nnoremap <leader>o :normal yiwologger.debug(f"<Esc>pa: {<Esc>pa}")<Esc>
 vnoremap <leader>o yologger.debug(f"<Esc>pa: {<Esc>pa}")<Esc>
 
 
-" Show line numbers
-set number
 
 " Full stack dev indentation
 au BufNewFile,BufRead *.js,*.html,*.css, *.yaml
@@ -781,25 +792,6 @@ au BufNewFile,BufRead *.py,*.pyx
     \ set fileformat=unix
 
 
-" Split a new window to the right
-set splitright
-" Split a new window to the bottom
-set splitbelow
-
-
-" Settings for compatibility with tmux colorscheme vim
-set background=dark
-set t_Co=256
-
-
-" Highlight matching search patterns
-set hlsearch
-" Enable incremental search
-set incsearch
-" Include matching uppercase words with lowercase search term
-set ignorecase
-" Include only uppercase words with uppercase search term
-set smartcase
 
 " Override w motion
 function! MyWMotion()
@@ -886,9 +878,6 @@ nnoremap <silent> B :call MyCapBMotion()<CR>
 highlight ColorColumn ctermbg=59 guibg=grey
 call matchadd('ColorColumn', '\%81v', 100)
 
-" Store info from no more than 101 files at a time, 9999 lines of text,
-" 100kb of data. Useful for copying large amounts of data between files.
-set viminfo='100,<9999,s101
 
 " Press * to search for the term under the cursor a visual selection and
 " then <leader>r to replace all the instances in the curr file.
@@ -908,7 +897,7 @@ nnoremap <leader>ss :Start! ssh_sync % <CR>
 
 
 " I don't like background highlighting at all
-highlight Folded ctermbg=black
+highlight Folded ctermbg=NONE ctermfg=10
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
@@ -945,6 +934,12 @@ augroup vimwikisave
     autocmd BufWritePost */tools/extendwiki/** execute ':silent ! cd ~/tools/extendwiki && nohup $(if git rev-parse --git-dir > /dev/null 2>&1 ; then git add . && git commit -m "Auto-commit: saved %" && git push; fi > /dev/null 2>&1) &'
 augroup end
 
+"" Vimwiki autosave
+augroup vimwikipsave
+    autocmd!
+    autocmd BufWritePost */tools/private-wiki/** execute ':silent ! cd ~/tools/private-wiki && nohup $(if git rev-parse --git-dir > /dev/null 2>&1 ; then git add . && git commit -m "Auto-commit: saved %" && git push; fi > /dev/null 2>&1) &'
+augroup end
+
 " Automatically create dirs if missing on :e/newdir/file.py
 function s:MkNonExDir(file, buf)
     if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
@@ -978,12 +973,11 @@ let g:nayvy_pyproject_root_markers = [
   \ 'requirements.txt',
 \ ]
 
-let g:nayvy_coc_enabled = 1
-let g:nayvy_linter_for_fix = "flake8"
-let g:nayvy_import_path_format = "all_absolute"
+"let g:nayvy_coc_enabled = 1
+"let g:nayvy_linter_for_fix = 'flake8'
 let g:nayvy_import_config_path = "~/dotfiles/nayvy_config.py"
 
-let g:ale_completion_enabled = 0
+let g:ale_completion_enabled = 1
 let g:ale_lint_on_enter = 0
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
@@ -993,8 +987,6 @@ let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
 " let g:ale_linters = {'python': ['flake8']}
-
-
 
 let g:ale_lint_dirs = {
 \    'flake8': getcwd()
@@ -1038,10 +1030,7 @@ let g:ale_fix_on_save = 1
 
 :command! Json :%!python -m json.tool
 
-set cursorline
-
 let g:pythonStdlibPath = '~/.pyenv/versions/3.7.7/lib/python3.7/site-packages/'
-
 
 function! RooterFileShow() abort
     :Rooter
@@ -1061,4 +1050,4 @@ hi Normal guibg=NONE ctermbg=NONE
 hi Visual cterm=none ctermbg=darkgrey ctermfg=cyan
 source ~/.vim/python_ropevim.vim
 source ~/dotfiles/custom_vim_plugins/visualMarks.vim
-
+highlight Folded ctermbg=NONE ctermfg=10
