@@ -34,6 +34,15 @@ hs.alert.show("Config loaded")
 --               }
 --)
 
+
+
+------ iTerm2 key bind ------
+hs.hotkey.bind({"alt"}, '1', function()hs.application.launchOrFocus('iTerm')end)
+hs.hotkey.bind({"alt"}, '2', function()hs.application.launchOrFocus('Google Chrome')end)
+hs.hotkey.bind({"alt"}, '3', function()hs.application.launchOrFocus('Slack')end)
+hs.hotkey.bind({"alt"}, '4', function()hs.application.launchOrFocus('Microsoft Outlook')end)
+
+
 ------ Window tiling --------
 
 hs.hotkey.bind({"cmd", "shift"}, "l", function()

@@ -21,11 +21,17 @@ export LC_ALL=en_US.UTF-8
 
 export PATH=/Users/mzi/Library:$PATH
 export PATH=/User/marekzidek/.pyenv/versions/3.7.7/bin/:$PATH
+export PATH=~/.pyenv/versions/3.7.7/bin/:$PATH
+export PATH=~/.pyenv/versions/3.7.7/bin:$PATH
 
 # If vim could not be complied with +clipboard
 # alias vim='vimx'
 
 #alias vim='nvim' # god damn the problems I had on macOs with nvim
+
+# Get a full path to a file
+alias lsp='ls -d "$PWD"/*'
+
 
 export HOMEBREW_NO_AUTO_UPDATE=1
 
@@ -409,4 +415,5 @@ export NAYVY_PYPROJECT_ROOT_MARKERS='pyproject.toml,setup.py,.git'  # comma-sepa
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+export PATH="~/.pyenv/versions/3.7.7/lib/python3.7/site-packages:$PATH"
 alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi --no-autoindent'
