@@ -716,7 +716,7 @@ syntax on
 " Turn off modelines
 " !mkdir ~/.vim/undodir
 
-let @p='yiwoprint("kjpA")kjyypf"x;xkVj<................Vjd'
+" let @p='yiwoprint("kjpA")kjyypf"x;xkVj<................Vjd'
 
 "This unsets the "last search pattern" register by hitting return
 nnoremap <CR> :noh<CR><CR>

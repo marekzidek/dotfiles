@@ -38,7 +38,13 @@ cp ~/.bin/kube-sync/kube_sync.sh ~/.bin/ks
 #v
 git clone https://github.com/rupa/v.git ~/.bin
 git clone https://github.com/andrewferrier/fzf-z ~/.bin
+
+
+# Tmux plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+then `tmux source ~/.tmux.conf`
+and then most importantly: `prefix + I` to install the listed plugins!
+
 
 
 # If using big sur 11.0 and newer, pyenv will be a terrible experience 
