@@ -122,6 +122,9 @@ let g:ale_disable_lsp = 1
 nmap <leader>s :split<CR>
 nmap <leader>v :vsplit<CR>
 
+" Reload vimrc
+nmap <leader><leader>r :so ~/dotfiles/.vimrc<CR>
+
 " set the runtime path to include vim-plug and initialize
 call plug#begin('~/.vim/plugged')
 
