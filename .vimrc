@@ -6,7 +6,7 @@ set nuw=5
 set virtualedit=block
 set hidden
 set clipboard=unnamed
-set number relativenumber
+"set number relativenumber
 set encoding=utf-8
 set t_Co=256
 set background=dark
@@ -21,9 +21,8 @@ set undodir=~/.vim/undodir
 set fillchars+=vert:\▏
 set splitright
 set splitbelow
-set background=dark
-set t_Co=256
 
+"
 " Highlight matching search patterns
 set hlsearch
 " Enable incremental search
@@ -42,7 +41,7 @@ set showcmd
 " Highlight matching pairs of brackets.
 set matchpairs+=<:>
 
-" Enable resize of vim when is tmux
+" Enable resize of vim when in tmux
 if has("mouse_sgr")
     set ttymouse=sgr
 else
@@ -112,9 +111,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 " Run PlugInstall if there are missing plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \| PlugInstall --sync | source $MYVIMRC
-\| endif
+"autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+"  \| PlugInstall --sync | source $MYVIMRC
+"\| endif
 
 let g:ale_disable_lsp = 1
 
@@ -132,7 +131,7 @@ call plug#begin('~/.vim/plugged')
 "Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 "Plug 'python-rope/ropevim'
 Plug 'psliwka/vim-smoothie'
-Plug 'makerforceio/CoVim'
+"Plug 'makerforceio/CoVim'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-dispatch'
 
@@ -144,6 +143,7 @@ Plug 'apalmer1377/factorus'
 "nmap <leader><leader>j <Plug>VisualMarksGetVisualMark
 
 
+
 " Amazing when writing markdown in vim, just paste image from clipboard
 Plug 'ferrine/md-img-paste.vim'
 autocmd FileType markdown nmap <buffer><silent> <leader><leader>p :call mdip#MarkdownClipboardImage()<CR>
@@ -153,8 +153,10 @@ let g:mdip_imgdir = 'img'
 Plug 'airblade/vim-rooter'
 let g:rooter_manual_only = 1
 
-Plug 'fisadev/vim-isort'
+"Plug 'fisadev/vim-isort'
 Plug 'voldikss/vim-floaterm'
+
+"Plug 'github/copilot.vim'
 
 "Plug 'chaoren/vim-wordmotion'
 
@@ -229,7 +231,7 @@ let g:NERDDefaultAlign = 'start'
 Plug 'preservim/tagbar'
 nmap <leader>t :TagbarToggle<CR>
 let g:tagbar_sort = 0
-Plug 'puremourning/vimspector'
+"Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
 Plug 'sstallion/vim-cursorline'
 Plug 'neoclide/coc.nvim', { 'tag': 'v0.0.78' }
@@ -259,7 +261,7 @@ let g:coiled_snake_explicit_sign_width = 1
 " use coc-linter instead
 " Plug 'vim-syntastic/syntastic'
 
-Plug 'marekzidek/vim-nayvy'
+"Plug 'marekzidek/vim-nayvy'
 Plug 'tpope/vim-surround'
 
 " Airline plugin
@@ -298,9 +300,26 @@ let g:vimwiki_markdown_link_ext = 1
 let g:vimwiki_ext2syntax = {'.md': 'markdown'}
 
 
+let src_dir = fnamemodify(getcwd(), ':t')
+let g:projectionist_heuristics = {
+      \ src_dir . "/*": {
+      \     src_dir . "/*.py":
+      \     {
+      \         "alternate": src_dir . "/tests/{dirname}/test_{basename}.py",
+      \         "type": "src",
+      \         "template": ["def {basename}():"]
+      \     },
+      \    src_dir . "tests/**/test_*.py":
+      \     {
+      \         "alternate": [src_dir . "/{basename}.py", src_dir . "/{dirname}/{basename}.py"],
+      \         "type": "test",
+      \         "template": ["from " . src_dir . ".{dot} import *\n\ndef test_{underscore}():\n    pass"]
+      \     }
+      \ }}
 
 Plug 'tpope/vim-projectionist'
 " Best thing ever I am mindblown
+" Projectionist
 
 let g:markdown_folding = 1
 
@@ -337,7 +356,7 @@ inoremap <silent><expr> <Tab>
 
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 "let g:asyncomplete_auto_popup = 1
@@ -372,32 +391,35 @@ Plug 'vim-scripts/indentpython.vim'
 Plug 'lotabout/slimux'
 
 
-vmap <leader>j <Plug>VisualMarksAlternateVisualMark
-nmap <leader>ll <Plug>VisualMarksSaveAlternateVisualMark
-nmap <leader>i <Plug>VisualMarksGetVisualMarkk
-nmap <leader>j <Plug>VisualMarksGetVisualMarkj
-nmap <leader>h <Plug>VisualMarksGetVisualMarkh
-nmap <leader>hh <Plug>VisualMarksAlternateVisualMarkSaveh
+"vmap <leader>j <Plug>VisualMarksAlternateVisualMark
+"nmap <leader>ll <Plug>VisualMarksSaveAlternateVisualMark
+"nmap <leader>i <Plug>VisualMarksGetVisualMarkk
+"nmap <leader>j <Plug>VisualMarksGetVisualMarkj
+"nmap <leader>h <Plug>VisualMarksGetVisualMarkh
+"nmap <leader>hh <Plug>VisualMarksAlternateVisualMarkSaveh
 " nmap <leader>l <Plug>VisualMarksGetVisualMark
 
 let g:slimux_select_from_current_window = 1
 map <Leader>;; :SlimuxREPLSendLine<CR>
-map <Leader>;x :norm ^viW 99<CR>
-map <Leader>;w :norm viw 99<CR>
+map <Leader>;x :norm ^viW ;;<CR>
+map <Leader>;w :norm viw ;;<CR>
 map <Leader>;d :call SlimuxSendCommand('%debug')<CR>
+map <Leader>;l :call SlimuxSendCommand('len(' . expand('<cword>') . ')')<CR>
 map <Leader>;c :call SlimuxSendCommand(expand('<cword>') . '.columns')<CR>
-map <Leader>;f :norm V[[%jO][k ;;<CR>
-map <Leader>;F :norm V[[O]]k ;;<CR>
-map <Leader>;m :norm V[m%jO]Mk ;;<CR>
-map <Leader>;M :norm V[mO]mk ;;<CR>
+map <Leader>;1 :call SlimuxSendCommand(expand('<cword>') . '.iloc[0]')<CR>
+map <Leader>;f :norm mzV^[]]]%jO]][[][k 6<CR>`z
+map <Leader>;F :norm mz]]zo`zV^[]]]O]][[][k 6<CR>`z
+map <Leader>;m :norm mzV^[mk]m%jO]m[m]Mk 6<CR>`z
+map <Leader>;M :norm mz]mzo`zV^[mk]mO]m[m]Mh ;;<CR>`z
 
 nmap <Leader>;k /if __name__ == "__main__":<CR> <bar> kVgg :SlimuxREPLSendSelection<CR>
-nmap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
-nmap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
-vmap <Leader>;; <Esc>mzgv<leader>j :SlimuxREPLSendSelection<CR>`z
-nmap <Leader>7 :call SlimuxSendCommand('')<CR>
+"nmap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
+"nmap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
+vmap <Leader>;; <Esc>mzgv :SlimuxREPLSendSelection<CR>`z
+"nmap <Leader>7 :call SlimuxSendCommand('')<CR>
 vmap <Leader>99 <Esc>mzgv<leader>j :SlimuxREPLSendSelection<CR>`z
-nmap <Leader>88 <Esc>mzgv<leader>j :SlimuxREPLSendSelection<CR>`z
+"vmap <Leader>6 :SlimuxREPLSendSelection<CR>
+"nmap <Leader>88 <Esc>mzgv<leader>j :SlimuxREPLSendSelection<CR>`z
 map <Leader>;b :SlimuxREPLSendBuffer<CR>
 " Explore current pandas df word under cursor
 map <Leader>;v :call SlimuxSendCommand('from visidata import view_pandas as vd; vd(' . expand('<cword>') . ')')<CR>
@@ -408,29 +430,29 @@ vnoremap y <Esc>mzgvy<CR>`z
 
 " Slimux send %%magic selection
 
-function! Get_visual_selection()
-    " Why is this not a built-in Vim script function?!
-    let [line_start, column_start] = getpos("'<")[1:2]
-    let [line_end, column_end] = getpos("'>")[1:2]
-    let lines = getline(line_start, line_end)
-    if len(lines) == 0
-        return ''
-    endif
-    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
-    let lines[0] = lines[0][column_start - 1:]
-    return join(lines, "\n")
-endfunction
+"function! Get_visual_selection()
+"    " Why is this not a built-in Vim script function?!
+"    let [line_start, column_start] = getpos("'<")[1:2]
+"    let [line_end, column_end] = getpos("'>")[1:2]
+"    let lines = getline(line_start, line_end)
+"    if len(lines) == 0
+"        return ''
+"    endif
+"    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+"    let lines[0] = lines[0][column_start - 1:]
+"    return join(lines, "\n")
+"endfunction
 
-function! CheckSlimuxEnter() abort
-  let selection = Get_visual_selection()
-  let iPythonMagic = matchstr(selection, '%%')
-  if strchars(iPythonMagic)
-    exec "normal mz 88"
-    exec "normal mz 7"
-  else
-    exec 'normal mz 88'
-  endif
-endfunction
+"function! CheckSlimuxEnter() abort
+"  let selection = Get_visual_selection()
+"  let iPythonMagic = matchstr(selection, '%%')
+"  if strchars(iPythonMagic)
+"    exec "normal mz 88"
+"    exec "normal mz 7"
+"  else
+"    exec 'normal mz 88'
+"  endif
+"endfunction
 
 " vnoremap <Leader>;; :<C-U>call CheckSlimuxEnter()<CR>
 
@@ -615,7 +637,8 @@ function! Open_lf_callback(selection_path) abort
     let s:choice_file_path = '/tmp/lf_result'
     if filereadable(a:selection_path)
       for f in readfile(a:selection_path)
-        exec "edit " . f
+	execute "edit " . f
+	break
       endfor
     endif
     call delete(a:selection_path)
@@ -709,11 +732,11 @@ syntax on
 :imap kj <Esc>
 
 
-:augroup *.py numbertoggle
-:  autocmd!
-:  autocmd BufEnter,FocusGained * set relativenumber
-:  autocmd BufLeave,FocusLost * set norelativenumber
-:augroup END
+":augroup *.py numbertoggle
+":  autocmd!
+":  autocmd BufEnter,FocusGained * set relativenumber
+":  autocmd BufLeave,FocusLost * set norelativenumber
+":augroup END
 
 "
 " Turn off modelines
@@ -768,7 +791,8 @@ highlight LineNr ctermfg=grey
 
 
 " Toggle lineNumbers
-nnoremap <leader>l :set relativenumber!<cr>:set number!<cr>
+"nnoremap <leader>l :set relativenumber!<cr>:set number!<cr>
+nnoremap <leader>l :set number!<cr>
 vnoremap <leader>gv :<c-u>exe '!git log -L' line("'<").','.line("'>").':'.expand('%')<CR>
 
 
@@ -986,10 +1010,13 @@ let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_linters_explicit = 1
+let g:ale_set_loclist = 1
+let g:ale_set_quickfix = 1
+let g:ale_open_list = 1
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
-" let g:ale_linters = {'python': ['flake8']}
+let g:ale_linters = {'python': ['black']}
 
 let g:ale_lint_dirs = {
 \    'flake8': getcwd()
@@ -1005,7 +1032,7 @@ let g:ale_fixers = {
 "\}
 "
 
-let g:ale_fix_on_save = 1
+"let g:ale_fix_on_save = 1
 
 " Format by black on save
 "augroup black_python
@@ -1051,6 +1078,7 @@ let g:fzf_colors =
 \ 'bg': ['bg', 'Normal']}
 hi Normal guibg=NONE ctermbg=NONE
 hi Visual cterm=none ctermbg=darkgrey ctermfg=cyan
-source ~/.vim/python_ropevim.vim
-source ~/dotfiles/custom_vim_plugins/visualMarks.vim
+
+" source ~/.vim/python_ropevim.vim
+"source ~/dotfiles/custom_vim_plugins/visualMarks.vim
 highlight Folded ctermbg=NONE ctermfg=10

@@ -46,7 +46,6 @@ then `tmux source ~/.tmux.conf`
 and then most importantly: `prefix + I` to install the listed plugins!
 
 
-
 # If using big sur 11.0 and newer, pyenv will be a terrible experience 
 Solve using this link https://github.com/pyenv/pyenv/issues/1737
 
@@ -79,6 +78,7 @@ autojump
 libtool
 autoconf
 automake
+pyenv
 
 
 # Change default shell
@@ -105,11 +105,32 @@ jedi
 neovim-remote
 
 
+Make sure to run CocConfig and copy the contents of coc-settings.json to the one from CocConfig
+
 ###### MacOS Section ########
 brew:
   hammerspoon
   homebrew
   karabiner
+  ical-buddy
+
+  One has to open icalendar:
+  	and do Calendar -> Add Acount -> Microsoft Exchange
+	Then, it is nice to disable notifications from one of the calendars, do it by going to generic Apple menu > System Settings, then click Notifications in the sidebar
+
+		Sometimes the calendar stops syncing:
+		25/30 * * * * pkill -f CalendarAgent into crontab to make it sync all the time
+
+		If one wants to not open god damn chrome tab with zoom and not actually needed for anything, then:
+			check finicky.js in Andrejs personal github dotfiles, and install finicky
+
+
+ brew, ALWAYS PIN superimportant packagesL
+ 	brew pin vim
+	brew pin ruby
+ 	brew pin perl
+
+
 
 cask:
   altTab

@@ -1,5 +1,4 @@
 import abc
-from abc import ABCMeta, abstractmethod, abstractclassmethod
 import aifc
 import argparse
 import array
@@ -16,7 +15,6 @@ import binhex
 import bisect
 import builtins
 import bz2
-import cProfile
 import calendar
 import cgi
 import cgitb
@@ -33,9 +31,9 @@ import compileall
 import concurrent.futures
 import configparser
 import contextlib
-from contextlib import contextmanager
 import copy
 import copyreg
+import cProfile
 import crypt
 import csv
 import ctypes
@@ -44,7 +42,6 @@ import curses.ascii
 import curses.panel
 import curses.textpad
 import dataclasses
-from dataclasses import dataclass
 import datetime
 import dbm
 import dbm.dumb
@@ -120,7 +117,6 @@ import encodings.mbcs
 import encodings.utf_8_sig
 import ensurepip
 import enum
-from enum import Enum, IntEnum, unique, auto
 import errno
 import faulthandler
 import fcntl
@@ -198,7 +194,6 @@ import os.path
 import ossaudiodev
 import parser
 import pathlib
-from pathlib import Path
 import pdb
 import pickle
 import pickletools
@@ -323,20 +318,87 @@ import zipapp
 import zipfile
 import zipimport
 import zlib
-from typing import Any, Callable, ClassVar, Generic, Optional, Tuple, Type, TypeVar, Union, AbstractSet, ByteString, Container, ContextManager, Hashable, ItemsView, Iterable, Iterator, KeysView, Mapping, MappingView, MutableMapping, MutableSequence, MutableSet, Sequence, Sized, ValuesView, Awaitable, AsyncIterator, AsyncIterable, Coroutine, Collection, AsyncGenerator, AsyncContextManager, Reversible, SupportsAbs, SupportsBytes, SupportsComplex, SupportsFloat, SupportsInt, SupportsRound, ChainMap, Counter, Deque, Dict, DefaultDict, List, OrderedDict, Set, FrozenSet, NamedTuple, Generator, AnyStr, cast, get_type_hints, NewType, no_type_check, no_type_check_decorator, NoReturn, overload, Text, TYPE_CHECKING
-from pprint import pprint as pp
+from abc import ABCMeta, abstractclassmethod, abstractmethod
+from contextlib import contextmanager
+from dataclasses import dataclass
+from enum import Enum, IntEnum, auto, unique
+from os.path import abspath, basename, dirname, exists, relpath
+from pathlib import Path
 from pprint import pformat
-from os.path import basename, dirname, relpath, exists, abspath
+from pprint import pprint as pp
+from typing import (
+    TYPE_CHECKING,
+    AbstractSet,
+    Any,
+    AnyStr,
+    AsyncContextManager,
+    AsyncGenerator,
+    AsyncIterable,
+    AsyncIterator,
+    Awaitable,
+    ByteString,
+    Callable,
+    ChainMap,
+    ClassVar,
+    Collection,
+    Container,
+    ContextManager,
+    Coroutine,
+    Counter,
+    DefaultDict,
+    Deque,
+    Dict,
+    FrozenSet,
+    Generator,
+    Generic,
+    Hashable,
+    ItemsView,
+    Iterable,
+    Iterator,
+    KeysView,
+    List,
+    Mapping,
+    MappingView,
+    MutableMapping,
+    MutableSequence,
+    MutableSet,
+    NamedTuple,
+    NewType,
+    NoReturn,
+    Optional,
+    OrderedDict,
+    Reversible,
+    Sequence,
+    Set,
+    Sized,
+    SupportsAbs,
+    SupportsBytes,
+    SupportsComplex,
+    SupportsFloat,
+    SupportsInt,
+    SupportsRound,
+    Text,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    ValuesView,
+    cast,
+    get_type_hints,
+    no_type_check,
+    no_type_check_decorator,
+    overload,
+)
 
-import torch
+import click
+import nltk
 import numpy as np
 import pandas as pd
-import tensorflow as tf
-import seaborn as sns
-import requests
-from logzero import logger
-import yaml
-import click
 import pytest
+import requests
+import seaborn as sns
+import tensorflow as tf
+import torch
+import yaml
+from logzero import logger
 from pytest import fixture
-import nltk

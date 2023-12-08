@@ -27,7 +27,7 @@ export PATH=~/.pyenv/versions/3.7.7/bin:$PATH
 # If vim could not be complied with +clipboard
 # alias vim='vimx'
 
-#alias vim='nvim' # god damn the problems I had on macOs with nvim
+alias vim='nvim'
 
 # Get a full path to a file
 alias lsp='ls -d "$PWD"/*'
@@ -130,7 +130,10 @@ git_info() {
 PROMPT='$(git_info)$(ssh_info) %F{12}%2~%f%u %F{173}❯%f '
 
 #RPROMPT='$(git_info)'
+#
+#
 
+source ~/.env
 
 # Vim keybindings and remappings
 bindkey -v
@@ -148,24 +151,24 @@ compinit -C
 _comp_options+=(globdots)
 
 
-if echo $OSTYPE | grep "darwin" > /dev/null; then
-	# Use brew installed vim, because the basic is not compiled with +clipboard
-	alias vim=/usr/local/bin/vim
-fi
+#if echo $OSTYPE | grep "darwin" > /dev/null; then
+#        # Use brew installed vim, because the basic is not compiled with +clipboard
+#        alias vim=/usr/local/bin/vim
+#fi
 
 if echo $OSTYPE | grep "darwin" > /dev/null; then
 	# Autosuggest with changes on accept and partial accept
 	source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-	# Let python be homebrew managed python on macOS
-	alias python=~/.pyenv/shims/python3
-	alias pip=~/.pyenv/shims/pip3
+#        # Let python be homebrew managed python on macOS
+#        alias python=~/.pyenv/shims/python3
+#        alias pip=~/.pyenv/shims/pip3
 else
 	# prior to this, git clone into .zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 	source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-	alias python=/usr/bin/python3
-	alias pip=/usr/bin/pip3
+#        alias python=/usr/bin/python3
+#        alias pip=/usr/bin/pip3
 fi
 
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
@@ -195,7 +198,7 @@ bindkey -v '^?' backward-delete-char
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/.bin:$PATH
-export PYENV_VERSION=3.7.7
+#export PYENV_VERSION=3.11.1
 
 HIST_STAMPS="mm/dd/yyyy"
 
@@ -282,7 +285,7 @@ bindkey -s "\C-n" ' back_project\n'
 
 # Interactive search.
 wikiprivate() {
-[[ -n $1 ]] && cd $1 || cd ~/tools/private-wiki #provided or default
+[[ -n $1 ]] && builtin cd $1 || builtin cd ~/tools/private-wiki #provided or default
 RG_DEFAULT_COMMAND="rg -i -l --no-ignore-vcs"
 selected=$(
 FZF_DEFAULT_COMMAND="rg --files" fzf \
@@ -297,14 +300,17 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
   --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
 )
 [[ -n $selected ]] && vim $selected # open multiple files in editor
+builtin cd -
 }
 bindkey -s "\C-e" ' wikiprivate\n'
 
-
+dsi_kube() {
+	cp ~/.kube/config_dsi ~/.kube/config
+}
 
 # Interactive search.
 wikiff() {
-[[ -n $1 ]] && cd $1 || cd ~/tools/extendwiki #provided or default
+[[ -n $1 ]] && builtin cd $1 || builtin cd ~/tools/extendwiki #provided or default
 RG_DEFAULT_COMMAND="rg -i -l --no-ignore-vcs"
 selected=$(
 FZF_DEFAULT_COMMAND="rg --files" fzf \
@@ -319,6 +325,7 @@ FZF_DEFAULT_COMMAND="rg --files" fzf \
   --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
 )
 [[ -n $selected ]] && vim $selected # open multiple files in editor
+builtin cd -
 }
 bindkey -s "\C-w" ' wikiff\n'
 
@@ -343,8 +350,8 @@ bindkey -s "\C-w" ' wikiff\n'
 #}
 #bindkey -s "\C-q" 'wikipp\n'
 
-export EDITOR=vim
-export VISUAL=vim
+export EDITOR=nvim
+export VISUAL=nvim
 export OPENER=open
 
 
@@ -416,4 +423,6 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 export PATH="~/.pyenv/versions/3.7.7/lib/python3.7/site-packages:$PATH"
-alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi --no-autoindent'
+alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi --no-autoindent' 
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
