@@ -55,6 +55,13 @@ Use iterm2 and set colorscheme as Elemental, and set
 the foreground color to normal white instead of grey
 
 
+For ctrl-tabbing in tmux
+ Go to profiles -> Keys -> Key Mappings and add:
+ 	Send Hex Codes: 0x01 0x6e for ^Tab -> 
+	Send Hex Codes: 0x01 0x7d for ^Shift+Tab <-
+
+
+
 # From system repo
 
 ctags
@@ -134,4 +141,14 @@ brew:
 
 cask:
   altTab
+
+Settings in atltab:
+ Blacklists:
+	 com.McAfre.McAfeeSafariHost (hide in AltTab - Always)
+	 com.googlecode.iterm2 (hide in AltTab - Always)
+	 com.tinyspeck.slackmacgap (hide in AltTab - Always)
+	 com.microsoft.Outlook (hide in AltTab - Always)
+
+ And then shortcut 1 on is with minimized windows -> Hide
+ and shortcut 2 is (option tab) is with minimized windows -> Show
 
