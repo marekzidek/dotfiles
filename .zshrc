@@ -158,7 +158,7 @@ _comp_options+=(globdots)
 
 if echo $OSTYPE | grep "darwin" > /dev/null; then
 	# Autosuggest with changes on accept and partial accept
-	source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+	source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 #        # Let python be homebrew managed python on macOS
 #        alias python=~/.pyenv/shims/python3
