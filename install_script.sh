@@ -86,6 +86,7 @@ libtool
 autoconf
 automake
 pyenv
+pyenv-virtualenv
 
 
 # Change default shell
@@ -110,6 +111,7 @@ black
 isort
 jedi
 neovim-remote
+poetry
 
 
 Make sure to run CocConfig and copy the contents of coc-settings.json to the one from CocConfig
