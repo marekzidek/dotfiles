@@ -17,3 +17,5 @@ ln -s $(pwd)/.vim/coc-settings.json ~/.vim/coc-settings.json
 
 mkdir -p ~/config
 ln -s $(pwd)/flake8 ~/.config/flake8
+
+ln -s ~/dotfiles/init.lua ~/.hammerspoon/init.lua
