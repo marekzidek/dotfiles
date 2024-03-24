@@ -1,4 +1,4 @@
-source ~/dotfiles/.vim_indent_python
+."\n"
 source ~/dotfiles/nvim/mappings.vim
 "source ~/dotfiles/nvim/trouble.lua
 
@@ -39,6 +39,7 @@ if has("mouse_sgr")
     set ttymouse=sgr
 else
 
+
   if !has('nvim')
     set ttymouse=xterm2
   endif
@@ -59,6 +60,8 @@ set lazyredraw
 " Some files need more memory for syntax highlight
 set mmp=5000
 
+noremap j gj  
+noremap k gk
 " Automatically wrap text that extends beyond the screen length. (OR NOT)
 set wrap
 
@@ -436,7 +439,7 @@ map <Leader>;v :call SlimuxSendCommand('from visidata import view_pandas; from v
 
 vnoremap y <Esc>mzgvy<CR>`z
 
-map <Leader>z :s/(/(\r    / <bar> s/, /\r    /g <bar> s/.*\zs)/\r)/<CR>
+map <Leader>z :s/(/(\r    / <bar> s/.*\zs)/\r)/ <bar> exec "norm k" <bar> s/, /\r    /g <CR>
 vmap <Leader>z :norm $x<CR>
 
 
@@ -547,6 +550,23 @@ Plug 'ludovicchabant/vim-gutentags'
 
 " All of your Plugs must be added before the following line
 call plug#end()            " required
+
+nnoremap Y :let @*=@*.getline('.')."\n"<CR>
+
+function! Get_visual_selection()
+    " Why is this not a built-in Vim script function?!
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    let lines = getline(line_start, line_end)
+    if len(lines) == 0
+        return ''
+    endif
+    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][column_start - 1:]
+    return join(lines, "\n")
+endfunction
+
+vnoremap Y :<C-U>let @*=@*.Get_visual_selection()."\n"
 
 nnoremap <leader>y :call PlotlySaveAndYank()<CR>
 function! PlotlySaveAndYank()
@@ -851,10 +871,10 @@ function! MyCapBMotion()
         normal j^
     endif
 endfunction
-nnoremap <silent> w :call MyWMotion()<CR>
-nnoremap <silent> b :call MyBMotion()<CR>
-nnoremap <silent> W :call MyCapWMotion()<CR>
-nnoremap <silent> B :call MyCapBMotion()<CR>
+"nnoremap <silent> w :call MyWMotion()<CR>
+"nnoremap <silent> b :call MyBMotion()<CR>
+"nnoremap <silent> W :call MyCapWMotion()<CR>
+"nnoremap <silent> B :call MyCapBMotion()<CR>
 
 "function! ScrollQuarter(move)
     "let height=winheight(0)
