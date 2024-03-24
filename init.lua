@@ -106,7 +106,7 @@ end
 
 function switchSpace(skip,dir)
    for i=1,skip do
-      hs.eventtap.keyStroke({"ctrl","fn"},dir,0) -- "fn" is a bugfix!
+      hs.eventtap.keyStroke({"ctrl", "fn"},dir, 500) -- "fn" is a bugfix!
    end
 end
 
@@ -134,8 +134,8 @@ function moveWindowOneSpace(dir,switch)
 	     (dir=="right" and last==thisSpace)) then
 	       local newSpace=(dir=="left" and last or spc)
 	       if switch then
-		  -- spaces.gotoSpace(newSpace)  -- also possible, invokes MC
-		  switchSpace(skipSpaces+1,dir)
+		  spaces.gotoSpace(newSpace)  -- also possible, invokes MC
+		  --switchSpace(skipSpaces+1,dir)
 	       end
 	       spaces.moveWindowToSpace(win,newSpace)
 	       return
@@ -233,23 +233,6 @@ hs.hotkey.bind({"shift", "cmd", "ctrl"},'j',function()hs.window.focusedWindow():
 -----hs.hotkey.bind('alt-shift','tab',switcher_space.previousWindow,nil,switcher_space.previousWindow)
 
 
---------- Wifi Show --------------
-wifiMenu = hs.menubar.newWithPriority(2147483645)
-wifiMenu:setTitle(hs.wifi.currentNetwork())
-
-wifiWatcher = nil
-
-function ssidChanged()
-    local wifiName = hs.wifi.currentNetwork()
-    if wifiName then
-        wifiMenu:setTitle(wifiName)
-    else
-        wifiMenu:setTitle("Wifi OFF")
-    end
-end
-
-wifiWatcher = hs.wifi.watcher.new(ssidChanged):start()
-
 
 ------ Disable CMD - tab ----- UNDER CONSTRUCTION
 --hs.hotkey.bind({"cmd"},"tab",function()
@@ -268,4 +251,4 @@ spoon.SpoonInstall:andUse("HeadphoneAutoPause",
 
 
 ----------------- GRID STUFF ---------
-hs.grid.setMargins({w=15, h=13})
+hs.grid.setMargins({w=6, h=6})

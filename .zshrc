@@ -426,3 +426,7 @@ export PATH="~/.pyenv/versions/3.7.7/lib/python3.7/site-packages:$PATH"
 alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi --no-autoindent' 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
