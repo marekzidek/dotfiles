@@ -14,7 +14,8 @@ spoon.SpoonInstall:andUse("ClipboardTool",
 hs.hotkey.bind({"cmd", "shift", "ctrl"}, "R", function()
   hs.reload()
 end)
-hs.alert.show("Config loaded")
+hs.alert.show("Hammerspoon Config loaded")
+
 
 ----------- Seal -------------
 --spoon.SpoonInstall:andUse("Seal",
@@ -40,8 +41,214 @@ hs.alert.show("Config loaded")
 hs.hotkey.bind({"alt"}, '1', function()hs.application.launchOrFocus('iTerm')end)
 hs.hotkey.bind({"alt"}, '2', function()hs.application.launchOrFocus('Google Chrome')end)
 hs.hotkey.bind({"alt"}, '3', function()hs.application.get('Slack'):activate()end)
-hs.hotkey.bind({"alt"}, '4', function()hs.application.launchOrFocus('Microsoft Outlook')end)
+-- hs.hotkey.bind({"alt"}, '4', function()hs.application.launchOrFocus('Microsoft Outlook')end)
 hs.hotkey.bind({"alt"}, '7', function()hs.application.launchOrFocus('zoom.us')end)
+
+
+
+
+--function focusChromeWindowByTitle(windowTitleMatch)
+--    -- Get all windows on the current system
+--    local allWindows = hs.window.allWindows()
+
+--    for _, w in ipairs(allWindows) do
+--        local app = w:application()
+--        -- Check if the application is Google Chrome
+--        if app:bundleID() == "com.google.Chrome" then
+--            local winTitle = w:title()
+--            -- Check if the window title contains the specified match string
+--            if winTitle and winTitle:find(windowTitleMatch) then
+--                -- Workaround to ensure the window is properly focused across spaces
+--                -- First activate the application
+--                app:activate(true) -- true brings all windows to the front
+
+--                -- Then use a short timer to focus the specific window
+--                -- This helps with OS-level focus issues, especially across different screens or spaces
+--                hs.timer.doAfter(0.1, function()
+--                    w:focus()
+--                end)
+--                return -- Exit the function once the window is found and focused
+--            end
+--        end
+--    end
+--    -- Optional: show an alert if the window is not found
+--    hs.alert.show("Chrome window with title '" .. windowTitleMatch .. "' not found.")
+--end
+
+---- Example usage:
+---- Bind a hotkey (e.g., cmd + ctrl + c) to focus a window named "My Work"
+--hs.hotkey.bind({"alt"}, "6", function()
+--    focusChromeWindowByTitle("Work Email") -- Use part of your specific window name
+--end)
+
+---- You might also have another hotkey for another window, e.g., "Music"
+--hs.hotkey.bind({"cmd", "ctrl"}, "m", function()
+--    focusChromeWindowByTitle("Music")
+--end)
+--
+--
+--function focusChromeWindowByTitle(windowTitleMatch, urlToOpen)
+--    local windowFound = false
+
+--    -- Create a window filter that includes invisible windows (those on other spaces)
+--    -- Setting an empty default filter includes all window types, regardless of space/visibility
+--    local windowFilter = hs.window.filter.new():setDefaultFilter{}
+--    local allWindows = windowFilter:getWindows()
+
+--    for _, w in ipairs(allWindows) do
+--        local app = w:application()
+--        if app:bundleID() == "com.google.Chrome" then
+--            local winTitle = w:title()
+--            if winTitle and winTitle:find(windowTitleMatch) then
+--                -- Window found, focus it
+--                windowFound = true
+                
+--                -- The workaround to ensure proper focusing across spaces is crucial here:
+--                app:activate(true)
+--                hs.timer.doAfter(0.1, function()
+--                    w:focus()
+--                end)
+--                break -- Exit the loop
+--            end
+--        end
+--    end
+
+--    if not windowFound then
+--        -- (The existing logic for opening a new URL remains the same using AppleScript)
+--        if urlToOpen then
+--            local appleScript = string.format([[
+--                tell application "Google Chrome"
+--                    activate
+--                    set newWindow to make new window
+--                    set URL of active tab of newWindow to "%s"
+--                end tell
+--            ]], urlToOpen)
+
+--            hs.osascript.applescript(appleScript)
+--            hs.alert.show("Opened new Chrome window for '" .. windowTitleMatch .. "'. Please use the 'Window > Name Window...' menu in Chrome to name it for future use.")
+--        else
+--            hs.alert.show("Chrome window with title '" .. windowTitleMatch .. "' not found and no URL provided.")
+--        end
+--    end
+--end
+--
+--
+function focusItermWindowByTitle(windowTitleMatch, urlToOpen)
+    local windowFound = false
+    local allWindows = hs.window.allWindows()
+
+    for _, w in ipairs(allWindows) do
+	local app = w:application()
+	if app:bundleID() == "com.googlecode.iterm2" then
+	    local winTitle = w:title()
+	    if winTitle and winTitle:find(windowTitleMatch) then
+		-- Window found, focus it
+		windowFound = true
+		app:activate(true)
+		hs.timer.doAfter(0.1, function()
+		    w:focus()
+		end)
+		break -- Exit the loop
+	    end
+	end
+    end
+
+    if not windowFound then
+	-- No matching window found, open the URL in a new Chrome window
+	if urlToOpen then
+	    hs.urlevent.openURLWithBundle(urlToOpen, "com.googlecode.iterm2")
+	    -- Optional: give it a moment to open and maybe manually name it later
+	    hs.alert.show("Opening new window with " .. urlToOpen)
+	else
+	    hs.alert.show("window with title '" .. windowTitleMatch .. "' not found and no URL provided.")
+	end
+    end
+end
+
+
+function focusChromeWindowByTitle(windowTitleMatch, urlToOpen)
+    local windowFound = false
+    local allWindows = hs.window.allWindows()
+
+    for _, w in ipairs(allWindows) do
+	local app = w:application()
+	if app:bundleID() == "com.google.Chrome" then
+	    local winTitle = w:title()
+	    if winTitle and winTitle:find(windowTitleMatch) then
+		-- Window found, focus it
+		windowFound = true
+		app:activate(true)
+		hs.timer.doAfter(0.1, function()
+		    w:focus()
+		end)
+		break -- Exit the loop
+	    end
+	end
+    end
+
+    if not windowFound then
+	-- No matching window found, open the URL in a new Chrome window
+	if urlToOpen then
+	    hs.urlevent.openURLWithBundle(urlToOpen, "com.google.Chrome")
+	    -- Optional: give it a moment to open and maybe manually name it later
+	    hs.alert.show("Opening new Chrome window with " .. urlToOpen)
+	else
+	    hs.alert.show("Chrome window with title '" .. windowTitleMatch .. "' not found and no URL provided.")
+	end
+    end
+end
+
+-- Example usage:
+
+-- Hotkey to focus "My Work" window, or open "https://work.example.com"
+-- Bind a hotkey (e.g., cmd + ctrl + c) to focus a window named "My Work"
+hs.hotkey.bind({"alt"}, "4", function()
+    focusChromeWindowByTitle("Work Email", "https://outlook.office.com/mail/") -- Use part of your specific window name
+end)
+
+
+hs.hotkey.bind({"alt"}, "6", function()
+    focusItermWindowByTitle("Duplicated Window", "https://dashboard.example.com")
+end)
+hs.hotkey.bind({"alt"}, "1", function()
+    focusItermWindowByTitle("Main Window", "https://dashboard.example.com")
+end)
+
+--hs.hotkey.bind({"cmd", "ctrl"}, "c", function()
+--    focusChromeWindowByTitle("My Work", "https://work.example.com")
+--end)
+
+
+
+function focusOtherChromeWindow(excludeTitleMatch)
+    local allWindows = hs.window.allWindows()
+    for _, w in ipairs(allWindows) do
+        local app = w:application()
+        local winTitle = w:title()
+
+        -- Check if it's Chrome and *doesn't* match the exclusion title
+        if app:bundleID() == "com.google.Chrome" and winTitle and not winTitle:find(excludeTitleMatch) then
+
+            -- Window found (and it's not the excluded one), focus it
+            app:activate(true)
+            hs.timer.doAfter(0.1, function()
+                w:focus()
+            end)
+            return -- Exit function after focusing
+        end
+    end
+
+    -- If no *other* suitable window is found
+    hs.alert.show("No other suitable Chrome window found (all are named '" .. excludeTitleMatch .. "').")
+end
+
+-- Example Usage in your init.lua:
+
+-- Hotkey (e.g., cmd + ctrl + v) to focus any *other* Chrome window except "My Work"
+hs.hotkey.bind({"alt"}, "2", function()
+    focusOtherChromeWindow("Work Email") -- Exclude any window matching "My Work" in the title
+end)
+
 
 
 ------ Window tiling --------
@@ -250,5 +457,8 @@ spoon.SpoonInstall:andUse("HeadphoneAutoPause",
 )
 
 
------------------ GRID STUFF ---------
-hs.grid.setMargins({w=6, h=6})
+
+
+----------------- GRID STUFF ----------------
+---never go larger than h = 11 on macbook air m2 15 inch, the grid snaps into a chain of smaller and smaller windows in height ---------
+hs.grid.setMargins({w=15, h=11})
