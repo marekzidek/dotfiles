@@ -7,5 +7,6 @@
   "diagnostic.enable":~,
   "diagnostic.hintSign": "",
   "python.pythonPath": "~/.pyenv/shims/python3",
-  "python.venvPath": "~/.pyenv/versions/3.7.7"
+  "python.venvPath": "~/.pyenv/versions/3.7.7",
+  "snippets.ultisnips.pythonPrompt": false
 }

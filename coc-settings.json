@@ -9,10 +9,14 @@
   "diagnostic.checkCurrentLine": false,
   "diagnostic.virtualTextCurrentLineOnly": false,
   "diagnostic.virtualTextPrefix": " 🧠 ",
+  "pyright.inlayHints.functionReturnTypes": false,
+  "pyright.inlayHints.variableTypes": false,
+  "pyright.inlayHints.parameterTypes": false
   "diagnostic.errorSign": "✖",
   "diagnostic.warningSign": "⚠",
   "diagnostic.infoSign": "●",
   "diagnostic.hintSign": "○",
   "python.pythonPath": "~/.pyenv/shims/python3",
-  "python.venvPath": "~/.pyenv/versions/3.7.7"
+  "python.venvPath": "~/.pyenv/versions/3.7.7",
+  "workspace.bottomupfiletypes": [ "python" ]
 }
