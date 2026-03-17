@@ -18,7 +18,10 @@ set shellopts '-eu'
 set ifs "\n"
 
 # leave some space at the top and the bottom of the screen
-set scrolloff 10
+set scrolloff 10 
+
+# show the result of execution of previous commands
+map ` !true
 
 # use enter for shell commands
 map <enter> shell
@@ -28,17 +31,26 @@ map x $$f
 map X !$f
 
 # dedicated keys for file opener actions
-map o &mimeopen $f
-map O $mimeopen --ask $f
+map o &open $f
+map O $open -R $f
 
 # Run BulkRename on br
 map br $vimv $fx
 
 
+
+cmd edit-config ${{
+    $EDITOR ~/.config/lf/lfrc
+    lf -remote "send $id source ~/dotfiles/lf/lfrc"
+}}
+
+map C edit-config
+
 # Tmux pane swithching
 map <c-j> ${{tmux select-pane -D}}
 map <c-k> ${{tmux select-pane -U}}
-map <bs> ${{tmux select-pane -L}}
+map <c-h> ${{tmux select-pane -L}}
+map <backspace> ${{tmux select-pane -L}}
 map <c-l> ${{tmux select-pane -R}}
 
 
@@ -49,12 +61,51 @@ map <c-l> ${{tmux select-pane -R}}
 # text files and a file opener for the rest.
 cmd open ${{
     case $(file --mime-type $f -b) in
-        text/*) $EDITOR $fx;;
-        # *) for f in $fx; do setsid $OPENER $f > /dev/null 2> /dev/null & done;;
-        *) for f in $fx; do $OPENER $f; done;;
-        # *) $OPENER $fx;;
+	text/*) $EDITOR $fx;;
+	application/json) $EDITOR $fx;;
+	application/octet-stream) $EDITOR $fx;;
+	# *) for f in $fx; do setsid $OPENER $f > /dev/null 2> /dev/null & done;;
+	*) for f in $fx; do $OPENER $f; done;;
+	# *) $OPENER $fx;;
     esac
 }}
+
+map P play
+# define a custom 'Play' command
+# This command works for csv, json, pickle and xlsx files
+# It just opens an ipython session with the file loaded for playing / analysing
+#cmd Play ${{
+#    case $f in
+#        *.xlsx) ipython -i -c "hi = pd.read_excel($fx)";;
+#    esac
+#}}
+        
+cmd play ${{
+
+    case $f in
+        *.xlsx)  ipython -i -c "hi = pd.read_excel('$f')";;
+	*.pickle)  ipython -i -c "with open('$f', 'rb') as f: import pickle; hi = pickle.load(f)";;
+	*.pkl)  ipython -i -c "with open('$f', 'rb') as f: import pickle; hi = pickle.load(f)";;
+	*.json)  ipython -i -c "with open('$f', 'r') as f: import json; import jsons; hi = jsons.load(json.load(f))";;
+	*.tsv)  ipython -i -c "hi = pd.read_csv('$f', sep='\\t')";;
+	*.csv)  ipython -i -c "hi = pd.read_csv('$f')";;
+	*.parquet)  ipython -i -c "hi = pd.read_parquet('$f')";; 
+    esac
+}}
+
+# define a custom 'Viz' command
+# This command works for csv xlsx files
+# It just opens visidata to see this dataframe
+cmd viz ${{
+    case $f in
+        *.xlsx)  visidata $f;;
+	*.csv)  visidata $f;;
+	*.tsv)  visidata $f;;
+	*.parquet)  visidata $f;;
+    esac
+}}
+map V viz
+
 
 # define a custom 'rename' command without prompt for overwrite
 # cmd rename %[ -e $1 ] && printf "file exists" || mv $f $1
@@ -94,6 +145,19 @@ cmd extract ${{
     esac
 }}
 
+
+cmd unzip ${{
+    set -f
+    case $f in
+        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf $f;;
+        *.tar.gz|*.tgz) tar xzvf $f;;
+        *.tar.xz|*.txz) tar xJvf $f;;
+        *.zip) unzip $f;;
+        *.rar) unrar x $f;;
+        *.7z) 7z x $f;;
+    esac
+}}
+
 # compress current file or selected files with tar and gunzip
 cmd tar ${{
     set -f
@@ -115,7 +179,17 @@ cmd zip ${{
 # Usage
 map U $du -hd1|less # Usage of a directory
 # Print
-map <c-p> print
+map <c-p> $echo "lol" | less
 
 map D trash        # custom command
 
+
+cmd copy_to_clipboard ${{
+      repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || true
+      if [ -n "$repo_root" ]; then
+          printf '%s' "${f#$repo_root/}" | pbcopy
+      else
+          printf '%s' "$f" | pbcopy
+      fi
+  }}
+map <c-c> copy_to_clipboard
