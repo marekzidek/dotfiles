@@ -20,9 +20,17 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 export PATH=/Users/mzi/Library:$PATH
+export PATH=~/libs/gitleaks:$PATH
 export PATH=/User/marekzidek/.pyenv/versions/3.7.7/bin/:$PATH
 export PATH=~/.pyenv/versions/3.7.7/bin/:$PATH
 export PATH=~/.pyenv/versions/3.7.7/bin:$PATH
+
+
+## Load secrets from .env
+if [[ -f ~/dotfiles/.env ]]; then
+  source ~/dotfiles/.env
+fi
+
 
 # If vim could not be complied with +clipboard
 # alias vim='vimx'
@@ -44,6 +52,7 @@ alias gd='git diff'
 alias gl='git log'
 alias ga='git add'
 alias gc='git commit'
+alias gb='gh browse --branch $(git branch --show-current)' # Opens your current branch in the browser
 
 alias env_add='set -a && source .env && set +a'
 # Another possibility is https://github.com/theskumar/python-dotenv
@@ -127,7 +136,8 @@ git_info() {
 
 # Use ❯ as the non-root prompt character; # for root
 # Change the prompt character color if the last command had a nonzero exit code
-PROMPT='$(git_info)$(ssh_info) %F{12}%2~%f%u %F{173}❯%f '
+#PROMPT='$(git_info)$(ssh_info) %F{12}%2~%f%u %F{173}❯%f '
+PROMPT='%F{12}%2~%f%u %F{173}❯%f '
 
 #RPROMPT='$(git_info)'
 #
@@ -416,6 +426,20 @@ bindkey -s "\C-t" ' cd $(fzfz)\n'
 #		kubectl config set-context --current --namespace=$1 > /dev/null
 #	fi
 #}
+#
+function preexec() {
+  timer=${timer:-$SECONDS}
+}
+
+function precmd() {
+  if [ $timer ]; then
+    timer_show=$(($SECONDS - $timer))
+    export RPROMPT="%F{cyan}${timer_show}s %{$reset_color%}"
+    unset timer
+  fi
+}
+
+DISABLE_AUTO_UPDATE="true"
 
 
 export NAYVY_PYPROJECT_ROOT_MARKERS='pyproject.toml,setup.py,.git'  # comma-separated format
@@ -427,6 +451,50 @@ alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi --no
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+#[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+setopt HIST_IGNORE_SPACE
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/Marek_Zidek/documents_/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/Marek_Zidek/documents_/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/Marek_Zidek/documents_/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/Marek_Zidek/documents_/google-cloud-sdk/completion.zsh.inc'; fi
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.claude/local:$PATH"
+
+
+notify() {
+
+    emulate -L zsh  # Reset shell options inside this function.
+
+    # Fetch the last command with elapsed time from history:
+    local -a stats=( "${=$(fc -Dl -1)}" )
+    # = splits the string into an array of words.
+    # The elapsed time is the second word in the array.
+
+    # Convert the elapsed minutes (and potentially hours) to seconds:
+    local -a time=( "${(s.:.)stats[2]}" )
+    local -i seconds=0 mult=1
+    while (( $#time[@] )); do
+      (( seconds += mult * time[-1] ))
+      (( mult *= 60 ))
+      shift -p time
+    done
+
+
+    # Skip notifications for interactive/editor commands
+    local cmd="${stats[3]}"
+    [[ "$cmd" == "vim" || "$cmd" == "nvim" || "$cmd" == "vi" || "$cmd" == "visidata" || "$cmd" == "lf" || "$cmd" == "claude" || "$cmd" == "codex" || "$cmd" == "lfcd" ]] && return 0
+
+    (( seconds >= 25 )) &&
+        osascript -e 'display notification "Your long running script finished" with title "Long running script finished" sound name "default"' &&
+        curl -s -X POST "$SLACK_WEBHOOK_URL" -H 'Content-type: application/json' -d '{"message": "Hey hey script finished"}' >/dev/null 2>&1
+
+    return 0  # Always return 'true' to avoid any hiccups.
+  }
+
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd notify
