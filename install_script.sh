@@ -40,6 +40,7 @@ git clone https://github.com/rupa/v.git ~/.bin
 git clone https://github.com/andrewferrier/fzf-z ~/.bin
 
 
+
 # Tmux plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 then `tmux source ~/.tmux.conf`
@@ -53,6 +54,8 @@ Solve using this link https://github.com/pyenv/pyenv/issues/1737
 Install iterm2
 Use iterm2 and set colorscheme as Elemental, and set
 the foreground color to normal white instead of grey
+do NOT tick the maximize throughput blabla - it slows down everything
+enable GPU acceleration
 
 
 For ctrl-tabbing in tmux
@@ -60,6 +63,10 @@ For ctrl-tabbing in tmux
  	Send Hex Codes: 0x01 0x6e for ^Tab -> 
 	Send Hex Codes: 0x01 0x7d for ^Shift+Tab <-
 
+
+# Setup git nicely
+git config --global merge.conflictStyle diff3
+git config --global --add --bool push.autoSetupRemote true
 
 
 # From system repo
@@ -110,8 +117,10 @@ fire
 black
 isort
 jedi
+visidata
 neovim-remote
 poetry
+neovim
 
 
 Make sure to run CocConfig and copy the contents of coc-settings.json to the one from CocConfig
@@ -120,6 +129,7 @@ Make sure to run CocConfig and copy the contents of coc-settings.json to the one
 brew:
   hammerspoon
   homebrew
+  gh
   karabiner
   ical-buddy
 
@@ -144,6 +154,9 @@ brew:
 cask:
   altTab
 
+Settings in chrome:
+- Go to Keyboard, Shortcut/keybindings, then App Shortcuts.
+    - in there find Google Chrome, and write down a menu title: "Move Tab to New Window" and add a keyboard shortcut of cmd E 
 Settings in atltab:
  Blacklists:
 	 com.McAfre.McAfeeSafariHost (hide in AltTab - Always)
@@ -153,4 +166,67 @@ Settings in atltab:
 
  And then shortcut 1 on is with minimized windows -> Hide
  and shortcut 2 is (option tab) is with minimized windows -> Show
+
+
+### Karabiner elements setup:
+
+{
+    "manipulators": [
+        {
+            "description": "Change caps_lock to command+control+option+shift.",
+            "from": {
+                "key_code": "caps_lock",
+                "modifiers": { "optional": ["any"] }
+            },
+            "to": [
+                {
+                    "key_code": "left_shift",
+                    "modifiers": ["left_command", "left_control"]
+                }
+            ],
+            "type": "basic"
+        }
+    ]
+}
+
+### AND ANOTHER ONE QUITE USEFUL
+{
+    "description": "Change caps+option to arrow keys",
+    "manipulators": [
+        {
+            "from": {
+                "key_code": "h",
+                "modifiers": { "mandatory": ["left_command", "left_control", "left_shift", "left_option"] }
+            },
+            "to": [{ "key_code": "left_arrow" }],
+            "type": "basic"
+        },
+        {
+            "from": {
+                "key_code": "j",
+                "modifiers": { "mandatory": ["left_command", "left_control", "left_shift", "left_option"] }
+            },
+            "to": [{ "key_code": "down_arrow" }],
+            "type": "basic"
+        },
+        {
+            "from": {
+                "key_code": "k",
+                "modifiers": { "mandatory": ["left_command", "left_control", "left_shift", "left_option"] }
+            },
+            "to": [{ "key_code": "up_arrow" }],
+            "type": "basic"
+        },
+        {
+            "from": {
+                "key_code": "l",
+                "modifiers": { "mandatory": ["left_command", "left_control", "left_shift", "left_option"] }
+            },
+            "to": [{ "key_code": "right_arrow" }],
+            "type": "basic"
+        }
+    ]
+}
+
+
 
