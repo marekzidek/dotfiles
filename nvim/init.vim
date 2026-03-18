@@ -3,7 +3,18 @@ source ~/dotfiles/nvim/mappings.vim
 "source ~/dotfiles/nvim/trouble.lua
 
 "let g:python3_host_prog = '/Library/Frameworks/Python.framework/Versions/3.9/bin/python3'
+"let g:python3_prog_path = '/Library/Frameworks/Python.framework/Versions/3.9/bin/python3'
 
+
+" Without this below line, the startup time when opening any file (does not
+" have to by .py file is increased by at least 0.5... python3 is required for
+" some plugins, even if they are lazy loaded
+let g:python3_host_prog = '/Users/Marek_Zidek/.pyenv/shims/python'
+
+
+" The notermguicolors was needed because without it the colors changed so much
+" after switching to neovim 0.10 from my past experience with gruvbox 
+set notermguicolors
 set nocp
 set noswapfile
 set guicursor=n-v-c-i:block
@@ -60,8 +71,7 @@ set lazyredraw
 " Some files need more memory for syntax highlight
 set mmp=5000
 
-noremap j gj  
-noremap k gk
+
 " Automatically wrap text that extends beyond the screen length. (OR NOT)
 set wrap
 
@@ -82,18 +92,18 @@ command! -bang WQ wq<bang>
 command! -bang Q q<bang>
 command! -bang W w<bang>
 
-""" Customize colors
-func! s:my_colors_setup() abort
-    " this is an example
-    hi Pmenu guibg=#d7e5dc gui=NONE
-    hi PmenuSel guibg=#b7c7b7 gui=NONE
-    hi PmenuSbar guibg=#bcbcbc
-    hi PmenuThumb guibg=#585858
-endfunc
+"""" Customize colors
+"func! s:my_colors_setup() abort
+"    " this is an example
+"    hi Pmenu guibg=#d7e5dc gui=NONE
+"    hi PmenuSel guibg=#b7c7b7 gui=NONE
+"    hi PmenuSbar guibg=#bcbcbc
+"    hi PmenuThumb guibg=#585858
+"endfunc
 
-augroup colorscheme_coc_setup | au!
-    au ColorScheme * call s:my_colors_setup()
-augroup END
+"augroup colorscheme_coc_setup | au!
+"    au ColorScheme * call s:my_colors_setup()
+"augroup END
 
 
 
@@ -118,13 +128,15 @@ Plug 'nvim-treesitter/nvim-treesitter'
 
 Plug 'folke/trouble.nvim'
 
+Plug 'gbprod/stay-in-place.nvim'
+
 
 
 
 
 
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
-let g:pydocstring_doq_path = "~/.pyenv/versions/3.7.7/bin/doq"
+let g:pydocstring_doq_path = "~/.pyenv/versions/3.10.9/bin/doq"
 let g:pydocstring_formatter = 'google'
 nmap <silent> <C-_> <Plug>(pydocstring)
 
@@ -149,6 +161,9 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'github/copilot.vim'
 imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = v:true
+
+
+Plug 'CopilotC-Nvim/CopilotChat.nvim'
 
 Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-rhubarb'
@@ -194,10 +209,10 @@ Plug 'haya14busa/is.vim'
 
 let g:UltiSnipsExpandTrigger = "<nop>"
 
-Plug 'gruvbox-community/gruvbox'
-"Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+"Plug 'gruvbox-community/gruvbox'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 " Plug 'cocopon/iceberg.vim'
-" Plug 'morhetz/gruvbox'
+Plug 'morhetz/gruvbox'
 
 let g:fzf_layout = { 'window': {'width': 0.85, 'height':0.85} }
 let $FZF_DEFAULT_OPTS='--reverse'
@@ -230,6 +245,7 @@ Plug 'scrooloose/nerdcommenter'
 let g:NERDDefaultAlign = 'start'
 
 "Plug 'puremourning/vimspector'
+Plug 'sphamba/smear-cursor.nvim'
 Plug 'szw/vim-maximizer'
 Plug 'sstallion/vim-cursorline'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -273,7 +289,7 @@ let g:floaterm_opener = 'edit'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 "
-let g:airline_theme='tomorrow'
+let g:airline_theme='zenburn'
 let g:airline_powerline_fonts = 0
 
 Plug 'vimwiki/vimwiki'
@@ -402,7 +418,7 @@ let g:context_highlight_tag = '<hide>'
 let &statuscolumn='%l  '
 
 " Indent python
-Plug 'vim-scripts/indentpython.vim'
+"Plug 'vim-scripts/indentpython.vim'
 
 
 vnoremap y <Esc>mzgvy<CR>`z
@@ -423,7 +439,9 @@ map <Leader>;F :norm mz]]zo`zV^[]]]O]][[][ 6<CR>`z
 map <Leader>;m :norm mzV^[mk]m%jO]m[m]Mk 6<CR>`z
 map <Leader>;M :norm mz]mzo`zV^[mk]mO]m[m]Mh ;;<CR>`z
 
-nmap <Leader>;k /if __name__ == "__main__":<CR> <bar> kVgg :SlimuxREPLSendSelection<CR>
+nmap <Leader>;k :call SlimuxSendCommand('safe_load_functions_and_imports("' . expand('%:t:r') . '.' . expand('%:e') . '")')<CR>
+map <Leader>;j :call SlimuxSendCommand('show_schema(' . expand('<cword>') . ')')<CR>
+"nmap <Leader>;k /if __name__ == "__main__":<CR> <bar> kVgg :SlimuxREPLSendSelection<CR>
 "nmap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
 "nmap <Leader>;j /if __name__ == "__main__":<CR> <bar> jVG :SlimuxREPLSendSelection<CR>
 vmap <Leader>;; <Esc>mzgv :SlimuxREPLSendSelection<CR>`z
@@ -551,6 +569,27 @@ Plug 'ludovicchabant/vim-gutentags'
 " All of your Plugs must be added before the following line
 call plug#end()            " required
 
+
+lua << EOF
+require("CopilotChat").setup {
+    mappings = {
+        complete = {
+          insert = '<Tab>',
+        },
+        close = {
+          normal = 'q',
+          insert = '<C-x>',
+        },
+    }
+}
+EOF
+
+lua require('smear_cursor').enabled = true
+
+
+" For command/normal mode
+nnoremap <S-Tab> <<
+
 nnoremap Y :let @*=@*.getline('.')."\n"<CR>
 
 function! Get_visual_selection()
@@ -566,7 +605,7 @@ function! Get_visual_selection()
     return join(lines, "\n")
 endfunction
 
-vnoremap Y :<C-U>let @*=@*.Get_visual_selection()."\n"
+vnoremap Y :<C-U>let @*=@*.Get_visual_selection()."\n"<CR>
 
 nnoremap <leader>y :call PlotlySaveAndYank()<CR>
 function! PlotlySaveAndYank()
@@ -639,13 +678,13 @@ hi Normal guibg=NONE ctermbg=NONE
 
 lua << EOF
 
-vim.diagnostic.config({virtual_text = true,
-signs = true,
-update_in_insert = false,
-underline = true,
-severity_sort = true,
--- float = true,
-})
+--vim.diagnostic.config({virtual_text = true,
+--signs = true,
+--update_in_insert = false,
+--underline = true,
+--severity_sort = true,
+---- float = true,
+--})
 
 require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
@@ -744,7 +783,9 @@ nnoremap <CR> :noh<CR><CR>
 " Or just select your stuff and use " '='
 nnoremap <F2> :set invpaste paste?<CR>
 imap <F2> <C-O>:set invpaste paste?<CR>
-set pastetoggle=<F2>
+
+" Apparently - this was needing at a certain time, but Neovim 0.11 says it's unsupported
+" set pastetoggle=<F2>
 
 
 
@@ -768,7 +809,7 @@ vnoremap <leader>p "_dP
 
 
 " Nicer visual selection
-hi Visual term=bold cterm=bold guibg=green
+hi Visual term=bold cterm=bold gui=bold
 
 
 " Split navigations
@@ -777,7 +818,7 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-highlight LineNr ctermfg=grey
+highlight LineNr ctermfg=grey guibg=grey
 
 " Toggle lineNumbers
 " nnoremap <leader>l :set relativenumber!<cr>:set number!<cr>
@@ -804,7 +845,7 @@ au BufNewFile,BufRead *.py,*.pyx
     \ set tabstop=4 |
     \ set softtabstop=4 |
     \ set shiftwidth=4 |
-    \ set textwidth=79 |
+    "\ set textwidth=79 |
     \ set expandtab |
     \ set autoindent |
     \ set fileformat=unix
@@ -918,7 +959,7 @@ nnoremap <leader>ss :Start! ssh_sync % <CR>
 
 " I don't like background highlighting at all
 "highlight Folded ctermbg=black
-highlight Folded ctermbg=NONE ctermfg=10
+"highlight Folded ctermbg=NONE ctermfg=10
 
 
 " Return to last edit position when opening files (You want this!)
@@ -929,7 +970,9 @@ autocmd BufReadPost *
 
 
 nnoremap j gj
+vnoremap j gj
 nnoremap k gk
+vnoremap k gk
 ""augroup vimrc
 ""    autocmd BufWritePost *
 ""    \   if expand('%') != '' && &buftype !~ 'nofile'
@@ -990,6 +1033,7 @@ augroup END
 au FileType python let b:coc_root_patterns = ['.git', '.env', 'venv', '.venv', 'setup.cfg', 'setup.py', 'pyrightconfig.json', 'env']
 
 let g:nayvy_pyproject_root_markers = [
+  \ '.git',
   \ 'pyproject.toml',
   \ 'setup.py',
   \ 'setup.cfg',
@@ -1017,15 +1061,18 @@ let g:ale_lint_dirs = {
 \    'flake8': getcwd()
 \}
 
+
 let g:ale_fixers = {
-\   'python': ['remove_trailing_lines', 'trim_whitespace', 'isort', 'black'],
+\   'python': ['remove_trailing_lines', 'trim_whitespace', 'ruff_format'],
 \   'javascript': ['eslint'],
 \}
-let g:ale_fix_on_save = 0
+
+let g:ale_linters = {'python': ['ruff']}
+let g:ale_fix_on_save = 1
 
 :command! Json :%!python -m json.tool
 
-let g:pythonStdlibPath = '~/.pyenv/versions/3.7.7/lib/python3.7/site-packages/'
+let g:pythonStdlibPath = '~/.pyenv/versions/3.9.10/lib/python3.9.10/site-packages/'
 
 
 function! RooterFileShow() abort
@@ -1038,17 +1085,19 @@ command! F call RooterFileShow()
 "colorscheme gruvbox8
 set noshowmode
 set shortmess+=F
+"hi clear
+"colorscheme vim
 colorscheme gruvbox
-"colorscheme catppuccin-mocha
+" colorscheme catppuccin-mocha
 let g:fzf_colors =
 \ { 'fg': ['fg', 'Normal'],
 \ 'bg': ['bg', 'Normal']}
 hi Normal guibg=NONE ctermbg=NONE
 hi Visual cterm=none ctermbg=darkgrey ctermfg=cyan
-hi FloatermBorder guibg=orange guifg=cyan
+hi FloatermBorder guibg=None guifg=cyan
 
-highlight Folded ctermbg=NONE ctermfg=10
-syntax on
+highlight Folded ctermbg=NONE ctermfg=10 guibg=NONE guifg=10
+"syntax on
 
 let g:airline#extensions#default#section_truncate_width = {
       \ 'b': 79,
@@ -1062,3 +1111,4 @@ let g:airline#extensions#default#layout = [
       \ [ 'a', 'b', 'c' ],
       \ [ 'x', 'y', 'z', 'error', ]
       \ ]
+hi Visual cterm=none ctermbg=darkgrey ctermfg=cyan guibg=darkgrey guifg=darkgrey
