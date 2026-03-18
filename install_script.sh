@@ -56,6 +56,8 @@ Use iterm2 and set colorscheme as Elemental, and set
 the foreground color to normal white instead of grey
 do NOT tick the maximize throughput blabla - it slows down everything
 enable GPU acceleration
+remove scrollbar
+remove title bar
 
 
 For ctrl-tabbing in tmux
