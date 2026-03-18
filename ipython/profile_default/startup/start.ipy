@@ -7,3 +7,190 @@ import time
 import datetime
 from loguru import logger
 
+import re
+import traceback
+from pathlib import Path
+
+from genson import SchemaBuilder
+
+
+from pathlib import Path
+from tempfile import TemporaryDirectory
+import json, dataclasses
+from pydantic import BaseModel
+from collections.abc import Mapping, Sequence
+
+def to_plain(o, _seen=None):
+    """
+    Recursively convert o into only dicts, lists, and primitives:
+      • BaseModel (v2 or v1) → dict
+      • dataclass           → dict
+      • Mapping            → dict
+      • Sequence           → list
+      • Any object with __dict__ → that dict
+      • Fallback           → repr(o)
+    """
+    if _seen is None:
+        _seen = set()
+    oid = id(o)
+    if oid in _seen:
+        return f"<circular:{type(o).__name__}>"
+    _seen.add(oid)
+
+    # primitives
+    if o is None or isinstance(o, (bool, int, float, str)):
+        return o
+
+    # Pydantic v2: .model_dump(); v1: .dict()
+    if isinstance(o, BaseModel):
+        if hasattr(o, "model_dump"):
+            data = o.model_dump()
+        else:
+            data = o.dict()
+        return to_plain(data, _seen)
+
+    # dataclass
+    if dataclasses.is_dataclass(o):
+        return to_plain(dataclasses.asdict(o), _seen)
+
+    # mapping (dict-like)
+    if isinstance(o, Mapping):
+        return {str(k): to_plain(v, _seen) for k, v in o.items()}
+
+    # sequences (list/tuple/set)
+    if isinstance(o, Sequence) and not isinstance(o, (str, bytes, bytearray)):
+        return [to_plain(v, _seen) for v in o]
+
+    # any other object with __dict__
+    if hasattr(o, "__dict__"):
+        return to_plain(o.__dict__, _seen)
+
+    # fallback: repr
+    return repr(o)
+
+
+def show_schema(obj):
+    """
+    Infer a JSON Schema from any Python dict/list.
+    Usage in IPython:
+      schema = get_schema(my_dict)
+    """
+    b = SchemaBuilder()
+    b.add_object(to_plain(obj))
+    import json; print(json.dumps(b.to_schema(), indent=2))
+    return
+
+def get_schema(obj):
+    """
+    Infer a JSON Schema from any Python dict/list.
+    Usage in IPython:
+      schema = get_schema(my_dict)
+    """
+    b = SchemaBuilder()
+    b.add_object(obj)
+    import json; print(json.dumps(b.to_schema(), indent=2))
+    return b.to_schema()
+
+def extract_imports(source_code):
+    import_lines = []
+    for line in source_code.splitlines():
+        line = line.strip()
+        if line.startswith("import ") or line.startswith("from "):
+            import_lines.append(line)
+    return import_lines
+
+# def extract_functions(source_code):
+#     pattern = re.compile(r'^(def .+?:\n(?:[ \t]+.*\n?)*)', re.MULTILINE)
+#     return pattern.findall(source_code)
+
+
+# Complex, but handles multiline decorators
+def extract_functions(source_code):
+    lines = source_code.split('\n')
+    results = []
+    block = []
+    in_decorator = False
+    open_parens = 0
+    i = 0
+    n = len(lines)
+    while i < n:
+        line = lines[i]
+        stripped = line.lstrip()
+        # Start decorator block
+        if stripped.startswith('@'):
+            if block:
+                # Save previous block if any
+                results.append('\n'.join(block))
+                block = []
+            in_decorator = True
+            open_parens = stripped.count('(') - stripped.count(')')
+            block.append(line)
+            i += 1
+            # Continue collecting decorator lines if parentheses are not closed
+            while in_decorator and i < n:
+                next_line = lines[i]
+                block.append(next_line)
+                open_parens += next_line.count('(') - next_line.count(')')
+                if open_parens <= 0 and next_line.strip().endswith(')'):
+                    in_decorator = False
+                i += 1
+            # Now expect the function def
+            if i < n and lines[i].lstrip().startswith('def '):
+                block.append(lines[i])
+                i += 1
+                # Collect function body (indented lines)
+                while i < n and (lines[i].startswith(' ') or lines[i].startswith('\t') or lines[i].strip() == ''):
+                    block.append(lines[i])
+                    i += 1
+                results.append('\n'.join(block))
+                block = []
+        # Start function with no decorator
+        elif stripped.startswith('def '):
+            if block:
+                results.append('\n'.join(block))
+                block = []
+            block.append(line)
+            i += 1
+            while i < n and (lines[i].startswith(' ') or lines[i].startswith('\t') or lines[i].strip() == ''):
+                block.append(lines[i])
+                i += 1
+            results.append('\n'.join(block))
+            block = []
+        else:
+            i += 1
+    # Add any remaining block (in case file ends mid-function)
+    if block:
+        results.append('\n'.join(block))
+    return [b for b in results if b.strip()]  # Remove empty blocks
+
+def get_function_name(fn_src):
+    # Find the first line that starts with 'def '
+    for line in fn_src.splitlines():
+        match = re.match(r'^\s*def\s+([a-zA-Z_][\w]*)\s*\(', line)
+        if match:
+            return match.group(1)
+    return '<unknown function name>'
+
+def safe_load_functions_and_imports(filepath, g=None):
+    g = g or globals()
+    source = Path(filepath).read_text()
+
+    # First: Try all imports
+    print("📌 Note: As of now, it is expected that the REPL runs in the same folder as the script you're just loading")
+    print("🔄 Processing imports...")
+    for line in extract_imports(source):
+        try:
+            exec(line, g)
+            print(f"✅ Imported: {line}")
+        except Exception:
+            print(f"❌ Failed to import: {line}\n{traceback.format_exc()}")
+
+    # Then: Try all functions
+    print("\n🔄 Processing functions...")
+    for fn_src in extract_functions(source):
+        try:
+            exec(fn_src, g)
+            name = get_function_name(fn_src)
+            print(f"✅ Loaded function: {name}")
+        except Exception:
+            print(f"❌ Failed to load function:\n{traceback.format_exc()}")
