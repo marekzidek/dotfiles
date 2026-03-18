@@ -445,7 +445,13 @@ DISABLE_AUTO_UPDATE="true"
 export NAYVY_PYPROJECT_ROOT_MARKERS='pyproject.toml,setup.py,.git'  # comma-separated format
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# Lazy-load pyenv for faster shell startup (~230ms saved)
+export PATH="$PYENV_ROOT/shims:$PATH"
+pyenv() {
+  unfunction pyenv
+  eval "$(command pyenv init -)"
+  pyenv "$@"
+}
 export PATH="~/.pyenv/versions/3.7.7/lib/python3.7/site-packages:$PATH"
 alias ipython='python -m IPython --TerminalInteractiveShell.editing_mode=vi --no-autoindent' 
 # Generated for envman. Do not edit.
