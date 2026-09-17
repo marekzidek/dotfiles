@@ -335,6 +335,7 @@ let g:markdown_folding = 1
 filetype plugin indent on
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown'}
 let g:instant_markdown_autostart = 0
+let g:instant_markdown_port = 38291
 
 " !pip install python-language-server
 "if executable('pyls')
@@ -851,6 +852,12 @@ au BufNewFile,BufRead *.py,*.pyx
     \ set fileformat=unix
 
 
+au BufNewFile,BufRead *.md
+      \ set tabstop=4 |
+      \ set softtabstop=4 |
+      \ set shiftwidth=4 |
+      \ set expandtab
+
 
 
 " Override w motion
@@ -1098,6 +1105,7 @@ hi FloatermBorder guibg=None guifg=cyan
 
 highlight Folded ctermbg=NONE ctermfg=10 guibg=NONE guifg=10
 "syntax on
+"
 
 let g:airline#extensions#default#section_truncate_width = {
       \ 'b': 79,

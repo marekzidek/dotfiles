@@ -1,3 +1,4 @@
+require("hs.ipc")
 -- https://github.com/Hammerspoon/Spoons/raw/master/Spoons/SpoonInstall.spoon.zip
 hs.loadSpoon("SpoonInstall")
 
@@ -42,6 +43,8 @@ hs.hotkey.bind({"alt"}, '1', function()hs.application.launchOrFocus('iTerm')end)
 hs.hotkey.bind({"alt"}, '2', function()hs.application.launchOrFocus('Google Chrome')end)
 hs.hotkey.bind({"alt"}, '3', function()hs.application.get('Slack'):activate()end)
 -- hs.hotkey.bind({"alt"}, '4', function()hs.application.launchOrFocus('Microsoft Outlook')end)
+hs.hotkey.bind({"alt"}, '4', function()hs.application.launchOrFocus('Outlook')end)
+hs.hotkey.bind({"alt"}, '5', function()hs.application.launchOrFocus('Miro')end)
 hs.hotkey.bind({"alt"}, '7', function()hs.application.launchOrFocus('zoom.us')end)
 
 
@@ -134,23 +137,23 @@ hs.hotkey.bind({"alt"}, '7', function()hs.application.launchOrFocus('zoom.us')en
 --
 --
 function focusItermWindowByTitle(windowTitleMatch, urlToOpen)
+    -- Scoped to iTerm's windows only. Previously walked hs.window.allWindows()
+    -- across every app on the system (AX-bound, scales with total open windows).
     local windowFound = false
-    local allWindows = hs.window.allWindows()
+    local app = hs.application.get("com.googlecode.iterm2")
 
-    for _, w in ipairs(allWindows) do
-	local app = w:application()
-	if app:bundleID() == "com.googlecode.iterm2" then
-	    local winTitle = w:title()
-	    if winTitle and winTitle:find(windowTitleMatch) then
-		-- Window found, focus it
-		windowFound = true
-		app:activate(true)
-		hs.timer.doAfter(0.1, function()
-		    w:focus()
-		end)
-		break -- Exit the loop
-	    end
-	end
+    if app then
+        for _, w in ipairs(app:allWindows()) do
+            local winTitle = w:title()
+            if winTitle and winTitle:find(windowTitleMatch) then
+                windowFound = true
+                app:activate(true)
+                hs.timer.doAfter(0.1, function()
+                    w:focus()
+                end)
+                break
+            end
+        end
     end
 
     if not windowFound then
@@ -167,23 +170,23 @@ end
 
 
 function focusChromeWindowByTitle(windowTitleMatch, urlToOpen)
+    -- Scoped to Chrome's windows only. Previously walked hs.window.allWindows()
+    -- across every app on the system, which was the dominant cost on each press.
     local windowFound = false
-    local allWindows = hs.window.allWindows()
+    local app = hs.application.get("com.google.Chrome")
 
-    for _, w in ipairs(allWindows) do
-	local app = w:application()
-	if app:bundleID() == "com.google.Chrome" then
-	    local winTitle = w:title()
-	    if winTitle and winTitle:find(windowTitleMatch) then
-		-- Window found, focus it
-		windowFound = true
-		app:activate(true)
-		hs.timer.doAfter(0.1, function()
-		    w:focus()
-		end)
-		break -- Exit the loop
-	    end
-	end
+    if app then
+        for _, w in ipairs(app:allWindows()) do
+            local winTitle = w:title()
+            if winTitle and winTitle:find(windowTitleMatch) then
+                windowFound = true
+                app:activate(true)
+                hs.timer.doAfter(0.1, function()
+                    w:focus()
+                end)
+                break
+            end
+        end
     end
 
     if not windowFound then
@@ -202,16 +205,33 @@ end
 
 -- Hotkey to focus "My Work" window, or open "https://work.example.com"
 -- Bind a hotkey (e.g., cmd + ctrl + c) to focus a window named "My Work"
-hs.hotkey.bind({"alt"}, "4", function()
-    focusChromeWindowByTitle("Work Email", "https://outlook.office.com/mail/") -- Use part of your specific window name
-end)
+-- hs.hotkey.bind({"alt"}, "4", function()
+--    focusChromeWindowByTitle("Work Email", "https://outlook.office.com/mail/") -- Use part of your specific window name
+-- end)
 
 
-hs.hotkey.bind({"alt"}, "6", function()
-    focusItermWindowByTitle("Duplicated Window", "https://dashboard.example.com")
-end)
-hs.hotkey.bind({"alt"}, "1", function()
-    focusItermWindowByTitle("Main Window", "https://dashboard.example.com")
+-- Alt+0: bring iTerm forward, then open tmux popup with Claude Code pane picker.
+-- If invoked from iTerm itself, pass the currently-focused tmux pane id to the
+-- picker so it can demote that pane (no point preselecting where you already are).
+-- Invoked from any other app → no exclusion, picker sorts as usual.
+hs.hotkey.bind({"alt"}, "0", function()
+    local excludePane = ""
+    local frontApp = hs.application.frontmostApplication()
+    if frontApp and frontApp:name() == "iTerm2" then
+        local cmd = "/opt/homebrew/bin/tmux list-panes -a -F "
+            .. "'#{session_activity} #{window_active} #{pane_active} #{pane_id}' "
+            .. "2>/dev/null | sort -rn | awk '$2==1 && $3==1 {print $4; exit}'"
+        local output, ok = hs.execute(cmd)
+        if ok and output then
+            excludePane = output:gsub("%s+$", "")
+        end
+    end
+    focusItermWindowByTitle("Main Window", nil)
+    hs.timer.doAfter(0.08, function()
+        hs.task.new("/opt/homebrew/bin/tmux", nil,
+            {"display-popup", "-E", "-w", "80%", "-h", "80%",
+             os.getenv("HOME") .. "/dotfiles/scripts/claude-picker.sh", excludePane}):start()
+    end)
 end)
 
 --hs.hotkey.bind({"cmd", "ctrl"}, "c", function()
@@ -221,24 +241,25 @@ end)
 
 
 function focusOtherChromeWindow(excludeTitleMatch)
-    local allWindows = hs.window.allWindows()
-    for _, w in ipairs(allWindows) do
-        local app = w:application()
+    -- Scoped to Chrome's windows only. Previously walked hs.window.allWindows()
+    -- across every app on the system.
+    local app = hs.application.get("com.google.Chrome")
+    if not app then
+        hs.alert.show("Google Chrome is not running.")
+        return
+    end
+
+    for _, w in ipairs(app:allWindows()) do
         local winTitle = w:title()
-
-        -- Check if it's Chrome and *doesn't* match the exclusion title
-        if app:bundleID() == "com.google.Chrome" and winTitle and not winTitle:find(excludeTitleMatch) then
-
-            -- Window found (and it's not the excluded one), focus it
+        if winTitle and not winTitle:find(excludeTitleMatch) then
             app:activate(true)
             hs.timer.doAfter(0.1, function()
                 w:focus()
             end)
-            return -- Exit function after focusing
+            return
         end
     end
 
-    -- If no *other* suitable window is found
     hs.alert.show("No other suitable Chrome window found (all are named '" .. excludeTitleMatch .. "').")
 end
 
@@ -280,6 +301,7 @@ spoon.SpoonInstall:andUse("MiroWindowsManager",
 	    hs.window.animationDuration = 0.0
 	    lol:bindHotkeys({
 	      up = {"cmd", "k"},
+	      up = {"cmd", "o"},
 	      right = {"cmd", "l"},
 	      down = {"cmd", "j"},
 	      left = {"cmd", "h"},
@@ -462,3 +484,5 @@ spoon.SpoonInstall:andUse("HeadphoneAutoPause",
 ----------------- GRID STUFF ----------------
 ---never go larger than h = 11 on macbook air m2 15 inch, the grid snaps into a chain of smaller and smaller windows in height ---------
 hs.grid.setMargins({w=15, h=11})
+dofile(os.getenv("HOME") .. "/side_projects/quick-diary/hammerspoon-config.lua")
+
